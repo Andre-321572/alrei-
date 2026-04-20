@@ -1,0 +1,77 @@
+<template>
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 col-lg-12">	
+            <div class="arrow_slide four_slide arrow_middle">
+                
+                <div ref="slider" class="tiny-slider">
+                    <div class="singles_items" v-for="(item, index) in coursesData.slice(0, 12)" :key="index">
+                        <div class="education_block_grid border">
+            
+                            <div class="education-thumb position-relative">
+                                <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
+                                    <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
+                                </div>
+                                <NuxtLink :to="`/course-detail/${item.id}`"><img :src="item.image" class="img-fluid" alt=""></NuxtLink>
+                                <div class="course-hours position-absolute top-0 start-0 ms-3 mt-3">
+                                    <span class="badge bg-dark rounded-pill"><i class="bi bi-clock-history me-1"></i>{{item.time}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="education-body p-3">
+                                <div class="education-title">
+                                    <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
+                                </div>
+                                
+                                <div class="cources-info">
+                                    <ul>
+                                        <li><i class="bi bi-camera-reels"></i>{{item.lectures}} Lectures</li>
+                                        <li><i class="bi bi-bar-chart"></i>{{item.level}}</li>
+                                        <li><i class="bi bi-coin"></i>${{item.price}}</li>
+                                        <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">{{item.rating}}</span><span class="total-reviews">({{item.review}})</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="education-footer border-0 p-3 pt-2">
+                                <a href="#" class="btn btn-md btn-outline-gray border-2 rounded-pill w-100">Enrolled Now<i class="bi bi-arrow-right ms-2"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+
+import { ref, onMounted } from 'vue'
+
+import { coursesData } from '@/data/data.js'
+
+const { $tns } = useNuxtApp()
+
+const slider = ref(null)
+
+onMounted(() => {
+  $tns({
+    container: slider.value,
+    nav: false,
+    mouseDrag: true,
+    loop: true,
+    autoplay: true,
+    rewind: true,
+    autoplayButtonOutput: false,
+    speed: 400,
+    autoplayTimeout: 3000,
+    controlsText:['<i class="bi bi-chevron-left"></i>', '<i class="bi bi-chevron-right"></i>'],
+    responsive: {
+        0: { items: 1 },
+        576: { items: 2 },
+        992: { items: 3 },
+        1200: { items: 4 },
+    },
+  })
+})
+</script>
