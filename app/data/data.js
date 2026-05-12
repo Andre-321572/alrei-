@@ -799,7 +799,7 @@ export const faqThree = [
     {
         data : [
             {
-                title:'How do I become a LearnUp instructor?',
+                title:'How do I become an Alrei instructor?',
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
             {
@@ -807,7 +807,7 @@ export const faqThree = [
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
             {
-                title:'Can I earn money by teaching on LearnUp?',
+                title:'Can I earn money by teaching on Alrei?',
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
         ],
@@ -834,7 +834,7 @@ export const faqFour = [
     {
         data : [
             {
-                title:'How do I become a LearnUp instructor?',
+                title:'How do I become an Alrei instructor?',
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
             {
@@ -842,7 +842,7 @@ export const faqFour = [
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
             {
-                title:'Can I earn money by teaching on LearnUp?',
+                title:'Can I earn money by teaching on Alrei?',
                 desc:'Curabitur at libero nec velit facilisis blandit. Integer a elit diam. Morbi ac lacus vitae orci vulputate malesuada. Phasellus non sapien massa. Fusce efficitur, enim in lacinia sollicitudin, enim libero tempus justo, at cursus neque turpis vel nisi. Etiam facilisis lorem vel lectus posuere, sed ultrices neque euismod.'
             },
         ],

@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="caps-content">
                                         <h5 class="cn-info-title mb-0">{{ $t('drop_mail') }}</h5>
-                                        <p class="text-muted lh-base">support@learnup.com<br>LearnUp@gmail.com</p>
+                                        <p class="text-muted lh-base">support@alrei.com<br>contact@alrei.com</p>
                                     </div>
                                 </div>
                                 

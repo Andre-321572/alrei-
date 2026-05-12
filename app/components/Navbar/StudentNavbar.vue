@@ -312,7 +312,7 @@
                         <div class="login-caps mb-4">
                             <div class="text-center">
                                 <h2 class="fw-semibold m-0">Hi! Welcome to</h2>
-                                <h3 class="fw-semibold m-0">LearnUp Online Study Center</h3>
+                                <h3 class="fw-semibold m-0">Alrei Online Study Center</h3>
                             </div>
                         </div>
                         

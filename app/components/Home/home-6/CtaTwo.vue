@@ -6,7 +6,7 @@
                     <div class="text-start">
                         <div class="subscribe-caption d-block mb-4">
                             <div class="d-flex align-items-center mb-1"><span  class="label bg-warning rounded-pill text-dark"><i class="bi bi-patch-check me-2"></i>Get Certificate</span></div>
-                            <h2 class="fs-1 lh-base text-light">Advance Your Learning with LearnUp's Quality Certification</h2>
+                            <h2 class="fs-1 lh-base text-light">Advance Your Learning with Alrei's Quality Certification</h2>
                             <p class="text-light opacity-75">Subscribe our newsletter & get latest news and updation!</p>
                         </div>
                         <div class="d-block join-block">

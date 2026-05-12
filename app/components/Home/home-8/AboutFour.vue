@@ -10,7 +10,7 @@
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
             <div class="benifit-oflearning">
                 <div class="d-block mb-4">
-                    <h2 class="display-5 fw-normal">Why LearnUp?<br>Online Learning Platform</h2>
+                    <h2 class="display-5 fw-normal">Why Alrei?<br>Online Learning Platform</h2>
                     <p>We’re developing an innovative Bootstrap-powered UI Kit tool designed specifically for developers, engineers, full-stack developers, and digital agencies.</p>
                     <p>You made all the required mock ups for commissioned layout, got all the approvals, built a tested code base or had them built, you decided on a content management system, got a license for it or adapted open source software for your client's needs.</p>
                 </div>

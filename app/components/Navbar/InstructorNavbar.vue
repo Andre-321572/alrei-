@@ -295,7 +295,7 @@
                         <div class="login-caps mb-4">
                             <div class="text-center">
                                 <h2 class="fw-semibold m-0">Hi! Welcome to</h2>
-                                <h3 class="fw-semibold m-0">LearnUp Online Study Center</h3>
+                                <h3 class="fw-semibold m-0">Alrei Online Study Center</h3>
                             </div>
                         </div>
                         
@@ -325,7 +325,7 @@
                                 </div>
                                 
                                 <div class="form-group mb-3">
-                                    <div class="text-center text-muted">Already have an account on LearnUp? <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold">Log In</a></div>
+                                    <div class="text-center text-muted">Already have an account on Alrei? <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold">Log In</a></div>
                                 </div>
                                 
                                 <div class="deider-wrap w-100 mt-4 mb-4">
