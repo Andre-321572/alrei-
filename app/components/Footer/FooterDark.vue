@@ -6,12 +6,12 @@
                     
                     <div class="col-lg-3 col-md-3">
                         <div class="footer-widget">
-                            <div class="d-flex align-items-center gap-3 mb-4">
-                                <img :src="logoLight" class="img-footer" style="max-height: 70px;" alt="Logo Alrei" />
-                                <img src="/logo-ituc.png" class="img-footer" style="max-height: 70px;" alt="Logo ITUC" />
+                            <div class="d-flex flex-wrap align-items-center justify-content-start gap-3 mb-4">
+                                <img :src="logoLight" class="img-footer" style="max-height: 70px; width: auto;" alt="Logo Alrei" />
+                                <img src="/logo-ituc.png" class="img-footer" style="max-height: 70px; width: auto;" alt="Logo ITUC" />
                             </div>
                             <div class="footer-add">
-                                <address class="mb-4 lh-base">{{ $t('address_text') }}</address>
+                                <address class="mb-4 lh-base text-light opacity-75">{{ $t('address_text') }}</address>
                                 <div class="d-flex align-items-center call-now gap-2 mb-3">
                                     <div class="square--30 circle bg-light-main text-main"><i class="bi bi-telephone"></i></div>
                                     <div class="fs-6 fw-semibold">+228</div>
