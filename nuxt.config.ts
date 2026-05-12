@@ -1,9 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  
+  // Désactiver les devtools pour économiser de la mémoire JS
+  devtools: { enabled: false },
+
+  // Optimisation de la mémoire pour les builds et le dev
+  sourcemap: {
+    server: false,
+    client: false,
+  },
 
   modules: ['@nuxtjs/i18n'],
+
+  nitro: {
+    prerender: {
+      crawlLinks: false
+    }
+  },
 
   runtimeConfig: {
     public: {
@@ -29,19 +43,31 @@ export default defineNuxtConfig({
 
   vite: {
     optimizeDeps: {
-      include: ['bootstrap'],
+      include: ['bootstrap', 'vue'],
+    },
+    server: {
+      watch: {
+        ignored: ['**/node_modules/**', '**/.git/**', '**/dist/**']
+      }
+    },
+    build: {
+      sourcemap: false,
+      rollupOptions: {
+        maxParallelFileOps: 20
+      }
+    },
+    worker: {
+      format: 'es'
     }
   },
 
   app: {
     head: {
-      title: "LearnUp - Nuxt Online Course & Education Template",
-
+      title: "LearnUp - Plateforme d'Apprentissage",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0" }
       ],
-
       link: [
         { rel: "icon", href: "/favicon.ico" },
         {

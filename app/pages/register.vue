@@ -3,16 +3,14 @@
     <Preloader />
     <NavDark />
 
-    <div class="bg-main position-relative">
+    <div class="bg-cover position-relative" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-xl-7 col-lg-9 col-md-12">
-                    <div class="ht-300"></div>
+                    <div class="ht-200"></div>
                 </div>
             </div>
         </div>
-        <div class="position-absolute end-0 top-0"><img :src="log" class="img-fluid" width="200" alt="Log Screen"></div>
-        <div class="position-absolute start-0 bottom-0"><img :src="log" class="img-fluid" width="150" alt="Log Screen"></div>
     </div>
 
     <section class="pt-0">

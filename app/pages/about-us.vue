@@ -147,18 +147,18 @@ import { computed } from 'vue'
 import hero3 from "@/assets/img/hero-img-3.png";
 
 /* Banner Background */
-import aboutBg from '@/assets/img/about-bg.jpg'
-import testimonial from '@/assets/img/testimonial.png'
+
+
 
 const aboutBgStyle = computed(() => ({
-    background: `url(${aboutBg})`,
+    backgroundImage: "url('/img/student-banner.png')",
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
 }))
 
 const testimonialBgStyle = computed(() => ({
-    background: `url(${testimonial})`,
+    backgroundImage: "url('/img/student-banner.png')",
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',

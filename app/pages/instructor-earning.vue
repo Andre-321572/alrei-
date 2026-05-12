@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient p-0">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
         </div>
@@ -24,9 +24,9 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 pb-4">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Instructor Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Earning</li>
+                                    <li class="breadcrumb-item"><a href="#">{{ $t('home') }}</a></li>
+                                    <li class="breadcrumb-item"><a href="#">{{ $t('instructor_dashboard') }}</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ $t('earning') }}</li>
                                 </ol>
                             </nav>
                         </div>
@@ -58,8 +58,8 @@
                                 <!-- Card header START -->
                                 <div class="card-header border-bottom">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <h4 class="mb-2 mb-sm-0">Recent Selling Courses</h4>
-                                        <a href="#" class="btns text-muted mb-0">View All</a>
+                                        <h4 class="mb-2 mb-sm-0">{{ $t('recent_selling_courses') }}</h4>
+                                        <a href="#" class="btns text-muted mb-0">{{ $t('view_all') }}</a>
                                     </div>
                                 </div>
 
@@ -69,38 +69,46 @@
                                         <table class="table align-middle p-4 mb-0">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th scope="col" class="border-0 rounded-start">Course Name</th>
-                                                    <th scope="col" class="border-0">Selling</th>
-                                                    <th scope="col" class="border-0">Amount</th>
-                                                    <th scope="col" class="border-0">Period</th>
-                                                    <th scope="col" class="border-0 rounded-end">Action</th>
+                                                    <th scope="col" class="border-0 rounded-start">{{ $t('course_name') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('selling') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('amount') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('period') }}</th>
+                                                    <th scope="col" class="border-0 rounded-end">{{ $t('action') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
-                                                <tr v-for="(item, index) in recentSellingCourses" :key="index">
-                                                    <td>
-                                                        <div class="d-flex align-items-center">
-                                                            <div class="w-15">
-                                                                <img :src="item.image" class="img-fluid rounded" alt="">
-                                                            </div>
-                                                            <h6 class="mb-0 fw-semibold ms-2 table-responsive-title">	
-                                                                <a href="#">{{item.title}}</a>
-                                                            </h6>
-                                                        </div>
-                                                    </td>
-                                                    <td><span class="text-muted-2">{{item.selling}}</span></td>
-                                                    <td><span class="text-muted-2">{{item.amount}}</span></td>
-                                                    <td>
-                                                        <span class="badge bg-light-green text-green">{{item.time}}</span>
-                                                    </td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-pencil-square"></i></a>
-                                                        <button class="btn btn-sm btn-light-red mb-0"><i class="bi bi-trash3"></i></button>
-                                                    </td>
-                                                </tr>
-                                              
-                                            </tbody>
+                                                 <tr v-if="loading">
+                                                     <td colspan="5" class="text-center py-5">
+                                                         <div class="spinner-border text-primary" role="status"></div>
+                                                     </td>
+                                                 </tr>
+                                                 <tr v-else-if="recentSellingCourses.length === 0">
+                                                     <td colspan="5" class="text-center py-5">
+                                                         <p class="text-muted mb-0">Aucune vente récente.</p>
+                                                     </td>
+                                                 </tr>
+                                                 <tr v-for="(item, index) in recentSellingCourses" :key="index">
+                                                     <td>
+                                                         <div class="d-flex align-items-center">
+                                                             <div class="w-15">
+                                                                 <img :src="item.course.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid rounded" alt="">
+                                                             </div>
+                                                             <h6 class="mb-0 fw-semibold ms-2 table-responsive-title">	
+                                                                 <a href="#">{{item.course.title}}</a>
+                                                             </h6>
+                                                         </div>
+                                                     </td>
+                                                     <td><span class="text-muted-2">{{item.user.name}}</span></td>
+                                                     <td><span class="text-muted-2">{{item.course.price}} FCFA</span></td>
+                                                     <td>
+                                                         <span class="badge bg-light-green text-green">{{ new Date(item.created_at).toLocaleDateString() }}</span>
+                                                     </td>
+                                                     <td>
+                                                         <NuxtLink :to="`/course-detail/${item.course.slug}`" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-eye"></i></NuxtLink>
+                                                     </td>
+                                                 </tr>
+                                               
+                                             </tbody>
                                         </table>
                                     </div>
 
@@ -137,7 +145,12 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+
+definePageMeta({
+    middleware: ['instructor'],
+});
 
 import Preloader from '@/components/Preloader.vue';
 import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
@@ -145,6 +158,52 @@ import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
 import FooterDark from '@/components/Footer/FooterDark.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import { earningAbout, recentSellingCourses } from '@/data/instructor.js'
+const api = useApi()
+const stats = ref<any>(null)
+const loading = ref(true)
+const error = ref<string | null>(null)
+
+const loadData = async () => {
+    loading.value = true
+    try {
+        const response = await api('/instructor/dashboard')
+        stats.value = response
+    } catch (err: any) {
+        error.value = err?.data?.message || 'Impossible de charger les données.'
+        console.error('Failed to fetch instructor earnings:', err)
+    } finally {
+        loading.value = false
+    }
+}
+
+onMounted(loadData)
+
+const earningAbout = computed(() => {
+    const { t } = useI18n()
+    return [
+        {
+            icon: 'bi bi-coin text-green',
+            theme: 'green',
+            value: `${stats.value?.earnings_month || 0} FCFA`,
+            title: t('sales_this_month')
+        },
+        {
+            icon: 'bi bi-wallet2 text-red',
+            theme: 'red',
+            value: `${stats.value?.pending_payout || 0} FCFA`,
+            title: t('next_payout')
+        },
+        {
+            icon: 'bi bi-piggy-bank text-main',
+            theme: 'main',
+            value: `${stats.value?.total_earnings || 0} FCFA`,
+            title: t('sales_overall')
+        },
+    ]
+})
+
+const recentSellingCourses = computed(() => {
+    return stats.value?.recent_enrollments || []
+})
 
 </script>

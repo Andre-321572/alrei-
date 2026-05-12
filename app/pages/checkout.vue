@@ -2,11 +2,11 @@
     <Preloader />
     <NavDark />
 
-    <section class="bg-gredient page-title">
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12">
-                    <div class="pageTitle-wrap">
+                    <div class="pageTitle-wrap text-center">
                         <h1 class="text-light">{{ $t('checkout') }}</h1>
                     </div>
                 </div>
@@ -33,7 +33,10 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-end fw-bold">{{ item.discount_price || item.price }} FCFA</td>
+                                        <td class="text-end fw-bold">
+                                            <span v-if="(item.discount_price || item.price) == 0" class="text-green">{{ $t('free') }}</span>
+                                            <span v-else>{{ item.discount_price || item.price }} FCFA</span>
+                                        </td>
                                         <td class="text-end">
                                             <button @click="removeFromCart(item.id)" class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
                                         </td>
@@ -50,11 +53,11 @@
                         <div class="cart-wrap">
                             <div class="flex_cart mb-4">
                                 <div class="flex_cart_1 fs-5 fw-bold">{{ $t('total_cost') }}</div>
-                                <div class="flex_cart_2 text-green fs-4 fw-bold">${{ total }}</div>
+                                <div class="flex_cart_2 text-green fs-4 fw-bold">{{ total }} FCFA</div>
                             </div>
                             <button @click="handleCheckout" :disabled="loading" class="btn btn-main w-100 py-3 fs-6">
                                 <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
-                                {{ $t('proceed_to_payment') }}<i class="bi bi-arrow-right ms-2"></i>
+                                {{ total == 0 ? $t('enroll_now') : $t('proceed_to_payment') }}<i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </div>
                     </div>
@@ -98,9 +101,15 @@ const handleCheckout = async () => {
             method: 'POST',
             body: {
                 course_ids: cart.value.map(item => item.id),
-                payment_method: 'stripe'
+                payment_method: total.value == 0 ? 'free' : 'stripe'
             }
         })
+
+        if (total.value == 0) {
+            clearCart()
+            alert('Inscription réussie !')
+            return navigateTo('/student-dashboard')
+        }
 
         if (response.checkout_url) {
             // Rediriger vers Stripe

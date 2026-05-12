@@ -3,7 +3,7 @@
     <Preloader />
     <NavDark />
 
-    <div class="bg-cover hero_banner home-3" :style="numBg" data-overlay="4">
+    <div class="bg-cover hero_banner home-3" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;" data-overlay="4">
         <div class="container">
             <div class="row align-items-center justify-content-between g-4">
                 <div class="col-xl-6 col-lg-6 col-md-12">

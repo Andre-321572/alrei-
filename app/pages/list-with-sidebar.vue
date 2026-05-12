@@ -3,7 +3,7 @@
     <Preloader />
     <NavDark />
 
-    <section class="bg-gredient page-title">
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -33,7 +33,7 @@
                     
                     <div class="row align-items-center g-3 mb-3">
                         <div class="col-xl-9 col-lg-9 col-md-9 col-sm-8 col-12">
-                            <span v-html="$t('we_found_courses', { count: 142 })"></span>
+                            <span v-html="$t('we_found_courses', { count: courses.length })"></span>
                         </div>
                         <div class="col-xl-3 col-lg-3 col-md-3 col-sm-4 col-12">
                             <div class="filter_wraps">
@@ -49,50 +49,59 @@
                             </div>
                         </div>
                     </div>
+
+                    <div v-if="loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">{{ $t('loading_courses') }}</p>
+                    </div>
                     
-                    <div class="row g-xl-3 g-4 mb-5">
+                    <div v-else class="row g-xl-3 g-4 mb-5">
                 
                         <div 
                             class="col-xl-12 col-lg-12 col-md-12 col-sm-12"
-                            v-for="(item, index) in coursesData.slice(0, 9)"
+                            v-for="(item, index) in courses"
                             :key="index"
                         >
                             <div class="card border p-2">
                                 <div class="row g-0">
                                     <div class="col-md-5 overflow-hidden">
-                                        <img :src="item.image" class="img-fluid rounded-2" alt="Card image">
+                                        <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">
+                                            <img :src="item.thumbnail" class="img-fluid rounded-2 w-100 h-100 object-fit-cover" alt="Card image" style="min-height: 200px;">
+                                        </NuxtLink>
                                         <div class="position-absolute start-0 top-0 mt-3 ms-3">
-                                            <div class="label text-light bg-green rounded-end"><span>Free</span></div>
+                                            <div v-if="item.is_free" class="label text-light bg-green rounded-end"><span>{{ $t('free') }}</span></div>
                                         </div>
                                     </div>
                                     <div class="col-md-7">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <a href="#" class="badge text-main bg-light-main mb-2 mb-sm-0">Development</a>
+                                                <a href="#" class="badge text-main bg-light-main mb-2 mb-sm-0">{{ item.category?.name || 'Education' }}</a>
                                                 <div>
-                                                    <span class="h6 me-2"><i class="fas fa-star text-warning me-1"></i>4.5</span>
+                                                    <span class="h6 me-2"><i class="fas fa-star text-warning me-1"></i>4.9</span>
                                                     <a href="#" class="text-danger"><i class="bi bi-heart"></i></a>
                                                 </div>
                                             </div>
                 
-                                            <h5 class="card-title"><a href="#">{{item.title}}</a></h5>
-                                            <p class="text-truncate-2 d-none d-lg-block">Explore our curated collection of courses designed to enhance your web design and development skills. From mastering HTML and CSS to advanced JavaScript techniques.</p>
+                                            <h5 class="card-title">
+                                                <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">{{item.title}}</NuxtLink>
+                                            </h5>
+                                            <p class="text-truncate-2 d-none d-lg-block">{{ item.subtitle || item.description?.substring(0, 150) + '...' }}</p>
                 
                                             <ul class="list-inline mb-3">
-                                                <li class="list-inline-item text-muted mb-1 mb-sm-0"><i class="far fa-clock text-danger me-2"></i>21h 56m</li>
-                                                <li class="list-inline-item text-muted mb-1 mb-sm-0"><i class="fas fa-table text-orange me-2"></i>{{item.lectures}} {{ $t('lectures') }}</li>
-                                                <li class="list-inline-item text-muted"><i class="fas fa-signal text-success me-2"></i>Intermediate</li>
+                                                <li class="list-inline-item text-muted mb-1 mb-sm-0"><i class="far fa-clock text-danger me-2"></i>{{ item.duration || '12h 30m' }}</li>
+                                                <li class="list-inline-item text-muted mb-1 mb-sm-0"><i class="fas fa-table text-orange me-2"></i>{{ getLecturesCount(item) }} {{ $t('lectures') }}</li>
+                                                <li class="list-inline-item text-muted text-capitalize"><i class="fas fa-signal text-success me-2"></i>{{ item.level }}</li>
                                             </ul>
                 
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar">
-                                                        <img class="img-fluid circle w-8" :src="item.autherImg" alt="avatar">
+                                                        <img class="img-fluid circle w-8" :src="getInstructorAvatar(item)" alt="avatar" style="width: 35px; height: 35px; object-fit: cover;">
                                                     </div>
-                                                    <p class="mb-0 ms-2"><a href="#" class="h6 fw-normal">{{item.autherName}}</a></p>
+                                                    <p class="mb-0 ms-2"><a href="#" class="h6 fw-normal">{{ getInstructorName(item) }}</a></p>
                                                 </div>
                                                 <div class="btn-wraps">
-                                                    <a href="#" class="btn btn-md btn-dark">{{ $t('view_more', 'View more') }}</a>    
+                                                    <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`" class="btn btn-md btn-dark">{{ $t('view_more', 'View more') }}</NuxtLink>    
                                                 </div>                  
                                             </div>
                                         </div>
@@ -148,7 +157,8 @@
 </template>
 
 <script setup>
-
+import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 import Preloader from '@/components/Preloader.vue';
 import NavDark from '@/components/Navbar/NavDark.vue';
 import SidebarOne from '@/components/Courses/courses-grid-sidebar/grid-with-sidebar/SidebarOne.vue';
@@ -156,6 +166,31 @@ import FooterTop from '@/components/Home/index/FooterTop.vue';
 import Footer from '@/components/Footer/Footer.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import { coursesData } from '@/data/data.js'
+const api = useApi()
+const courses = ref([])
+const loading = ref(true)
+
+onMounted(async () => {
+    try {
+        const response = await api('/courses')
+        courses.value = response.data
+    } catch (error) {
+        console.error('Failed to fetch courses:', error)
+    } finally {
+        loading.value = false
+    }
+})
+
+const getInstructorAvatar = (course) => {
+    return course.instructor?.user?.avatar || '/assets/img/avatar-1.jpg'
+}
+
+const getInstructorName = (course) => {
+    return course.instructor?.user?.name || 'Instructor'
+}
+
+const getLecturesCount = (course) => {
+    return course.sections?.reduce((acc, s) => acc + (s.lessons?.length || 0), 0) || 12
+}
 
 </script>

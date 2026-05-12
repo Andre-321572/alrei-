@@ -6,10 +6,10 @@ export const useExternal = () => {
 
     const fetchLiveClasses = async (courseId?: number) => {
         try {
-            const response = await api('/live-classes', {
+            const response = await api('/live-sessions', {
                 params: { course_id: courseId }
             })
-            return response.data
+            return response.data || response
         } catch (error) {
             console.error('Failed to fetch live classes:', error)
             return []
@@ -41,7 +41,7 @@ export const useExternal = () => {
     const createLiveClass = async (data: any) => {
         loading.value = true
         try {
-            const response = await api('/instructor/live-classes', {
+            const response = await api('/live-sessions', {
                 method: 'POST',
                 body: data
             })

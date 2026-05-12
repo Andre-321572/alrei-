@@ -11,7 +11,7 @@
                         <form class="subscribe-form" @submit.prevent="handleSubmit">
                             <div class="form-group">
                                 <input v-model="email" type="email" class="form-control rounded-pill" :placeholder="$t('your_email', 'Your Email Address')" required="required">
-                                <input type="submit" class="btn btn-dark rounded-pill" :value="$t('get_started', 'Get Started')">
+                                <input type="submit" class="btn btn-main rounded-pill" :value="$t('get_started', 'Get Started')">
                             </div>
                         </form>
                     </div>
@@ -24,12 +24,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-import subscribeBg from '@/assets/img/subscribe-bg.png'
+
 
 const email = ref('')
 
 const sectionStyle = computed(() => ({
-  backgroundImage: `url(${subscribeBg})`
+  backgroundImage: "url('/img/student-banner.png')",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover'
 }))
 
 const handleSubmit = () => {

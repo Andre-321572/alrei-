@@ -1320,7 +1320,10 @@ div[data-overlay] p{
 }
 /*-------------- Global Settings: Background Colors ----------------*/
 .bg-gredient{
-	background-image: linear-gradient(to right, #ec77ab 0%, #7873f5 100%);
+	background-color: var(--alrei-green);
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' preserveAspectRatio='xMinYMin slice'%3E%3Crect x='-20' y='-20' width='450' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='-20' y='90' width='350' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='-20' y='200' width='250' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
+    background-position: left top;
+    background-size: cover;
 }
 .bg-main {
   background-color:var(--maincolor) !important;
@@ -1764,33 +1767,33 @@ ol li {
 
 
 .btn-dark{
-	background:var(--inversecolor);
-	border-color:var(--inversecolor);
+	background:var(--alrei-orange);
+	border-color:var(--alrei-orange);
 	color:#ffffff;
 }
 .btn-dark:hover, .btn-dark:focus, .btn-dark:active{
-	background:color-mix(in srgb, var(--inversecolor), transparent 10%) !important;
-	border-color:color-mix(in srgb, var(--inversecolor), transparent 10%) !important;
+	background:var(--backupcolor) !important;
+	border-color:var(--backupcolor) !important;
 	color:#ffffff !important;
 }
 .btn-outline-dark{
 	background:transparent;
-	border-color:var(--inversecolor);
-	color:var(--inversecolor);
+	border-color:var(--alrei-orange);
+	color:var(--alrei-orange);
 }
 .btn-outline-dark:hover, .btn-outline-dark:focus, .btn-outline-dark:active{
-	background:var(--inversecolor) !important;
-	border-color:var(--inversecolor) !important;
+	background:var(--alrei-orange) !important;
+	border-color:var(--alrei-orange) !important;
 	color:#ffffff !important;
 }
 .btn-light-dark{
-	background:color-mix(in srgb, var(--inversecolor), transparent 85%);
-	border-color:color-mix(in srgb, var(--inversecolor), transparent 85%);
-	color:var(--inversecolor);
+	background:color-mix(in srgb, var(--alrei-orange), transparent 85%);
+	border-color:color-mix(in srgb, var(--alrei-orange), transparent 85%);
+	color:var(--alrei-orange);
 }
 .btn-light-dark:hover, .btn-light-dark:focus, .btn-light-dark:active{
-	background:var(--inversecolor) !important;
-	border-color:var(--inversecolor) !important;
+	background:var(--alrei-orange) !important;
+	border-color:var(--alrei-orange) !important;
 	color:#ffffff !important;
 }
 
@@ -5540,7 +5543,12 @@ a.btn-br-more {
     font-size: 15px;
     border-radius: 4px;
     text-decoration: none;
-    background: #333c56;
+    background: var(--alrei-orange);
+    color: #fff;
+    transition: all 0.3s;
+}
+#back2Top:hover {
+    background: var(--backupcolor);
     color: #fff;
 }
 /*------------- Breadcrumbs ---------------*/

@@ -2,7 +2,7 @@
     <Preloader />
     <StudentNavbar />
 
-    <section class="bg-cover p-0" :style="studentBg" data-overlay="4">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-250"></div>
         </div>
@@ -22,7 +22,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                                     <li class="breadcrumb-item"><a href="#">Student Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Mes Certificats</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ $t('my_certificates') }}</li>
                                 </ol>
                             </nav>
                         </div>
@@ -31,7 +31,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                                <div class="head-title"><h4 class="mb-2 mb-sm-0">Mes Certificats</h4></div>
+                                <div class="head-title"><h4 class="mb-2 mb-sm-0">{{ $t('my_certificates') }}</h4></div>
                             </div>
                         </div>
                         
@@ -47,12 +47,17 @@
                                 >
                                     <div class="education_block_grid border p-4 bg-white rounded-4 shadow-sm h-100">
                                         <div class="d-flex align-items-center gap-3 mb-3">
-                                            <div class="square--60 circle bg-light-success text-success fs-3">
-                                                <i class="bi bi-patch-check"></i>
+                                            <div :class="['square--60 circle fs-3', cert.status === 'approved' ? 'bg-light-success text-success' : 'bg-light-warning text-warning']">
+                                                <i :class="cert.status === 'approved' ? 'bi bi-patch-check' : 'bi bi-clock-history'"></i>
                                             </div>
-                                            <div>
-                                                <h5 class="mb-1 fw-bold">{{ cert.course.title }}</h5>
-                                                <p class="mb-0 text-muted small">Délivré le {{ new Date(cert.issued_at).toLocaleDateString() }}</p>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <h5 class="mb-1 fw-bold">{{ cert.course.title }}</h5>
+                                                    <span :class="['badge rounded-pill px-2 small', cert.status === 'approved' ? 'bg-success' : 'bg-warning']">
+                                                        {{ cert.status === 'approved' ? 'Validé' : 'En attente' }}
+                                                    </span>
+                                                </div>
+                                                <p class="mb-0 text-muted small">Demandé le {{ new Date(cert.issued_at).toLocaleDateString() }}</p>
                                             </div>
                                         </div>
                                         <div class="bg-light p-3 rounded-3 mb-3">
@@ -62,8 +67,12 @@
                                             </div>
                                         </div>
                                         <div class="d-flex gap-2">
-                                            <button @click="downloadCert(cert)" class="btn btn-main flex-grow-1 rounded-pill">
-                                                <i class="bi bi-download me-2"></i>Télécharger (PDF)
+                                            <button 
+                                                @click="downloadCert(cert)" 
+                                                :disabled="cert.status !== 'approved'"
+                                                class="btn btn-main flex-grow-1 rounded-pill"
+                                            >
+                                                <i class="bi bi-download me-2"></i>{{ cert.status === 'approved' ? 'Télécharger (PDF)' : 'Validation en cours' }}
                                             </button>
                                             <NuxtLink :to="`/course-detail/${cert.course.slug}`" class="btn btn-outline-main rounded-circle">
                                                 <i class="bi bi-eye"></i>
@@ -136,11 +145,6 @@ onMounted(() => {
     fetchCertificates()
 })
 
-import studentbg from '@/assets/img/student-bg.jpg'
-const studentBg = computed(() => ({
-    background: `url(${studentbg})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-}))
+
+
 </script>

@@ -3,7 +3,7 @@
     <Preloader />
     <NavDark />
 
-    <section class="bg-gredient page-title">
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -28,7 +28,7 @@
                 <div class="col-xxl-12 col-lg-12 col-12">
                     <div class="row align-items-center g-3 mb-3">
                         <div class="col-xxl-9 col-xl-8 col-lg-9 col-md-6 col-sm-12 col-12">
-                            <span v-html="$t('we_found_courses', { count: 142 })"></span>
+                            <span v-html="$t('we_found_courses', { count: courses.length })"></span>
                         </div>
                         <div class="col-xxl-3 col-xl-4 col-lg-3 col-md-6 col-sm-12 col-12">
                             <div class="filter_wraps d-flex align-items-center justify-content-center gap-2">
@@ -48,11 +48,16 @@
                         </div>
                     </div>
                     
-                    <div class="row justify-content-center g-xl-3 g-4 mb-5">
+                    <div v-if="loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">{{ $t('loading_courses') }}</p>
+                    </div>
+
+                    <div v-else class="row justify-content-center g-xl-3 g-4 mb-5">
                         
                         <div 
                             class="col-xxl-3 col-xl-4 col-lg-4 col-md-6"
-                            v-for="(item, index) in coursesData.slice(0, 12)"
+                            v-for="(item, index) in courses"
                             :key="index"
                         >
                             <div class="education_block_grid border">
@@ -61,20 +66,20 @@
                                     <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
                                         <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                     </div>
-                                    <NuxtLink :to="`/course-detail/${item.id}`"><img :src="item.image" class="img-fluid" alt=""></NuxtLink>
+                                    <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`"><img :src="item.thumbnail" class="img-fluid" alt=""></NuxtLink>
                                 </div>
                                 
                                 <div class="education-body p-3">
                                     <div class="education-title">
-                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
+                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
                                     </div>
                                     
                                     <div class="cources-info">
                                         <ul>
-                                            <li><i class="bi bi-camera-reels"></i>{{item.lectures}} {{ $t('lectures') }}</li>
-                                            <li><i class="bi bi-bar-chart"></i>{{item.level}}</li>
+                                            <li><i class="bi bi-camera-reels"></i>{{ getLecturesCount(item) }} {{ $t('lectures') }}</li>
+                                            <li class="text-capitalize"><i class="bi bi-bar-chart"></i>{{item.level}}</li>
                                             <li><i class="bi bi-coin"></i>{{item.price}} FCFA</li>
-                                            <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">{{item.rating}}</span><span class="total-reviews">({{item.review}})</span></li>
+                                            <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">4.9</span><span class="total-reviews">(124)</span></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -82,11 +87,11 @@
                                 <div class="education-footer p-3">
                                     <div class="education_block_author">
                                         <a href="#" class="d-flex align-items-center justify-content-start gap-2">
-                                            <span class="square--30"><img :src="item.autherImg" class="img-fluid circle" alt="Author"></span>
-                                            <span class="text-dark fw-medium">{{item.autherName}}</span>
+                                            <span class="square--30"><img :src="getInstructorAvatar(item)" class="img-fluid circle" alt="Author"></span>
+                                            <span class="text-dark fw-medium">{{ getInstructorName(item) }}</span>
                                         </a>
                                     </div>
-                                    <div class="enrolled-link"><a href="#" class="main-link fw-medium">{{ $t('enrolled_now') }}<i class="bi bi-arrow-right ms-2"></i></a></div>
+                                    <div class="enrolled-link"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`" class="main-link fw-medium">{{ $t('enrolled_now') }}<i class="bi bi-arrow-right ms-2"></i></NuxtLink></div>
                                 </div>
                             </div>	
                         </div>
@@ -136,7 +141,8 @@
 </template>
 
 <script setup>
-
+import { ref, onMounted } from 'vue'
+import { useApi } from '@/composables/useApi'
 import Preloader from '@/components/Preloader.vue';
 import NavDark from '@/components/Navbar/NavDark.vue';
 import FooterTop from '@/components/Home/index/FooterTop.vue';
@@ -144,6 +150,31 @@ import FooterDark from '@/components/Footer/FooterDark.vue';
 import FilterModal from '@/components/Courses/full-width-course/FilterModal.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import { coursesData } from '@/data/data.js'
+const api = useApi()
+const courses = ref([])
+const loading = ref(true)
+
+onMounted(async () => {
+    try {
+        const response = await api('/courses')
+        courses.value = response.data
+    } catch (error) {
+        console.error('Failed to fetch courses:', error)
+    } finally {
+        loading.value = false
+    }
+})
+
+const getInstructorAvatar = (course) => {
+    return course.instructor?.user?.avatar || '/assets/img/avatar-1.jpg'
+}
+
+const getInstructorName = (course) => {
+    return course.instructor?.user?.name || 'Instructor'
+}
+
+const getLecturesCount = (course) => {
+    return course.sections?.reduce((acc, s) => acc + (s.lessons?.length || 0), 0) || 12
+}
 
 </script>

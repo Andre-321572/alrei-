@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient p-0">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
         </div>

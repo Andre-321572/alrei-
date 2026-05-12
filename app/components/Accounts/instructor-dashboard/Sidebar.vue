@@ -8,7 +8,7 @@
     </div>
     <div class="offcanvas offcanvas-start offcanvas-collapse side-filter" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header d-lg-none border-bottom">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ $t('menu') }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body pt-4 pt-lg-0 p-lg-0 overlio">
@@ -36,16 +36,18 @@
                 
                 <div class="d-navigation">
                     <ul id="side-menu">
-                        <li v-if="user?.role === 'admin'"><NuxtLink to="/admin-dashboard" :class="{ active: isActive('/admin-dashboard') }"><i class="bi bi-shield-lock"></i>Admin Dashboard</NuxtLink></li>
+                        <li v-if="user?.role === 'admin'"><NuxtLink to="/admin-dashboard" :class="{ active: isActive('/admin-dashboard') }"><i class="bi bi-shield-lock"></i>{{ $t('admin_dashboard') }}</NuxtLink></li>
                         
                         <template v-if="user?.role === 'instructor' || user?.role === 'admin'">
                             <li><NuxtLink to="/instructor-dashboard" :class="{ active: isActive('/instructor-dashboard') }"><i class="bi bi-ui-radios-grid"></i>{{ $t('instructor_dashboard') }}</NuxtLink></li>
+                            <li><NuxtLink to="/instructor-students" :class="{ active: isActive('/instructor-students') }"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
                             <li><NuxtLink to="/instructor-courses" :class="{ active: isActive('/instructor-courses') }"><i class="bi bi-basket2"></i>{{ $t('my_courses') }}</NuxtLink></li>
                             <li><NuxtLink to="/instructor-create-course" :class="{ active: isActive('/instructor-create-course') }"><i class="bi bi-patch-plus"></i>{{ $t('create_course') }}</NuxtLink></li>
-                            <li><NuxtLink to="/instructor-earning" :class="{ active: isActive('/instructor-earning') }"><i class="bi bi-coin"></i>{{ $t('earnings') }}</NuxtLink></li>
+                            <li><NuxtLink to="/instructor-earning" :class="{ active: isActive('/instructor-earning') }"><i class="bi bi-coin"></i>{{ $t('earning') }}</NuxtLink></li>
+                            <li><NuxtLink to="/instructor-orders" :class="{ active: isActive('/instructor-orders') }"><i class="bi bi-cart-check"></i>{{ $t('orders') }}</NuxtLink></li>
+                            <li><NuxtLink to="/instructor-integrations" :class="{ active: isActive('/instructor-integrations') }"><i class="bi bi-plugin"></i>{{ $t('integrations') }}</NuxtLink></li>
                         </template>
 
-                        <li><NuxtLink to="/student-all-courses" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-book"></i>{{ $t('my_learning') }}</NuxtLink></li>
                         <li><NuxtLink to="/profile-edit" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle"></i>{{ $t('my_profile') }}</NuxtLink></li>
                     </ul>
                 </div>

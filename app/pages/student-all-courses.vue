@@ -3,7 +3,7 @@
     <Preloader />
     <StudentNavbar />
 
-    <section class="bg-cover p-0" :style="studentBg" data-overlay="4">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-250"></div>
         </div>
@@ -188,11 +188,4 @@ onMounted(async () => {
     }
 })
 
-import studentbg from '@/assets/img/student-bg.jpg'
-const studentBg = computed(() => ({
-    background: `url(${studentbg})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-}))
 </script>

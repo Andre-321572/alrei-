@@ -26,6 +26,9 @@
                     <i class="bi bi-basket2 me-2"></i>{{ isInCart ? $t('in_cart') : $t('add_to_cart') }}
                 </button>
                 <button @click="handleBuyNow" class="btn btn-main w-100 rounded-pill">{{ $t('buy_now') }}</button>
+                <button v-if="course.access_key" @click="handleEnrollWithKey" class="btn btn-outline-secondary w-100 rounded-pill">
+                    <i class="bi bi-key me-2"></i>{{ $t('enroll_with_key') }}
+                </button>
                 <button @click="handleAddToWishlist" class="btn btn-outline-main w-100 rounded-pill">
                     <i class="bi bi-heart me-2"></i>{{ $t('add_to_wishlist') }}
                 </button>
@@ -48,7 +51,7 @@
             </li>
             <li>
                 <span class="info-title"><i class="bi bi-clock-history"></i>{{ $t('updated_at') }}</span>
-                <span class="text-dark right">{{ course.created_at }}</span>
+                <span class="text-dark right">{{ new Date(course.created_at).toLocaleDateString() }}</span>
             </li>
         </ul>
     </div>
@@ -93,6 +96,27 @@ const handleAddToWishlist = async () => {
     } catch (error) {
         console.error('Failed to add to wishlist:', error)
         alert('Failed to add to wishlist. Maybe it is already there?')
+    }
+}
+const handleEnrollWithKey = async () => {
+    if (!isAuthenticated.value) {
+        router.push('/login')
+        return
+    }
+
+    const key = prompt('Please enter the course access key:')
+    if (!key) return
+
+    try {
+        await api(`/courses/${props.course.id}/enroll-with-key`, {
+            method: 'POST',
+            body: { access_key: key }
+        })
+        alert('Successfully enrolled!')
+        router.push('/student-dashboard')
+    } catch (error) {
+        console.error('Enrollment failed:', error)
+        alert('Invalid access key or enrollment failed.')
     }
 }
 </script>

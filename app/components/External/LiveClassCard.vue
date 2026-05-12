@@ -3,11 +3,11 @@
     <div class="card-body p-3">
       <div class="d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
-          <div class="icon-box bg-light-primary text-primary rounded-circle p-3 me-3">
-            <i class="bi bi-camera-video fs-4"></i>
+          <div :class="`icon-box rounded-circle p-3 me-3 ${providerStyle.bg} ${providerStyle.text}`">
+            <i :class="`fs-4 ${providerStyle.icon}`"></i>
           </div>
           <div>
-            <h6 class="mb-1 fw-bold">{{ meeting.topic }}</h6>
+            <h6 class="mb-1 fw-bold">{{ meeting.title }}</h6>
             <div class="text-muted small mb-1">{{ meeting.course?.title }}</div>
             <div class="d-flex align-items-center text-muted small">
               <i class="bi bi-calendar-event me-1"></i>
@@ -43,6 +43,18 @@ const props = defineProps({
   meeting: {
     type: Object,
     required: true
+  }
+})
+
+const providerStyle = computed(() => {
+  switch (props.meeting.provider) {
+    case 'google':
+      return { bg: 'bg-light-danger', text: 'text-danger', icon: 'bi-google' }
+    case 'microsoft':
+      return { bg: 'bg-light-info', text: 'text-info', icon: 'bi-microsoft-teams' }
+    case 'zoom':
+    default:
+      return { bg: 'bg-light-primary', text: 'text-primary', icon: 'bi-camera-video-fill' }
   }
 })
 

@@ -2,13 +2,13 @@
     <div class="d-flex flex-row align-items-center justify-content-between mt-2 mb-3">
         <div class="d-flex w-100">
             <a class="d-lg-none btn btn-md btn-outline-dark rounded-pill w-100" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-                <i class="bi bi-ui-checks-grid me-2"></i>Dashboard Menu
+                <i class="bi bi-ui-checks-grid me-2"></i>{{ $t('dashboard_menu') }}
             </a>
         </div>
     </div>
     <div class="offcanvas offcanvas-start offcanvas-collapse side-filter" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header d-lg-none border-bottom">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Filter</h5>
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ $t('filter') }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body pt-4 pt-lg-0 p-lg-0 overlio">
@@ -35,25 +35,27 @@
                     <div class="d-flex justify-content-between mb-4">
                         <div class="d-flex flex-column justify-content-center align-items-center gap-1">
                             <h6 class="text-dark lh-1 fw-semibold m-0">12</h6>
-                            <span class="text-muted-2 m-0">Done Courses</span>
+                            <span class="text-muted-2 m-0">{{ $t('done_courses') }}</span>
                         </div>
                         <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                             <h6 class="text-dark lh-1 fw-semibold m-0">156</h6>
-                            <span class="text-muted-2 m-0">Done Lessons</span>
+                            <span class="text-muted-2 m-0">{{ $t('done_lessons') }}</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="d-navigation">
                     <ul id="side-menu"> 
-                        <li><NuxtLink to="/student-dashboard" :class="{ active: isActive('/student-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>Dashboard</NuxtLink></li>
-                        <li><NuxtLink to="/student-all-courses" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-play-circle me-2"></i>All Courses</NuxtLink></li>
-                        <li><NuxtLink to="/student-subscription" :class="{ active: isActive('/student-subscription') }"><i class="bi bi-basket2 me-2"></i>My Subscription</NuxtLink></li>
-                        <li><NuxtLink to="/student-course-resume" :class="{ active: isActive('/student-course-resume') }"><i class="bi bi-patch-plus me-2"></i>Course Resume</NuxtLink></li>
-                        <li><NuxtLink to="/student-certificates" :class="{ active: isActive('/student-certificates') }"><i class="bi bi-award me-2"></i>Mes Certificats</NuxtLink></li>
-                        <li><NuxtLink to="/student-wishlist" :class="{ active: isActive('/student-wishlist') }"><i class="bi bi-heart me-2"></i>Liste de souhaits</NuxtLink></li>
-                        <li><NuxtLink to="/student-payment-info" :class="{ active: isActive('/student-payment-info') }"><i class="bi bi-credit-card me-2"></i>Paiements</NuxtLink></li>
-                        <li><a href="#"><i class="bi bi-question-octagon me-2"></i>Aide & Support</a></li>
+                        <li><NuxtLink to="/student-dashboard" :class="{ active: isActive('/student-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-all-courses" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-play-circle me-2"></i>{{ $t('all_courses') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-assignments" :class="{ active: isActive('/student-assignments') }"><i class="bi bi-file-earmark-text me-2"></i>{{ $t('my_assignments') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-subscription" :class="{ active: isActive('/student-subscription') }"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-course-resume" :class="{ active: isActive('/student-course-resume') }"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-certificates" :class="{ active: isActive('/student-certificates') }"><i class="bi bi-award me-2"></i>{{ $t('my_certificates') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-wishlist" :class="{ active: isActive('/student-wishlist') }"><i class="bi bi-heart me-2"></i>{{ $t('wishlist') }}</NuxtLink></li>
+                        <li><NuxtLink to="/student-payment-info" :class="{ active: isActive('/student-payment-info') }"><i class="bi bi-credit-card me-2"></i>{{ $t('payments') }}</NuxtLink></li>
+                        <li><NuxtLink to="/profile-edit" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
+                        <li><a href="#"><i class="bi bi-question-octagon me-2"></i>{{ $t('help_support') }}</a></li>
                     </ul>
                 </div>
                 
@@ -73,6 +75,6 @@ const isActive = (path: string) => route.path === path
 
 const { user } = useAuth()
 const userAvatar = computed(() => user.value?.avatar || avatar1)
-const userName   = computed(() => user.value?.name   || 'Étudiant')
+const userName   = computed(() => user.value?.name   || 'Étudiant') // Maybe better to not translate 'Étudiant' here if it is a fallback name, but I can do: || useI18n().t('student'))
 const userRole   = computed(() => user.value?.role   || 'student')
 </script>

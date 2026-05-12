@@ -56,7 +56,7 @@
                            
                         </li>
                         
-                        <li :class="['/grid-with-sidebar','/detail','/find-instructor','/instructor-detail'].includes(current) ? 'active' : ''">
+                        <li v-if="!isStudent" :class="['/grid-with-sidebar','/detail','/find-instructor','/instructor-detail'].includes(current) ? 'active' : ''">
                             <a href="#">
                                 {{ $t('courses') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
@@ -82,7 +82,7 @@
                             </ul>
                         </li>
                         
-                        <li :class="['/about-us','/blog','/blog-detail','/pricing','/register','/component','/contact','/privacy','/faq','/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
+                        <li v-if="!isStudent" :class="['/about-us','/blog','/blog-detail','/pricing','/register','/component','/contact','/privacy','/faq','/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
                             <a href="#">
                                 {{ $t('pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
@@ -218,7 +218,7 @@
                         <div class="social-login-wrap mb-4">
                             <div class=" d-flex align-items-center justify-content-between gap-4">
                                 <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-apple"></i></a>
-                                <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-google text-red"></i></a>
+                                <a href="#" @click.prevent="loginWithGoogle" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-google text-red"></i></a>
                                 <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-twitter text-info"></i></a>
                             </div>
                         </div>
@@ -397,7 +397,7 @@
                                 <div class="social-login-wrap">
                                     <div class=" d-flex align-items-center justify-content-between gap-4">
                                         <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">SignUp with<i class="bi bi-apple ms-2"></i></a>
-                                        <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">SignUp with<i class="bi bi-google text-red ms-2"></i></a>
+                                        <a href="#" @click.prevent="loginWithGoogle" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">SignUp with<i class="bi bi-google text-red ms-2"></i></a>
                                     </div>
                                 </div>
                                 
@@ -427,6 +427,12 @@ const isSticky = ref(false)
 
 const route = useRoute()
 const current = computed(() => route.path)
+const config = useRuntimeConfig()
+
+const loginWithGoogle = () => {
+  const apiBase = config.public.apiBase.replace('/api', '')
+  window.location.href = `${apiBase}/api/auth/google/redirect`
+}
 
 // --- Auth ---
 const { user, login, register, logout, fetchUser, isAuthenticated, isInstructor, isStudent, isAdmin } = useAuth()
@@ -464,7 +470,7 @@ const handleLogin = async () => {
   try {
     await login(loginForm.value)
     // La redirection est gérée par useAuth.redirectAfterLogin
-  } catch (err: any) {
+  } catch (err) {
     loginError.value =
       err?.data?.errors?.email?.[0] ||
       err?.data?.message ||
@@ -491,7 +497,7 @@ const handleRegister = async () => {
   registerLoading.value = true
   try {
     await register(registerForm.value)
-  } catch (err: any) {
+  } catch (err) {
     const errors = err?.data?.errors
     registerError.value = errors
       ? Object.values(errors).flat().join(' ')

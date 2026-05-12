@@ -3,7 +3,7 @@
     <Preloader />
     <NavDark />
 
-    <section class="bg-gredient page-title">
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-11">

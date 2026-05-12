@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient p-0">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
         </div>
@@ -108,8 +108,8 @@
                                                         <span class="text-muted-2">{{ item.is_free ? 'Free' : item.price + ' FCFA' }}</span>
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-pencil-square"></i></a>
-                                                        <button class="btn btn-sm btn-light-red mb-0"><i class="bi bi-trash3"></i></button>
+                                                        <NuxtLink :to="`/instructor-manage-curriculum-${item.id}`" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-pencil-square"></i></NuxtLink>
+                                                        <button @click="deleteCourse(item.id)" class="btn btn-sm btn-light-red mb-0"><i class="bi bi-trash3"></i></button>
                                                     </td>
                                                 </tr>
                                                         
@@ -171,4 +171,16 @@ onMounted(async () => {
         loading.value = false
     }
 })
+
+const deleteCourse = async (id) => {
+    if (confirm('Are you sure you want to delete this course?')) {
+        try {
+            await api(`/instructor/courses/${id}`, { method: 'DELETE' })
+            courses.value = courses.value.filter(c => c.id !== id)
+        } catch (error) {
+            console.error('Failed to delete course:', error)
+            alert('Failed to delete course.')
+        }
+    }
+}
 </script>

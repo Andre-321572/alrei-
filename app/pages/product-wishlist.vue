@@ -3,7 +3,7 @@
     <Preloader />
     <NavDark />
 
-    <section class="bg-gredient page-title">
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12">
@@ -12,12 +12,12 @@
                             <ol class="breadcrumb simple light">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
                                 <li class="breadcrumb-item"><a href="#">Store</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                                <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
                             </ol>
                         </nav>
                     </div>
                     <div class="pageTitle-wrap">
-                        <h1 class="text-light">Checkout</h1>
+                        <h1 class="text-light">Wishlist</h1>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,22 @@
+<script setup>
+import { computed } from 'vue'
+import { educationData } from '@/data/data'
+import CourseRating from '../courses-detail/CourseRating.vue';
+
+// default image path
+import avatar3 from "@/assets/img/avatar-3.jpg";
+
+const props = defineProps({ instructor: Object })
+
+const imageAvatar = computed(() => {
+  return props.instructor?.image || avatar3
+})
+
+const getLecturesCount = (course) => {
+    return course.sections?.reduce((acc, s) => acc + (s.lessons?.length || 0), 0) || 12
+}
+</script>
+
 <template>
     <section class="bg-light pt-4">
         <div class="container">
@@ -30,18 +49,18 @@
                                         <div class="d-flex flex-column gap-1">
                                             <div class="d-flex align-items-center justify-content-center">
                                                 <h5 class="fw-semibold m-0">
-                                                    {{ instructor ? instructor.name : "Adam L. Markram" }}
+                                                    {{ instructor?.name || "Instructor" }}
                                                 </h5><span class="verified text-green ms-2"><i class="bi bi-patch-check-fill"></i></span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-center">
                                                 <span class="text-muted">
-                                                    {{ instructor ? instructor.roal : "Front-End Developer" }}
+                                                    {{ instructor?.roal || "Expert Instructor" }}
                                                 </span>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-center gap-1">
                                                 <span class="rating-star"><i class="bi bi-star-fill text-warning"></i></span>
                                                 <span class="fw-semibold text-dark">4.9</span>
-                                                <span class="text-muted text-mid">(2.15k Reviews)</span>
+                                                <span class="text-muted text-mid">(124 Reviews)</span>
                                             </div>
                                         </div>
                                     </div>
@@ -58,11 +77,11 @@
                                     
                                     <div class="d-flex justify-content-between mb-4">
                                         <div class="d-flex flex-column gap-1">
-                                            <h6 class="text-dark lh-1 fw-semibold m-0">42,570</h6>
+                                            <h6 class="text-dark lh-1 fw-semibold m-0">{{ instructor?.students_count || '150' }}</h6>
                                             <span class="text-muted-2 m-0">{{ $t('students') }}</span>
                                         </div>
                                         <div class="d-flex flex-column gap-2">
-                                            <h6 class="text-dark lh-1 fw-semibold m-0">46+</h6>
+                                            <h6 class="text-dark lh-1 fw-semibold m-0">{{ instructor?.courses?.length || 0 }}+</h6>
                                             <span class="text-muted-2 m-0">{{ $t('courses') }}</span>
                                         </div>
                                     </div>
@@ -73,7 +92,7 @@
                                     <div class="gap-2 d-flex flex-wrap">
 
                                         <a 
-                                            v-for="(item, index) in skill" 
+                                            v-for="(item, index) in instructor?.skill" 
                                             :key="index" 
                                             href="#" 
                                             class="badge badge-sm badge-outline rounded-pill"
@@ -89,7 +108,7 @@
 
                                     <div 
                                         class="d-flex align-items-center mb-3"
-                                        v-for="(item, index) in educationData"
+                                        v-for="(item, index) in educationData.slice(0, 2)"
                                         :key="index"
                                     >
                                         <span class="square--40 bg-light rounded-3 text-muted"><i class="fas fa-graduation-cap"></i></span>
@@ -122,9 +141,8 @@
                             <div class="card mb-4">
                                 <div class="card-body p-4">
                                     <h4>{{ $t('about') }}</h4>
-                                    <p>A globally recognized designer with over 7 years of hands-on experience in UX, product design, and brand strategy. I’ve guided aspiring creatives into high-impact roles across the US, Europe, Japan, and India—empowering them to launch fulfilling careers and build a personal brand that stands out. My mission? To spark the next generation of design leaders—supercharging their creativity, securing top-tier opportunities, and amplifying their voice in the design world through unforgettable, purpose-driven projects.</p>
-                                    
-                                    <p>My design expertise has helped companies across the US, Europe, and Japan unlock over $150M in revenue. I specialize in Web3, artificial intelligence, and edtech—where innovation meets design with real business impact.</p>
+                                    <div v-if="instructor?.bio" v-html="instructor.bio"></div>
+                                    <p v-else>No biography available for this instructor.</p>
                                 </div>
                             </div>
                             
@@ -136,7 +154,7 @@
 
                                         <span 
                                             class="badge badge-gray rounded-pill"
-                                            v-for="(item, index) in instructorsSkill"
+                                            v-for="(item, index) in instructor?.skill"
                                             :key="index"
                                         >
                                             {{item}}
@@ -154,7 +172,7 @@
                                         
                                         <div 
                                             class="col-xl-4 col-lg-6 col-md-6" 
-                                            v-for="(item, index) in coursesData.slice(0, 6)" 
+                                            v-for="(item, index) in instructor?.courses" 
                                             :key="index"
                                         >
                                             <div class="education_block_grid border">
@@ -163,20 +181,20 @@
                                                     <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
                                                         <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                                     </div>
-                                                    <NuxtLink :to="`/course-detail/${item.id}`"><img :src="item.image" class="img-fluid" alt=""></NuxtLink>
+                                                    <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`"><img :src="item.thumbnail" class="img-fluid" alt=""></NuxtLink>
                                                 </div>
                                                 
                                                 <div class="education-body p-3">
                                                     <div class="education-title">
-                                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
+                                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
                                                     </div>
                                                     
                                                     <div class="cources-info">
                                                         <ul>
-                                                            <li><i class="bi bi-camera-reels"></i>{{item.lectures}} {{ $t('lectures') }}</li>
-                                                            <li><i class="bi bi-bar-chart"></i>{{item.level}}</li>
-                                                            <li><i class="bi bi-coin"></i>${{item.price}}</li>
-                                                            <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">{{item.rating}}</span><span class="total-reviews">({{item.review}})</span></li>
+                                                            <li><i class="bi bi-camera-reels"></i>{{ getLecturesCount(item) }} {{ $t('lectures') }}</li>
+                                                            <li class="text-capitalize"><i class="bi bi-bar-chart"></i>{{item.level}}</li>
+                                                            <li><i class="bi bi-coin"></i>{{item.price}} FCFA</li>
+                                                            <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">4.9</span><span class="total-reviews">(124)</span></li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -184,18 +202,18 @@
                                                 <div class="education-footer p-3">
                                                     <div class="education_block_author">
                                                         <a href="#" class="d-flex align-items-center justify-content-start gap-2">
-                                                            <span class="square--30"><img :src="item.autherImg" class="img-fluid circle" alt="Author"></span>
-                                                            <span class="text-dark fw-medium">{{item.autherName}}</span>
+                                                            <span class="square--30"><img :src="imageAvatar" class="img-fluid circle" alt="Author"></span>
+                                                            <span class="text-dark fw-medium">{{ instructor.name }}</span>
                                                         </a>
                                                     </div>
-                                                    <div class="enrolled-link"><a href="#" class="main-link fw-medium">{{ $t('enrolled_now') }}<i class="bi bi-arrow-right ms-2"></i></a></div>
+                                                    <div class="enrolled-link"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`" class="main-link fw-medium">{{ $t('enrolled_now') }}<i class="bi bi-arrow-right ms-2"></i></NuxtLink></div>
                                                 </div>
                                             </div>	
                                         </div>
                                         
                                     </div>
                                     
-                                    <div class="row align-items-center justify-content-center">
+                                    <div v-if="instructor?.courses?.length > 6" class="row align-items-center justify-content-center">
                                         <div class="col-12">
                                             <div class="text-center">
                                                 <button type="button" class="btn btn-md btn-light-main rounded-pill">{{ $t('load_more_courses') }}</button>
@@ -207,9 +225,7 @@
                             
                             <!-- Reviews Info -->
                             <div class="card mb-4">
-                                
                                 <CourseRating />
-
                             </div>
                             
                         </div>
@@ -222,21 +238,3 @@
         </div>
     </section>
 </template>
-
-<script setup>
-import { computed } from 'vue'
-
-const skill = ['WordPress','HTML5','Figma','Full Stack','3 More..']
-
-import { coursesData, educationData, instructorsSkill } from '@/data/data'
-import CourseRating from '../courses-detail/CourseRating.vue';
-
-// default image path
-import avatar3 from "@/assets/img/avatar-3.jpg";
-
-const { instructor } = defineProps({ instructor: Object })
-
-const imageAvatar = computed(() => {
-  return instructor?.image || avatar3
-})
-</script>

@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient py-5">
+    <section class="bg-cover py-5" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12 col-lg-12 col-12">
@@ -68,6 +68,11 @@
                                     <div class="form-group mb-3">
                                         <label class="form-label">Course Description</label>
                                         <textarea v-model="course.description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Prerequisites</label>
+                                        <textarea v-model="course.prerequisites" class="form-control" rows="2" placeholder="e.g. Basic knowledge of JavaScript"></textarea>
                                     </div>
                                     
                                     <div class="mb-4">
@@ -167,7 +172,8 @@ const course = reactive({
     description: '',
     is_free: false,
     price: 0,
-    thumbnail: null
+    thumbnail: null,
+    prerequisites: ''
 })
 
 const api = useApi()
@@ -213,6 +219,7 @@ const handleSubmit = async () => {
         formData.append('category_id', course.category_id)
         formData.append('level', course.level)
         formData.append('description', course.description || '')
+        formData.append('prerequisites', course.prerequisites || '')
         formData.append('is_free', course.is_free ? 1 : 0)
         formData.append('price', course.is_free ? 0 : course.price)
         if (course.thumbnail) {

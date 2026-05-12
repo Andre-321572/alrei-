@@ -6,7 +6,10 @@
                     
                     <div class="col-lg-3 col-md-3">
                         <div class="footer-widget">
-                            <img :src="logoLight" class="img-footer" alt="" />
+                            <div class="d-flex align-items-center gap-3 mb-4">
+                                <img :src="logoLight" class="img-footer" style="max-height: 70px;" alt="Logo Alrei" />
+                                <img src="/logo-ituc.png" class="img-footer" style="max-height: 70px;" alt="Logo ITUC" />
+                            </div>
                             <div class="footer-add">
                                 <address class="mb-4 lh-base">{{ $t('address_text') }}</address>
                                 <div class="d-flex align-items-center call-now gap-2 mb-3">

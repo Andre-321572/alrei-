@@ -25,7 +25,7 @@
                         
                     </div>
                 </div>
-                <a href="#" class="btn btn-dark rounded-pill px-5">Get Membership</a>
+                <a href="#" class="btn btn-main rounded-pill px-5">Get Membership</a>
             </div>
             
         </div>

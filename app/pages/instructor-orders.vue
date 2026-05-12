@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient p-0">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
         </div>
@@ -24,9 +24,9 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 pb-4">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Instructor Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
+                                    <li class="breadcrumb-item"><NuxtLink to="/">{{ $t('home') }}</NuxtLink></li>
+                                    <li class="breadcrumb-item"><NuxtLink to="/instructor-dashboard">{{ $t('instructor_dashboard') }}</NuxtLink></li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ $t('orders') }}</li>
                                 </ol>
                             </nav>
                         </div>
@@ -38,7 +38,7 @@
                             <div class="card border bg-transparent rounded-3">
                                 <div class="card-header border-bottom">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <h4 class="mb-2 mb-sm-0">All Orders</h4>
+                                        <h4 class="mb-2 mb-sm-0">{{ $t('all_orders') }}</h4>
                                     </div>
                                 </div>
 
@@ -69,37 +69,47 @@
                                         </div>
                                     </div>
                 
-                                    <div class="table-responsive border-0 rounded-3">
+                                    <div v-if="loading" class="text-center py-5">
+                                        <div class="spinner-border text-main" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+
+                                    <div v-else-if="orders.length === 0" class="text-center py-5">
+                                        <p class="text-muted mb-0">{{ $t('no_orders_found') }}</p>
+                                    </div>
+
+                                    <div v-else class="table-responsive border-0 rounded-3">
                                         <table class="table align-middle p-4 mb-0">
                                             <thead class="table-dark">
                                                 <tr>
-                                                    <th scope="col" class="border-0 rounded-start">Order Title</th>
-                                                    <th scope="col" class="border-0">Order ID</th>
-                                                    <th scope="col" class="border-0">Date</th>
-                                                    <th scope="col" class="border-0">Ammount</th>
-                                                    <th scope="col" class="border-0 rounded-end">Payment</th>
+                                                    <th scope="col" class="border-0 rounded-start">{{ $t('order_title') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('order_id') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('date') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('amount') }}</th>
+                                                    <th scope="col" class="border-0 rounded-end">{{ $t('payment') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                
-                                                <tr v-for="(item, index) in orderData" :key="index">
+                                                <tr v-for="item in orders" :key="item.id">
                                                     <td>
                                                         <h6 class="mb-0 fw-semibold table-responsive-title">	
-                                                            <a href="#">{{item.title}}</a>
+                                                            <NuxtLink :to="`/course-detail/${item.course.slug}`">{{ item.course.title }}</NuxtLink>
                                                         </h6>
                                                     </td>
                                                     <td>
-                                                        <a href="#" class="text-dark"><u>{{item.id}}</u></a>
+                                                        <span class="text-dark">#{{ item.id }}</span>
                                                     </td>
-                                                    <td><span class="text-muted-2">{{item.date}}</span></td>
+                                                    <td><span class="text-muted-2">{{ new Date(item.created_at).toLocaleDateString() }}</span></td>
                                                     <td>
-                                                        <span class="text-muted-2">{{item.amount}}</span>
+                                                        <span class="text-muted-2">{{ item.amount }} FCFA</span>
                                                     </td>
                                                     <td>
-                                                        <span class="text-muted-2">{{item.payment}}</span>
+                                                        <span class="badge" :class="item.payment_status === 'paid' ? 'bg-light-green text-green' : 'bg-light-red text-red'">
+                                                            {{ item.payment_status }}
+                                                        </span>
                                                     </td>
                                                 </tr>
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -137,13 +147,33 @@
 </template>
 
 <script setup>
-
+import { ref, onMounted } from 'vue'
 import Preloader from '@/components/Preloader.vue';
 import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
 import FooterDark from '@/components/Footer/FooterDark.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import { orderData } from '@/data/instructor.js'
+// Middleware to ensure user is an instructor
+definePageMeta({
+    middleware: ['instructor']
+})
 
+const api = useApi()
+const orders = ref([])
+const loading = ref(true)
+
+const loadOrders = async () => {
+    loading.value = true
+    try {
+        const response = await api('/instructor/orders')
+        orders.value = response.data
+    } catch (error) {
+        console.error('Failed to load orders:', error)
+    } finally {
+        loading.value = false
+    }
+}
+
+onMounted(loadOrders)
 </script>

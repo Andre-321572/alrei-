@@ -1,5 +1,5 @@
 <template>
-    <div class="trips_wrap full bg-main py-4">
+    <div class="trips_wrap full bg-alrei-green py-4">
         <div class="container">
             <div class="row g-4">
             

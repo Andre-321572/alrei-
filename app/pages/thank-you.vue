@@ -6,6 +6,8 @@
         <NavDark />
     </div>
 
+    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover; height: 150px;"></section>
+
     <section>
         <div class="container">
             <div class="row justify-content-center">

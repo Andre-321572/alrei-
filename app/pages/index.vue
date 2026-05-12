@@ -131,14 +131,15 @@ import FooterTop from '@/components/Home/index/FooterTop.vue';
 import FooterDark from '@/components/Footer/FooterDark.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import banner2 from '@/assets/img/banner-2.jpg'
+import studentHero from '@/assets/img/student-hero.png'
 
 import { ref, computed } from 'vue'
 
 const search = ref('')
 
 const bannerStyle = computed(() => ({
-    backgroundImage: `url(${banner2})`,
+    backgroundImage: `url(${studentHero})`,
+    backgroundColor: '#69c9d0',
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
     backgroundPosition: 'center',

@@ -3,7 +3,7 @@
     <Preloader />
     <InstructorNavbar />
 
-    <section class="bg-gredient p-0">
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
         </div>
@@ -34,9 +34,9 @@
                     <div class="row mb-5">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
-                                <div class="head-title"><h4 class="mb-2 mb-sm-0">Mes réunions Zoom prévues</h4></div>
+                                <div class="head-title"><h4 class="mb-2 mb-sm-0">{{ $t('scheduled_live_classes') }}</h4></div>
                                 <button @click="showCreateModal = true" class="btn btn-main btn-sm px-4 rounded-pill">
-                                    <i class="bi bi-plus-circle me-1"></i> Programmer un Live
+                                    <i class="bi bi-plus-circle me-1"></i> {{ $t('schedule_live') }}
                                 </button>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                             </div>
                             <div v-else class="card border rounded-3 p-4 text-center bg-light">
                                 <i class="bi bi-camera-video text-muted fs-1 mb-2"></i>
-                                <p class="text-muted mb-0">Aucune réunion Zoom créée pour le moment.</p>
+                                <p class="text-muted mb-0">{{ $t('no_live_classes_scheduled') }}</p>
                             </div>
                         </div>
                     </div>
@@ -215,9 +215,14 @@ const onMeetingCreated = () => {
     loadData() // Recharge tout pour voir la nouvelle réunion dans la liste
 }
 
-const instructorAbout = computed(() => [
-    { title: 'Total Courses',   value: stats.value?.total_courses  || 0,    icon: 'bi bi-journal-text', theme: 'purple' },
-    { title: 'Total Students',  value: stats.value?.total_students || 0,    icon: 'bi bi-people',       theme: 'orange' },
-    { title: 'Total Earnings',  value: `$${stats.value?.total_earnings || 0}`, icon: 'bi bi-wallet2',  theme: 'green'  },
-])
+const instructorAbout = computed(() => {
+    const { t } = useI18n()
+    return [
+        { title: t('total_courses'),   value: stats.value?.total_courses  || 0,    icon: 'bi bi-journal-text', theme: 'purple' },
+        { title: t('total_students'),  value: stats.value?.total_students || 0,    icon: 'bi bi-people',       theme: 'orange' },
+        { title: t('quizzes_active'),  value: stats.value?.total_quizzes  || 0,    icon: 'bi bi-question-circle', theme: 'blue' },
+        { title: t('pending_tasks'),   value: stats.value?.pending_submissions || 0, icon: 'bi bi-file-earmark-check', theme: 'danger' },
+        { title: t('total_earnings'),  value: `${stats.value?.total_earnings || 0} FCFA`, icon: 'bi bi-wallet2',  theme: 'green'  },
+    ]
+})
 </script>

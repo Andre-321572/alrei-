@@ -11,16 +11,16 @@
                         </div>
                         <div class="ed_header_caption">
                             <h2 class="ed_title">
-                                {{ course ? course.title : "Ruby on Rails Program" }}
+                                {{ course?.title || $t('loading') }}
                             </h2>
                             <ul>
-                                <li><i class="bi bi-calendar-check"></i>10 - 20 weeks</li>
-                                <li><i class="bi bi-camera-video"></i>102 Lectures</li>
-                                <li><i class="bi bi-people"></i>502 Student Enrolled</li>
+                                <li><i class="bi bi-calendar-check"></i>{{ course?.duration || '10-20 weeks' }}</li>
+                                <li><i class="bi bi-camera-video"></i>{{ course?.lectures_count || 0 }} {{ $t('lectures') }}</li>
+                                <li><i class="bi bi-people"></i>{{ course?.enrollments_count || 0 }} {{ $t('students_enrolled') }}</li>
                             </ul>
                         </div>
                         <div class="ed_header_short">
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore. veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                            <p>{{ course?.short_description || course?.description?.substring(0, 200) + '...' }}</p>
                         </div>
                         
                         <div class="ed_rate_info">
