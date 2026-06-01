@@ -7,7 +7,24 @@ export default defineNuxtConfig({
   },
 
   nitro: {
-    preset: 'static'
+    preset: 'static',
+    prerender: {
+      failOnError: false,
+      crawlLinks: true,
+    }
+  },
+
+  // Routes dynamiques rendues côté client uniquement (données venant de l'API)
+  routeRules: {
+    '/instructor-detail/**': { prerender: false },
+    '/product-detail/**': { prerender: false },
+    '/course-detail/**': { prerender: false },
+    '/en/instructor-detail/**': { prerender: false },
+    '/en/product-detail/**': { prerender: false },
+    '/en/course-detail/**': { prerender: false },
+    '/pt/instructor-detail/**': { prerender: false },
+    '/pt/product-detail/**': { prerender: false },
+    '/pt/course-detail/**': { prerender: false },
   },
 
   // Désactiver les devtools pour économiser de la mémoire JS
@@ -20,12 +37,6 @@ export default defineNuxtConfig({
   },
 
   modules: ['@nuxtjs/i18n'],
-
-  //nitro: {
-  //prerender: {
-  //crawlLinks: false
-  //}
-  //},
 
   runtimeConfig: {
     public: {

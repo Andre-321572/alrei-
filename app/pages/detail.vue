@@ -98,7 +98,7 @@
     </div>
     <div v-else-if="!loading" class="text-center py-5 my-5">
         <h3 class="fw-bold">{{ $t('course_not_found', 'Course Not Found') }}</h3>
-        <NuxtLink to="/courses" class="btn btn-main mt-3">{{ $t('back_to_courses', 'Back to Courses') }}</NuxtLink>
+        <NuxtLink to="/full-width-course" class="btn btn-main mt-3">{{ $t('back_to_courses', 'Back to Courses') }}</NuxtLink>
     </div>
 
     <FooterTop />
