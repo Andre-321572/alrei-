@@ -47,7 +47,7 @@
                             <div v-else-if="wishlistItems.length > 0" class="row g-3">
                                     
                                 <div 
-                                    class="col-xl-4 col-lg-4 col-md-6"
+                                    class="col-xl-2 col-lg-2 col-md-3 col-sm-4"
                                     v-for="item in wishlistItems"
                                     :key="item.id"
                                 >
@@ -68,7 +68,7 @@
                                         <div class="education-body p-3">
                                             <div class="education-title">
                                                 <div class="course-type d-flex align-items-center gap-2 mb-1">
-                                                    <span class="badge bg-light-green text-green rounded-pill">{{ item.course.level || 'Beginner' }}</span>
+                                                    <span class="badge bg-light-green text-green rounded-pill">{{ item.course.level ? $t(item.course.level.toLowerCase()) : $t('beginner') }}</span>
                                                 </div>
                                                 <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.course.slug}`" class="text-dark">{{item.course.title}}</NuxtLink></h4>
                                             </div>

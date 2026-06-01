@@ -52,7 +52,7 @@
                     <div class="row align-items-center g-xl-3 g-4 mb-5">
                 
                         <div 
-                            class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-6"
+                            class="col-xxl-2 col-xl-2 col-lg-2 col-md-3 col-sm-4"
                             v-for="(item, index) in shopData.slice(0, 8)" 
                             :key="index"
                         >

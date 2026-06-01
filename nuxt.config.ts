@@ -1,7 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  
+  srcDir: 'app',
+  future: {
+    compatibilityVersion: 4
+  },
+
+  nitro: {
+    preset: 'static'
+  },
+
   // Désactiver les devtools pour économiser de la mémoire JS
   devtools: { enabled: false },
 
@@ -13,22 +21,23 @@ export default defineNuxtConfig({
 
   modules: ['@nuxtjs/i18n'],
 
-  nitro: {
-    prerender: {
-      crawlLinks: false
-    }
-  },
+  //nitro: {
+  //prerender: {
+  //crawlLinks: false
+  //}
+  //},
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8001/api'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://elearningbackend.alrei.org/api'
     }
   },
 
   i18n: {
     locales: [
       { code: 'en', iso: 'en-US', file: 'en.json', name: 'English' },
-      { code: 'fr', iso: 'fr-FR', file: 'fr.json', name: 'Français' }
+      { code: 'fr', iso: 'fr-FR', file: 'fr.json', name: 'Français' },
+      { code: 'pt', iso: 'pt-PT', file: 'pt.json', name: 'Português' }
     ],
     defaultLocale: 'fr',
     langDir: 'locales/',

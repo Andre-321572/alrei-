@@ -30,6 +30,8 @@
                 <p class="small text-muted mb-0">
                   {{ quiz.questions_count }} Questions • Note de passage: {{ quiz.passing_score }}%
                   <span v-if="quiz.duration_minutes"> • {{ quiz.duration_minutes }} min</span>
+                  <br>
+                  <span v-if="quiz.is_final" class="badge bg-danger mt-1"><i class="bi bi-star-fill me-1"></i> Évaluation Finale</span>
                 </p>
               </div>
               <div class="dropdown">
@@ -145,6 +147,12 @@
                 <div v-if="errors.duration_minutes" class="invalid-feedback">{{ errors.duration_minutes[0] }}</div>
               </div>
             </div>
+            <div class="mb-3 form-check form-switch mt-2">
+              <input v-model="quizForm.is_final" class="form-check-input" type="checkbox" id="isFinalQuiz">
+              <label class="form-check-label fw-bold text-danger" for="isFinalQuiz">
+                <i class="bi bi-star-fill me-1"></i> Ce quiz est l'évaluation finale pour l'obtention du certificat
+              </label>
+            </div>
           </div>
           <div class="modal-footer border-0 pt-0">
             <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
@@ -186,7 +194,8 @@ const quizForm = reactive({
   title: '',
   description: '',
   passing_score: 70,
-  duration_minutes: null
+  duration_minutes: null,
+  is_final: false
 })
 
 let modalInstance = null
@@ -234,11 +243,13 @@ const openQuizModal = async (quiz = null) => {
     quizForm.description = quiz.description || ''
     quizForm.passing_score = quiz.passing_score
     quizForm.duration_minutes = quiz.duration_minutes
+    quizForm.is_final = quiz.is_final ? true : false
   } else {
     quizForm.title = ''
     quizForm.description = ''
     quizForm.passing_score = 70
     quizForm.duration_minutes = null
+    quizForm.is_final = false
   }
   if (modalInstance) modalInstance.show()
 }

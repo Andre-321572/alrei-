@@ -3,18 +3,16 @@
     <Preloader />
     <NavDark />
 
-    <div class="image-cover half_banner" :style="bannerStyle">
+    <div class="half_banner bg-light-hero">
         <div class="container">
-            <div class="row">
-                <div class="col-xl-6 col-lg-7 col-md-12 col-sm-12">
-                    <div class="card rounded-4 p-lg-5 p-4">
-                        <div class="hero-caption mb-4">
-                            <h1 class="big-header-capt mb-0">{{ $t('hero_title') }}</h1>
-                            <p>{{ $t('hero_subtitle') }}</p>
-                        </div>
+            <div class="row align-items-center g-4">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 order-2 order-lg-1">
+                    <div class="hero-caption">
+                        <h1 class="big-header-capt mb-3">{{ $t('hero_title') }}</h1>
+                        <p class="mb-4">{{ $t('hero_subtitle') }}</p>
                         
-                        <div class="hero-search">
-                            <form @submit.prevent="handleSearch" class="search-form border border-2">
+                        <div class="hero-search mb-2">
+                            <form @submit.prevent="handleSearch" class="search-form border border-2 shadow-sm">
                                 <div class="form-group flex-fill">
                                     <input v-model="search" type="text" class="form-control" :placeholder="$t('search_placeholder')">
                                     <i class="ico bi bi-search"></i>
@@ -24,6 +22,12 @@
                                 </div>
                             </form>
                         </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 order-1 order-lg-2 text-center">
+                    <div class="hero-image-container position-relative d-inline-block animate-float">
+                        <img :src="studentHero" class="img-fluid hero-student-img" alt="Student Hero">
                     </div>
                 </div>
             </div>
@@ -131,19 +135,11 @@ import FooterTop from '@/components/Home/index/FooterTop.vue';
 import FooterDark from '@/components/Footer/FooterDark.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import studentHero from '@/assets/img/student-hero.png'
+import studentHero from '@/assets/img/student-hero.jpg'
 
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 const search = ref('')
-
-const bannerStyle = computed(() => ({
-    backgroundImage: `url(${studentHero})`,
-    backgroundColor: '#69c9d0',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-}))
 
 const handleSearch = () => {
     if (search.value.trim() === '') return
@@ -152,3 +148,114 @@ const handleSearch = () => {
     search.value = ''
 }
 </script>
+
+<style scoped>
+.bg-light-hero {
+  background: linear-gradient(135deg, #fdf6ec 0%, #e2f4eb 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0;
+}
+
+.bg-light-hero::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  border: 1px solid rgba(105, 201, 208, 0.2);
+  top: -150px;
+  right: -100px;
+  pointer-events: none;
+}
+
+.bg-light-hero::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 162, 97, 0.15);
+  bottom: -100px;
+  left: -100px;
+  pointer-events: none;
+}
+
+.hero-student-img {
+  max-height: 520px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  border: 4px solid #ffffff;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-student-img:hover {
+  transform: translateY(-5px);
+}
+
+.hero-caption h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #0f2942;
+  line-height: 1.25;
+}
+
+.hero-caption p {
+  font-size: 1.1rem;
+  color: #5a6b82;
+  line-height: 1.8;
+}
+
+/* Colored soft glow backdrop behind the student */
+.hero-image-container::before {
+  content: '';
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  background: #fcdab6;
+  top: 5%;
+  left: -5%;
+  z-index: -1;
+  opacity: 0.85;
+  filter: blur(25px);
+}
+
+/* Brand green/teal decorative ring */
+.hero-image-container::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 5px solid #69c9d0;
+  top: -20px;
+  right: -20px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (max-width: 991px) {
+  .hero-caption h1 {
+    font-size: 2.2rem;
+  }
+  .hero-student-img {
+    max-height: 400px;
+    margin-top: 2rem;
+  }
+}
+</style>

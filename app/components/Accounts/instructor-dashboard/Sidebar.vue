@@ -41,10 +41,14 @@
                         <template v-if="user?.role === 'instructor' || user?.role === 'admin'">
                             <li><NuxtLink to="/instructor-dashboard" :class="{ active: isActive('/instructor-dashboard') }"><i class="bi bi-ui-radios-grid"></i>{{ $t('instructor_dashboard') }}</NuxtLink></li>
                             <li><NuxtLink to="/instructor-students" :class="{ active: isActive('/instructor-students') }"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
+                            <li>
+                                <NuxtLink to="/messages" :class="{ active: isActive('/messages') }" class="d-flex justify-content-between align-items-center">
+                                    <div><i class="bi bi-chat-dots"></i>Messages</div>
+                                    <span v-if="unreadCount > 0" class="badge bg-danger rounded-pill">{{ unreadCount }}</span>
+                                </NuxtLink>
+                            </li>
                             <li><NuxtLink to="/instructor-courses" :class="{ active: isActive('/instructor-courses') }"><i class="bi bi-basket2"></i>{{ $t('my_courses') }}</NuxtLink></li>
                             <li><NuxtLink to="/instructor-create-course" :class="{ active: isActive('/instructor-create-course') }"><i class="bi bi-patch-plus"></i>{{ $t('create_course') }}</NuxtLink></li>
-                            <li><NuxtLink to="/instructor-earning" :class="{ active: isActive('/instructor-earning') }"><i class="bi bi-coin"></i>{{ $t('earning') }}</NuxtLink></li>
-                            <li><NuxtLink to="/instructor-orders" :class="{ active: isActive('/instructor-orders') }"><i class="bi bi-cart-check"></i>{{ $t('orders') }}</NuxtLink></li>
                             <li><NuxtLink to="/instructor-integrations" :class="{ active: isActive('/instructor-integrations') }"><i class="bi bi-plugin"></i>{{ $t('integrations') }}</NuxtLink></li>
                         </template>
 
@@ -60,10 +64,25 @@
 
 <script setup>
 import { useRoute } from '#app'
+import { ref, onMounted } from 'vue'
 import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const route = useRoute()
 const { user } = useAuth()
 
 const isActive = (path) => route.path === path
+
+const unreadCount = ref(0)
+const fetchUnreadCount = async () => {
+    try {
+        const response = await api('/messages/unread-count')
+        unreadCount.value = response.data?.count || response.count || 0
+    } catch (error) {
+        console.error('Failed to fetch unread count:', error)
+    }
+}
+
+onMounted(() => {
+    fetchUnreadCount()
+})
 </script>

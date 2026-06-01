@@ -193,7 +193,7 @@ const getLecturesCount = (course) => {
                                                         <ul>
                                                             <li><i class="bi bi-camera-reels"></i>{{ getLecturesCount(item) }} {{ $t('lectures') }}</li>
                                                             <li class="text-capitalize"><i class="bi bi-bar-chart"></i>{{item.level}}</li>
-                                                            <li><i class="bi bi-coin"></i>{{item.price}} FCFA</li>
+                                                            <li><i class="bi bi-coin"></i>{{item.price}} $</li>
                                                             <li><i class="bi bi-star-fill text-warning"></i><span class="overall-rates text-dark fw-medium ms-1">4.9</span><span class="total-reviews">(124)</span></li>
                                                         </ul>
                                                     </div>

@@ -74,7 +74,6 @@
                                                     <th scope="col" class="border-0 rounded-start">Course Title</th>
                                                     <th scope="col" class="border-0">Enrolled</th>
                                                     <th scope="col" class="border-0">Status</th>
-                                                    <th scope="col" class="border-0">Price</th>
                                                     <th scope="col" class="border-0 rounded-end">Action</th>
                                                 </tr>
                                             </thead>
@@ -102,10 +101,6 @@
                                                         <span v-if="item.status === 'published'" class="badge bg-light-green text-green">Published</span>
                                                         <span v-else-if="item.status === 'draft'" class="badge bg-light text-secondary">Draft</span>
                                                         <span v-else class="badge bg-light-red text-red">{{ item.status }}</span>
-                                                    </td>
-                                                    
-                                                    <td>
-                                                        <span class="text-muted-2">{{ item.is_free ? 'Free' : item.price + ' FCFA' }}</span>
                                                     </td>
                                                     <td>
                                                         <NuxtLink :to="`/instructor-manage-curriculum-${item.id}`" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-pencil-square"></i></NuxtLink>

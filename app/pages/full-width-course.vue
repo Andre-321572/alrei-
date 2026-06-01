@@ -53,25 +53,30 @@
                         <p class="mt-2">{{ $t('loading_courses') }}</p>
                     </div>
 
-                    <div v-else class="row justify-content-center g-xl-3 g-4 mb-5">
+                    <div v-else class="row g-4 mb-5">
                         
                         <div 
-                            class="col-xxl-3 col-xl-4 col-lg-4 col-md-6"
+                            class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12"
                             v-for="(item, index) in courses"
                             :key="index"
                         >
-                            <div class="education_block_grid border">
+                            <div class="education_block_grid border course-card-premium rounded-4 overflow-hidden">
                             
                                 <div class="education-thumb position-relative">
-                                    <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
+                                    <div class="save-course position-absolute top-0 end-0 me-3 mt-3" style="z-index:2">
                                         <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                     </div>
-                                    <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`"><img :src="item.thumbnail" class="img-fluid" alt=""></NuxtLink>
+                                    <NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">
+                                        <img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid course-thumb-img" alt="">
+                                    </NuxtLink>
+                                    <div class="position-absolute top-0 start-0 ms-3 mt-3" style="z-index:2">
+                                        <span v-if="item.category" class="badge bg-dark bg-opacity-75 rounded-pill"><i class="bi bi-tag me-1"></i>{{ item.category?.name }}</span>
+                                    </div>
                                 </div>
                                 
                                 <div class="education-body p-3">
-                                    <div class="education-title">
-                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
+                                    <div class="education-title mb-2">
+                                        <h4 class="fs-6 fw-semibold lh-sm"><NuxtLink :to="item.slug ? `/course-detail/${item.slug}` : `/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
                                     </div>
                                     
                                     <div class="cources-info">
@@ -84,7 +89,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="education-footer p-3">
+                                <div class="education-footer p-3 border-top">
                                     <div class="education_block_author">
                                         <a href="#" class="d-flex align-items-center justify-content-start gap-2">
                                             <span class="square--30"><img :src="getInstructorAvatar(item)" class="img-fluid circle" alt="Author"></span>
@@ -178,3 +183,21 @@ const getLecturesCount = (course) => {
 }
 
 </script>
+
+<style scoped>
+.course-card-premium {
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-color: #e8ecf0 !important;
+}
+.course-card-premium:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+}
+.course-thumb-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+</style>

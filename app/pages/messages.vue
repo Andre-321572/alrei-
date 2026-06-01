@@ -4,7 +4,13 @@
     <StudentNavbar v-if="userRole === 'student'" />
     <InstructorNavbar v-else />
 
-    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover; height: 120px;"></section>
+    <section class="bg-cover page-title d-flex align-items-center" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover; height: 120px;">
+      <div class="container">
+        <NuxtLink :to="userRole === 'instructor' ? '/instructor-dashboard' : '/student-dashboard'" class="btn btn-sm btn-light shadow-sm fw-semibold px-4 py-2 rounded-pill">
+          <i class="bi bi-arrow-left me-2"></i>Retour au Dashboard
+        </NuxtLink>
+      </div>
+    </section>
 
     <section class="bg-light py-5">
       <div class="container">
@@ -35,10 +41,12 @@
                           </div>
                           <div class="flex-grow-1 overflow-hidden">
                             <div class="d-flex justify-content-between align-items-center mb-1">
-                              <h6 class="mb-0 fw-bold text-truncate">{{ getOtherUser(conv).name }}</h6>
-                              <small class="text-muted tiny">{{ formatTime(conv.lastMessage?.created_at) }}</small>
+                              <h6 :class="['mb-0 text-truncate', hasUnread(conv) ? 'fw-bold text-dark' : 'fw-semibold']">{{ getOtherUser(conv).name }}</h6>
+                              <small :class="['tiny', hasUnread(conv) ? 'fw-bold text-primary' : 'text-muted']">{{ formatTime(conv.lastMessage?.created_at) }}</small>
                             </div>
-                            <p class="mb-0 small text-muted text-truncate">{{ conv.lastMessage?.content || 'Aucun message' }}</p>
+                            <p :class="['mb-0 small text-truncate', hasUnread(conv) ? 'fw-bold text-dark' : 'text-muted']">
+                              {{ conv.lastMessage?.content || 'Aucun message' }}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -136,6 +144,11 @@ const fetchConversations = async () => {
 
 const selectConversation = async (conv) => {
   activeConversation.value = conv
+  // Optimistic update : marque comme lu localement
+  if (hasUnread(conv)) {
+    conv.lastMessage.is_read = true
+  }
+  
   try {
     const res = await api(`/conversations/${conv.id}`)
     messages.value = res.data.messages
@@ -169,6 +182,12 @@ const sendMessage = async () => {
 
 const getOtherUser = (conv) => {
   return conv.users.find(u => u.id !== currentUser.value.id)
+}
+
+const hasUnread = (conv) => {
+  return conv.lastMessage && 
+         conv.lastMessage.is_read === false && 
+         conv.lastMessage.user_id !== currentUser.value.id
 }
 
 const scrollToBottom = () => {

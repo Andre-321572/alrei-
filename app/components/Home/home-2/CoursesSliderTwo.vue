@@ -11,7 +11,7 @@
                                 <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
                                     <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                 </div>
-                                <NuxtLink :to="`/course-detail/${item.slug}`"><img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid" alt=""></NuxtLink>
+                                <NuxtLink :to="`/course-detail/${item.slug}`"><img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid w-100 object-fit-cover" style="height: 180px;" alt=""></NuxtLink>
                                 <div class="course-hours position-absolute top-0 start-0 ms-3 mt-3">
                                     <span class="badge bg-dark rounded-pill"><i class="bi bi-clock-history me-1"></i>{{ item.level }}</span>
                                 </div>
@@ -26,7 +26,7 @@
                                     <ul>
                                         <li><i class="bi bi-person"></i> {{ item.instructor?.user?.name }}</li>
                                         <li><i class="bi bi-bar-chart"></i>{{ item.level }}</li>
-                                        <li><i class="bi bi-coin"></i>{{ item.price }} FCFA</li>
+                                        <li><i class="bi bi-coin"></i>{{ item.price }} $</li>
                                     </ul>
                                 </div>
                             </div>

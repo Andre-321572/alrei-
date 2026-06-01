@@ -89,7 +89,7 @@
                             <div class="card border bg-transparent rounded-3">
                                 <div class="card-header border-bottom">
                                     <div class="d-flex align-items-center justify-content-between w-100">
-                                        <h4 class="mb-2 mb-sm-0">{{ $t('recent_selling_courses') }}</h4>
+                                        <h4 class="mb-2 mb-sm-0">{{ $t('recent_enrollments') }}</h4>
                                         <a href="#" class="btns text-muted mb-0">{{ $t('view_all') }}</a>
                                     </div>
                                 </div>
@@ -100,8 +100,7 @@
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th scope="col" class="border-0 rounded-start">{{ $t('course_name') }}</th>
-                                                    <th scope="col" class="border-0">{{ $t('selling') }}</th>
-                                                    <th scope="col" class="border-0">{{ $t('amount') }}</th>
+                                                    <th scope="col" class="border-0">{{ $t('student') }}</th>
                                                     <th scope="col" class="border-0">{{ $t('period') }}</th>
                                                     <th scope="col" class="border-0 rounded-end">{{ $t('action') }}</th>
                                                 </tr>
@@ -123,7 +122,6 @@
                                                         </div>
                                                     </td>
                                                     <td><span class="text-muted-2">{{item.user.name}}</span></td>
-                                                    <td><span class="text-muted-2">{{item.course.price}} FCFA</span></td>
                                                     <td>
                                                         <span class="badge bg-light-green text-green">{{ new Date(item.created_at).toLocaleDateString() }}</span>
                                                     </td>
@@ -164,7 +162,6 @@
         </div>
     </section>
 
-    <FooterDark />
     <ScrollToTop />
 
 </template>
@@ -222,7 +219,6 @@ const instructorAbout = computed(() => {
         { title: t('total_students'),  value: stats.value?.total_students || 0,    icon: 'bi bi-people',       theme: 'orange' },
         { title: t('quizzes_active'),  value: stats.value?.total_quizzes  || 0,    icon: 'bi bi-question-circle', theme: 'blue' },
         { title: t('pending_tasks'),   value: stats.value?.pending_submissions || 0, icon: 'bi bi-file-earmark-check', theme: 'danger' },
-        { title: t('total_earnings'),  value: `${stats.value?.total_earnings || 0} FCFA`, icon: 'bi bi-wallet2',  theme: 'green'  },
     ]
 })
-</script>
+</script>

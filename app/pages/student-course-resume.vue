@@ -85,6 +85,15 @@
                                                         </div>
                                                         <span class="small text-muted">{{ progressPercentage }}% complété</span>
                                                     </div>
+                                                    <button
+                                                        v-if="course?.instructor"
+                                                        @click.prevent.stop="showMessageModal = true"
+                                                        class="btn btn-sm btn-outline-primary rounded-pill ms-auto me-3 d-flex align-items-center gap-2"
+                                                        style="white-space: nowrap;"
+                                                    >
+                                                        <i class="bi bi-chat-dots-fill"></i>
+                                                        Contacter l'instructeur
+                                                    </button>
                                                 </a>
                                                 <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample1">
                                                     <div class="accordion-body border-top d-flex flex-column gap-3">
@@ -100,7 +109,12 @@
                                                                             </button>
                                                                             <span :class="['d-inline-block text-truncate w-shrunk', { 'text-muted text-decoration-line-through': isLessonCompleted(lesson.id) }]">{{ lesson.title }}</span>
                                                                         </div>
-                                                                        <span class="text-mid text-muted">{{ lesson.duration }}</span>
+                                                                        <div class="d-flex align-items-center gap-2">
+                                                                            <span class="text-mid text-muted">{{ lesson.duration }}</span>
+                                                                            <a v-if="lesson.type === 'document' && lesson.file_path" :href="lesson.file_path" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill py-1 ms-2">
+                                                                                <i class="bi bi-download me-1"></i> {{ $t('download') }}
+                                                                            </a>
+                                                                        </div>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -181,7 +195,7 @@
 
                                         <!-- Forum Tab -->
                                         <div class="tab-pane fade" id="pills-forum">
-                                            <CourseForum :course-id="courseId" />
+                                            <CourseForum v-if="courseId" :course-id="courseId" />
                                         </div>
                                     </div>
                                 </div>
@@ -195,6 +209,44 @@
             
         </div>
     </section>
+
+    <!-- Message Instructor Modal -->
+    <div v-if="showMessageModal" class="modal-overlay" @click.self="showMessageModal = false">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 520px; margin: auto;">
+            <div class="modal-content border-0 shadow-xl rounded-4 overflow-hidden bg-white">
+                <div class="modal-header border-0 p-4 pb-2">
+                    <div>
+                        <h5 class="fw-bold mb-0">Message à l'instructeur</h5>
+                        <p class="text-muted small mb-0">{{ course?.instructor?.name }}</p>
+                    </div>
+                    <button @click="showMessageModal = false" class="btn-close ms-auto"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-uppercase small text-primary">Votre message</label>
+                        <textarea
+                            v-model="directMessage"
+                            class="form-control rounded-3 border-0 bg-light"
+                            rows="5"
+                            placeholder="Posez votre question directement à l'instructeur..."
+                        ></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 p-4 pt-0 d-flex justify-content-between">
+                    <button @click="showMessageModal = false" class="btn btn-link text-muted text-decoration-none">Annuler</button>
+                    <button
+                        @click="sendDirectMessage"
+                        :disabled="!directMessage.trim() || sendingMessage"
+                        class="btn btn-primary rounded-pill px-4"
+                    >
+                        <span v-if="sendingMessage" class="spinner-border spinner-border-sm me-2"></span>
+                        <i v-else class="bi bi-send-fill me-2"></i>
+                        Envoyer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <FooterDark />
     <ScrollToTop />
@@ -226,8 +278,12 @@ const route = useRoute()
 const { currentQuiz, currentAttempt, isSubmitting, startQuiz, saveAnswer, submitQuiz } = useQuizStore()
 
 const course = ref(null)
+const courseId = ref(null)
 const claiming = ref(false)
 const selectedQuizId = ref(null)
+const showMessageModal = ref(false)
+const directMessage = ref('')
+const sendingMessage = ref(false)
 const quizLoading = ref(false)
 const selectedAssignmentId = ref(null)
 
@@ -288,9 +344,10 @@ const isLessonCompleted = (lessonId) => {
 
 const fetchCourse = async () => {
     try {
-        const courseId = route.query.id
-        if (courseId) {
-            const response = await api(`/courses/by-id/${courseId}`)
+        const id = route.query.id
+        if (id) {
+            courseId.value = id
+            const response = await api(`/courses/by-id/${id}`)
             course.value = response.data || response
         }
     } catch (error) {
@@ -298,11 +355,18 @@ const fetchCourse = async () => {
     }
 }
 
+// Watch for route query changes to allow navigating between courses
+watch(() => route.query.id, (newId) => {
+    if (newId) {
+        fetchCourse()
+    }
+})
+
 const markAsComplete = async (lessonId) => {
     if (isLessonCompleted(lessonId)) return
     
     try {
-        await api(`/courses/${course.value.id}/lessons/${lessonId}/complete`, {
+        await api(`/lessons/${lessonId}/complete`, {
             method: 'POST'
         })
         // On met à jour localement pour éviter de tout re-fetch
@@ -329,6 +393,35 @@ const claimCertificate = async () => {
     }
 }
 
+const sendDirectMessage = async () => {
+    if (!directMessage.value.trim()) return
+    
+    const recipientId = course.value?.instructor?.id || course.value?.instructor?.user?.id
+    if (!recipientId) {
+        alert("Impossible de trouver l'identifiant de l'instructeur. Veuillez rafraîchir la page.")
+        return
+    }
+    
+    sendingMessage.value = true
+    try {
+        await api('/messages', {
+            method: 'POST',
+            body: {
+                recipient_id: recipientId,
+                content: directMessage.value.trim()
+            }
+        })
+        directMessage.value = ''
+        showMessageModal.value = false
+        navigateTo('/messages')
+    } catch (error) {
+        console.error('Error sending message:', error)
+        alert('Une erreur est survenue lors de l\'envoi du message.')
+    } finally {
+        sendingMessage.value = false
+    }
+}
+
 onMounted(() => {
     fetchCourse()
 })
@@ -349,5 +442,15 @@ onMounted(() => {
 }
 .icon-box.bg-danger {
     background-color: #ff4d4d !important;
+}
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
 }
 </style>

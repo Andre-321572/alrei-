@@ -74,7 +74,6 @@
                         <div class="card-body">
                             <div class="contact-info">
                                 <h4>{{ $t('get_in_touch') }}</h4>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
                                 
                                 <div class="d-flex align-items-start gap-3 mb-3">
                                     <div class="icons">
@@ -82,7 +81,7 @@
                                     </div>
                                     <div class="caps-content">
                                         <h5 class="cn-info-title mb-0">{{ $t('reach_us') }}</h5>
-                                        <p class="text-muted lh-base">2512, New Market,<br>Eliza Road, Sincher 80 CA, Canada, USA</p>
+                                        <p class="text-muted lh-base">BP : 4401, Lomé - TOGO, Route Internationale d’Atakpamé, Centre FOPADESC Agoè - Nyivé</p>
                                     </div>
                                 </div>
                                 
@@ -102,7 +101,7 @@
                                     </div>
                                     <div class="caps-content">
                                         <h5 class="cn-info-title mb-0">{{ $t('call_us') }}</h5>
-                                        <p class="text-muted lh-base">(41) 123 521 458<br>+91 235 548 7548</p>
+                                        <p class="text-muted lh-base"> (+228) 22 25 03 90<br></p>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +113,31 @@
                 
     </section>
 
-    <FooterTop />
+    <!-- Localisation / Map -->
+    <section class="map-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="map-wrapper">
+                        <div class="map-header mb-2">
+                            <i class="bi bi-geo-alt-fill text-main me-1"></i>
+                            <span class="fw-semibold small">Centre FOPADESC Agoè - Nyivé, Lomé, TOGO</span>
+                        </div>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0!2d1.2255!3d6.2075!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1023e1c113ac7e4b%3A0x9a13b0b34c7a5e8d!2sAgo%C3%A9-Ny%C3%AAv%C3%A9%2C%20Lom%C3%A9%2C%20Togo!5e0!3m2!1sfr!2sfr!4v1716900000000!5m2!1sfr!2sfr"
+                            width="100%"
+                            height="300"
+                            style="border:0; border-radius: 10px;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <Footer />
     <ScrollToTop />
 
@@ -124,8 +147,25 @@
 
 import Preloader from '@/components/Preloader.vue';
 import NavDark from '@/components/Navbar/NavDark.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
 import Footer from '@/components/Footer/Footer.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
 </script>
+
+<style scoped>
+.map-section {
+    padding: 20px 0 40px;
+}
+
+.map-wrapper {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.map-header {
+    color: #444;
+    font-size: 0.85rem;
+}
+</style>

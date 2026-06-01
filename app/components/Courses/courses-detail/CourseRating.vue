@@ -1,5 +1,5 @@
 <template>
-    <div class="list-single-main-item fl-wrap border">
+    <div class="list-single-main-item fl-wrap border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
         <div class="list-single-main-item-title fl-wrap">
             <h3>{{ $t('reviews') }} - <span> {{ course?.reviews?.length || 0 }} </span></h3>
         </div>
@@ -35,6 +35,32 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import avatar3 from "@/assets/img/avatar-3.jpg";
-const { course } = defineProps({ course: Object })
+
+const props = defineProps({
+    course: {
+        type: Object,
+        default: () => ({
+            reviews: [
+                {
+                    id: 1,
+                    rating: 5,
+                    comment: "Excellent course! The explanations are super clear and the projects are very practical.",
+                    created_at: new Date().toISOString(),
+                    user: { name: "Jane Doe", avatar: null }
+                },
+                {
+                    id: 2,
+                    rating: 4,
+                    comment: "Great content, but would love to have more advanced testing exercises.",
+                    created_at: new Date().toISOString(),
+                    user: { name: "John Smith", avatar: null }
+                }
+            ]
+        })
+    }
+})
+
+const course = computed(() => props.course)
 </script>

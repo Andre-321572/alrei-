@@ -50,19 +50,21 @@
                         </div>
                     </div>
                     
-                    <div class="row justify-content-center g-xl-3 g-4 mb-5">
+                    <div class="row g-4 mb-5">
                         
                         <div 
-                            class="col-xxl-3 col-xl-4 col-lg-4 col-md-6"
+                            class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12"
                             v-for="(item, index) in freeCoursesData.slice(0, 8)"
                             :key="index"
                         >
-                            <div class="education_block_grid border">
+                            <div class="education_block_grid border course-card-premium rounded-4 overflow-hidden">
                             
                                 <div class="education-thumb position-relative">
-                                    <NuxtLink :to="`/course-detail/${item.id}`"><img :src="item.image" class="img-fluid" alt=""></NuxtLink>
-                                    <div class="course-hours position-absolute top-0 start-0 ms-2 mt-2">
-                                        <span class="badge bg-dark rounded-pill"><i class="bi bi-clock-history me-1"></i>22h 10m</span>
+                                    <NuxtLink :to="`/course-detail/${item.id}`">
+                                        <img :src="item.image || '/img/course-placeholder.jpg'" class="img-fluid course-thumb-img" alt="">
+                                    </NuxtLink>
+                                    <div class="course-hours position-absolute top-0 start-0 ms-2 mt-2" style="z-index:2">
+                                        <span class="badge bg-dark bg-opacity-75 rounded-pill"><i class="bi bi-clock-history me-1"></i>22h 10m</span>
                                     </div>
                                 </div>
                                 
@@ -72,7 +74,7 @@
                                             <span class="badge bg-light-green text-green rounded-pill">{{item.level}}</span>
                                             <span class="badge bg-light-red text-red rounded-pill">Pro</span>
                                         </div>
-                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.id}`" class="text-dark">{{item.title}}</NuxtLink></h4>
+                                        <h4 class="fs-6 fw-semibold lh-sm"><NuxtLink :to="`/course-detail/${item.id}`" class="text-dark">{{item.title}}</NuxtLink></h4>
                                     </div>
                                     
                                     <div class="courses-ratings mb-4">
@@ -84,7 +86,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="education_block_author">
+                                    <div class="education_block_author mt-auto">
                                         <a href="#" class="d-flex align-items-center justify-content-start gap-2">
                                             <span class="square--40"><img :src="item.autherImg" class="img-fluid circle" alt="Author"></span>
                                             <div class="d-flex align-items-start flex-column">
@@ -94,9 +96,8 @@
                                     </div>
                                 </div>
                                 
-                                <div class="education-footer p-3">
-                                        <h5 class="m-0 fw-semibold text-red">{{item.price}} FCFA</h5>
-                                    </div>
+                                <div class="education-footer border-top p-3 mt-auto d-flex align-items-center justify-content-between">
+                                    <h5 class="m-0 fw-semibold text-red">{{item.price}} FCFA</h5>
                                     <div class="enrolled-link"><a href="#" class="main-link fw-medium">Enrolled Now<i class="bi bi-arrow-right ms-2"></i></a></div>
                                 </div>
                             </div>	
@@ -134,6 +135,7 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
     <FooterTop />
@@ -155,3 +157,21 @@ import ScrollToTop from '@/components/ScrollToTop.vue';
 import { freeCoursesData } from '@/data/data.js'
 
 </script>
+
+<style scoped>
+.course-card-premium {
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-color: #e8ecf0 !important;
+}
+.course-card-premium:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+}
+.course-thumb-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+</style>

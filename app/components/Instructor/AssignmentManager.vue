@@ -27,7 +27,10 @@
             <div class="d-flex justify-content-between align-items-start mb-3">
               <div>
                 <h6 class="fw-bold mb-1">{{ assignment.title }}</h6>
-                <p class="small text-muted mb-0">Due: {{ formatDate(assignment.due_date) }}</p>
+                <p class="small text-muted mb-0">Due: {{ formatDate(assignment.due_date) }}
+                  <br>
+                  <span v-if="assignment.is_final" class="badge bg-danger mt-1"><i class="bi bi-star-fill me-1"></i> Évaluation Finale</span>
+                </p>
               </div>
               <div class="dropdown">
                 <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
@@ -78,6 +81,12 @@
                 <label class="form-label">Max Points</label>
                 <input v-model="assignmentForm.max_points" type="number" class="form-control">
               </div>
+            </div>
+            <div class="mb-3 form-check form-switch mt-2">
+              <input v-model="assignmentForm.is_final" class="form-check-input" type="checkbox" id="isFinalAssignment">
+              <label class="form-check-label fw-bold text-danger" for="isFinalAssignment">
+                <i class="bi bi-star-fill me-1"></i> Ce devoir est l'évaluation finale pour l'obtention du certificat
+              </label>
             </div>
             <div class="mb-3">
               <label class="form-label">Resource File (Optional)</label>
@@ -167,6 +176,7 @@ const assignmentForm = reactive({
   description: '',
   due_date: '',
   max_points: 100,
+  is_final: false,
   file: null
 })
 
@@ -209,11 +219,13 @@ const openAssignmentModal = (assignment = null) => {
     assignmentForm.description = assignment.description
     assignmentForm.due_date = assignment.due_date ? assignment.due_date.substring(0, 16) : ''
     assignmentForm.max_points = assignment.max_points
+    assignmentForm.is_final = assignment.is_final ? true : false
   } else {
     assignmentForm.title = ''
     assignmentForm.description = ''
     assignmentForm.due_date = ''
     assignmentForm.max_points = 100
+    assignmentForm.is_final = false
   }
   assignmentForm.file = null
   assignmentModal.show()
@@ -230,6 +242,7 @@ const saveAssignment = async () => {
   formData.append('description', assignmentForm.description)
   formData.append('due_date', assignmentForm.due_date)
   formData.append('max_points', assignmentForm.max_points)
+  formData.append('is_final', assignmentForm.is_final)
   if (assignmentForm.file) {
     formData.append('file', assignmentForm.file)
   }

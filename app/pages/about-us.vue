@@ -110,7 +110,7 @@
         </div>
     </section>
 
-    <section :style="testimonialBgStyle">
+    <section class="bg-light">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-10 col-sm-12">
@@ -151,13 +151,6 @@ import hero3 from "@/assets/img/hero-img-3.png";
 
 
 const aboutBgStyle = computed(() => ({
-    backgroundImage: "url('/img/student-banner.png')",
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-}))
-
-const testimonialBgStyle = computed(() => ({
     backgroundImage: "url('/img/student-banner.png')",
     backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',

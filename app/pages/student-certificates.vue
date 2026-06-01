@@ -132,10 +132,18 @@ const downloadCert = async (cert) => {
     try {
         const response = await api(`/certificates/${cert.id}/download`, {
             method: 'GET',
+            responseType: 'blob',
         })
-        // En Laravel/Nuxt avec api wrapper, il faut gérer le blob si c'est un flux
-        // Mais si l'API retourne une URL ou si l'on veut forcer l'ouverture:
-        window.open(`${useRuntimeConfig().public.apiBase}/certificates/${cert.id}/download`, '_blank')
+        
+        // Créer un lien temporaire pour télécharger le fichier
+        const url = window.URL.createObjectURL(new Blob([response]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `Certificat_${cert.certificate_number}.pdf`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
     } catch (error) {
         console.error('Download error:', error)
     }

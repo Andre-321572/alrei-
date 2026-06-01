@@ -34,8 +34,11 @@
                     <div class="row mb-5">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="card border rounded-3">
-                                <div class="card-header bg-white border-bottom py-3">
+                                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
                                     <h4 class="mb-0">{{ $t('students_list') }}</h4>
+                                    <button @click="exportGlobalCsv" class="btn btn-success btn-sm rounded-pill">
+                                        <i class="bi bi-download me-1"></i> {{ $t('export_csv') }}
+                                    </button>
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="table-responsive">
@@ -186,6 +189,32 @@ const sendMessage = async () => {
     } finally {
         sending.value = false
     }
+}
+
+const exportGlobalCsv = () => {
+    if (students.value.length === 0) return
+    
+    const headers = ['Name', 'Email', 'Course', 'Progress', 'Joined At']
+    const csvContent = [
+        headers.join(','),
+        ...students.value.map(s => [
+            `"${s.name}"`,
+            `"${s.email}"`,
+            `"${s.course_title}"`,
+            `"${s.progress}%"`,
+            `"${new Date(s.joined_at).toLocaleDateString()}"`
+        ].join(','))
+    ].join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', 'students_list.csv')
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 }
 
 onMounted(() => {

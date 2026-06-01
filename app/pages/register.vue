@@ -106,6 +106,33 @@
                                             </div>
                                         </div>
 
+                                        <div class="form-group mb-3">
+                                            <label class="form-label text-muted small uppercase fw-semibold">{{ $t('language') }}</label>
+                                            <select v-model="preferredLanguage" class="form-control">
+                                                <option value="fr">Français</option>
+                                                <option value="en">English</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label class="form-label text-muted small uppercase fw-semibold">{{ $t('student_type') }}</label>
+                                            <select v-model="studentType" class="form-control">
+                                                <option value="regular">{{ $t('paying_student') }}</option>
+                                                <option value="scholarship">{{ $t('scholarship_student') }}</option>
+                                            </select>
+                                        </div>
+
+                                        <div v-if="studentType === 'scholarship'" class="scholarship-fields border rounded p-3 mb-3 bg-light">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label small fw-semibold">{{ $t('scholarship_letter') }} (PDF/Word)</label>
+                                                <input type="file" @change="handleLetterUpload" class="form-control" accept=".pdf,.doc,.docx" required>
+                                            </div>
+                                            <div class="form-group mb-0">
+                                                <label class="form-label small fw-semibold">{{ $t('other_documents') }}</label>
+                                                <input type="file" @change="handleDocsUpload" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" multiple>
+                                            </div>
+                                        </div>
+                                        
                                         <div v-if="regError" class="alert alert-danger py-2 mb-3">{{ regError }}</div>
                                         
                                         <div class="form-group mb-3">
@@ -188,20 +215,47 @@ const regFirstName = ref('');
 const regLastName = ref('');
 const regEmail = ref('');
 const regPassword = ref('');
+const studentType = ref('regular');
+const scholarshipLetter = ref(null);
+const scholarshipDocs = ref([]);
 const regLoading = ref(false);
 const regError = ref('');
+
+const { locale } = useI18n();
+
+const preferredLanguage = ref(locale.value || 'fr');
+
+const handleLetterUpload = (event) => {
+    scholarshipLetter.value = event.target.files[0];
+};
+
+const handleDocsUpload = (event) => {
+    scholarshipDocs.value = Array.from(event.target.files);
+};
 
 const handleRegister = async () => {
     regLoading.value = true;
     regError.value = '';
     try {
-        await register({
-            name: `${regFirstName.value} ${regLastName.value}`,
-            email: regEmail.value,
-            password: regPassword.value,
-            password_confirmation: regPassword.value,
-            role: 'student'
-        });
+        const formData = new FormData();
+        formData.append('name', `${regFirstName.value} ${regLastName.value}`);
+        formData.append('email', regEmail.value);
+        formData.append('password', regPassword.value);
+        formData.append('password_confirmation', regPassword.value);
+        formData.append('role', 'student');
+        formData.append('student_type', studentType.value);
+        formData.append('preferred_language', preferredLanguage.value);
+
+        if (studentType.value === 'scholarship') {
+            if (scholarshipLetter.value) {
+                formData.append('scholarship_letter', scholarshipLetter.value);
+            }
+            scholarshipDocs.value.forEach((doc, index) => {
+                formData.append(`scholarship_documents[${index}]`, doc);
+            });
+        }
+
+        await register(formData);
     } catch (err) {
         regError.value = err.data?.message || 'Erreur lors de l\'inscription';
     } finally {

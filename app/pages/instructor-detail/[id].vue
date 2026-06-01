@@ -1,4 +1,6 @@
+
 <template>
+  <div>
 
     <Preloader />
 
@@ -10,20 +12,25 @@
         </div>
     </section>
 
-    <div v-if="loading" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-2">{{ $t('loading_instructor') }}</p>
-    </div>
-
-    <InstructorHeader v-else-if="mappedInstructor" :instructor="mappedInstructor" />
-
-    <div v-else class="text-center py-5">
-        <p>{{ $t('instructor_not_found') }}</p>
-    </div>
+<template v-if="loading">
+  <div class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">{{ $t('loading_instructor') }}</p>
+  </div>
+</template>
+<template v-else-if="mappedInstructor">
+  <InstructorHeader :instructor="mappedInstructor" />
+</template>
+<template v-else>
+  <div class="text-center py-5">
+    <p>{{ $t('instructor_not_found') }}</p>
+  </div>
+</template>
 
     <FooterDark />
     <ScrollToTop />
 
+</div>
 </template>
 
 <script setup>

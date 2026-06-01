@@ -22,31 +22,46 @@
                     
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 pb-4">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="#">{{ $t('home') }}</a></li>
-                                    <li class="breadcrumb-item"><a href="#">{{ $t('student_dashboard') }}</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">{{ $t('dashboard') }}</li>
-                                </ol>
-                            </nav>
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                <nav aria-label="breadcrumb" class="mb-0">
+                                    <ol class="breadcrumb mb-0">
+                                        <li class="breadcrumb-item"><a href="#">{{ $t('home') }}</a></li>
+                                        <li class="breadcrumb-item"><a href="#">{{ $t('student_dashboard') }}</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">{{ $t('dashboard') }}</li>
+                                    </ol>
+                                </nav>
+
+                                <!-- Language Switcher -->
+                                <div class="d-flex align-items-center gap-1 p-1 rounded-pill" style="background: #f0f4ff; border: 1px solid #d0d9f5;">
+                                    <span class="text-muted small px-2"><i class="bi bi-translate me-1"></i></span>
+                                    <button
+                                        v-for="lang in availableLangs"
+                                        :key="lang.code"
+                                        @click="switchLanguage(lang.code)"
+                                        :class="['btn btn-sm rounded-pill px-3 fw-semibold', currentLocale === lang.code ? 'btn-primary shadow-sm' : 'btn-link text-muted text-decoration-none']"
+                                        style="transition: all .2s;"
+                                    >
+                                        {{ lang.flag }} {{ lang.label }}
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="row gy-3 mb-4">
                 
                         <div 
-                            class="col-xl-4 col-lg-4 col-md-6 col-sm-6"
+                            class="col-xl-4 col-lg-4 col-md-6 col-sm-12"
                             v-for="(item, index) in aboutData" 
                             :key="index"
                         >
-                            <div class="card rounded-3 border px-3 py-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div :class="`square--60 circle fs-3 bg-light-${item.theme}`">
-                                        <i :class="item.icon"></i>
-                                    </div>
-                                    <div class="d-flex flex-column gap-1">
-                                        <h2 class="fw-semibold m-0">{{item.value}}</h2><span class="text-muted">{{item.title}}</span>
-                                    </div>
+                            <div class="stat-card d-flex align-items-center gap-3 rounded-4 border px-4 py-3 shadow-sm" style="background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%); transition: transform .2s, box-shadow .2s;">
+                                <div :class="`stat-icon square--60 circle fs-3 bg-light-${item.theme}`" style="flex-shrink:0;">
+                                    <i :class="item.icon"></i>
+                                </div>
+                                <div class="d-flex flex-column gap-1">
+                                    <h2 class="fw-bold m-0 fs-2">{{item.value}}</h2>
+                                    <span class="text-muted fw-medium small">{{item.title}}</span>
                                 </div>
                             </div>	
                         </div>
@@ -120,10 +135,10 @@
                                     <table class="table table-hover align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th class="ps-3">Quiz</th>
-                                                <th>Score</th>
-                                                <th>Résultat</th>
-                                                <th class="text-end pe-3">Correction</th>
+                                                <th class="ps-3">{{ $t('quiz') }}</th>
+                                                <th>{{ $t('score') }}</th>
+                                                <th>{{ $t('result') }}</th>
+                                                <th class="text-end pe-3">{{ $t('correction') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -138,11 +153,11 @@
                                                 </td>
                                                 <td>
                                                     <span :class="['badge rounded-pill px-3', attempt.passed ? 'bg-light-success text-success' : 'bg-light-danger text-danger']">
-                                                        {{ attempt.passed ? 'Réussi' : 'Échoué' }}
+                                                        {{ attempt.passed ? $t('passed') : $t('failed') }}
                                                     </span>
                                                 </td>
                                                 <td class="text-end pe-3">
-                                                    <NuxtLink :to="`/quizzes/${attempt.quiz?.id}/result/${attempt.id}`" class="btn btn-sm btn-outline-primary rounded-pill px-3">Voir</NuxtLink>
+                                                    <NuxtLink :to="`/quizzes/${attempt.quiz?.id}/result/${attempt.id}`" class="btn btn-sm btn-outline-primary rounded-pill px-3">{{ $t('view') }}</NuxtLink>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -151,7 +166,7 @@
                             </div>
                             <div v-else class="card border rounded-3 p-4 text-center bg-light">
                                 <i class="bi bi-graph-up text-muted fs-1 mb-2"></i>
-                                <p class="text-muted mb-0">Vous n'avez pas encore passé de quiz.</p>
+                                <p class="text-muted mb-0">{{ $t('no_quiz_attempts_yet') }}</p>
                             </div>
                         </div>
                     </div>
@@ -169,12 +184,12 @@
                             <div class="row g-3">
                                     
                                 <div 
-                                    class="col-xl-4 col-lg-4 col-md-6"
+                                    class="col-xl-3 col-lg-4 col-md-6 col-sm-12"
                                     v-for="(item, index) in enrolledCourses" 
                                     :key="index"
                                 >
-                                    <div class="education_block_grid border shadow-sm rounded-4 overflow-hidden h-100">
-                                    
+                                <div class="education_block_grid border card-premium shadow-sm rounded-4 overflow-hidden">
+                                     
                                          <div class="education-thumb position-relative">
                                              <NuxtLink :to="`/course-detail/${item.course?.slug}`"><img :src="item.course?.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid" alt=""></NuxtLink>
                                              <div class="course-hours position-absolute top-0 start-0 ms-3 mt-3">
@@ -232,7 +247,6 @@
         </div>
     </section>
 
-    <FooterDark/>
     <ScrollToTop />
 
 </template>
@@ -245,11 +259,23 @@ import FooterDark from '@/components/Footer/FooterDark.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 import { computed, ref, onMounted } from 'vue'
 
-import { aboutData, coursesData } from '@/data/student.js'
-
 const { fetchLiveClasses } = useExternal()
 const api = useApi()
 const { fetchMyQuizAttempts } = useQuizStore()
+
+// ===== Language Switcher =====
+const { locale, setLocale, t } = useI18n()
+const currentLocale = computed(() => locale.value)
+const availableLangs = [
+    { code: 'fr', label: 'FR', flag: '🇫🇷' },
+    { code: 'en', label: 'EN', flag: '🇬🇧' },
+    { code: 'pt', label: 'PT', flag: '🇵🇹' },
+]
+const switchLanguage = async (lang: string) => {
+    await setLocale(lang)
+    await loadData()
+}
+// ==============================
 const liveClasses = ref([])
 const enrolledCourses = ref([])
 const assignments = ref([])
@@ -272,11 +298,11 @@ const claimCertificate = async (course) => {
         await api(`/courses/${course.id}/claim-certificate`, {
             method: 'POST'
         })
-        alert('Votre demande de certificat a été envoyée avec succès. Elle doit maintenant être validée par l\'administration avant d\'être disponible dans votre dashboard.')
+        alert(t('certificate_claim_success'))
         navigateTo('/student-certificates')
     } catch (error) {
         console.error('Error claiming certificate:', error)
-        alert(error.response?._data?.message || 'Une erreur est survenue lors de la génération du certificat. Assurez-vous d\'avoir validé le devoir final.')
+        alert(error.response?._data?.message || t('certificate_claim_error'))
     } finally {
         claiming.value = false
     }
@@ -307,7 +333,6 @@ const loadData = async () => {
 onMounted(loadData)
 
 const aboutData = computed(() => {
-    const { t } = useI18n()
     return [
         { title: t('active_courses'), value: stats.value.active_courses, icon: 'bi bi-journal-text', theme: 'purple' },
         { title: t('completed'), value: stats.value.completed_courses, icon: 'bi bi-check-circle', theme: 'green' },
@@ -320,3 +345,24 @@ definePageMeta({
     middleware: ['auth'],
 });
 </script>
+
+<style scoped>
+.card-premium {
+  border-radius: 0.85rem !important;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.09) !important;
+  transition: transform 0.22s ease, box-shadow 0.22s ease !important;
+}
+.card-premium:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.15) !important;
+}
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+.education_block_grid img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+</style>

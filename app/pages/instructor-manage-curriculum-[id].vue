@@ -177,14 +177,40 @@
           </div>
 
           <div v-if="lessonForm.type === 'video'" class="mb-3">
-            <label class="form-label">Video URL (YouTube/Vimeo)</label>
-            <input v-model="lessonForm.video_url" type="url" class="form-control" placeholder="https://youtube.com/...">
+            <div class="row">
+              <div class="col-md-4 mb-2">
+                <label class="form-label">Video URL (FR)</label>
+                <input v-model="lessonForm.video_url_fr" type="url" class="form-control" placeholder="https://youtube.com/...">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label class="form-label">Video URL (EN)</label>
+                <input v-model="lessonForm.video_url_en" type="url" class="form-control" placeholder="https://youtube.com/...">
+              </div>
+              <div class="col-md-4 mb-2">
+                <label class="form-label">Video URL (PT)</label>
+                <input v-model="lessonForm.video_url_pt" type="url" class="form-control" placeholder="https://youtube.com/...">
+              </div>
+            </div>
           </div>
 
           <div v-if="lessonForm.type === 'document'" class="mb-3">
-            <label class="form-label">Upload Document</label>
-            <input @change="handleFileChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
-            <small v-if="editingLesson?.file_path" class="text-muted">Current file: {{ editingLesson.file_path.split('/').pop() }}</small>
+            <div class="row">
+              <div class="col-md-4">
+                <label class="form-label">Document (FR)</label>
+                <input @change="handleFileFrChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                <small v-if="editingLesson?.file_path_fr" class="text-muted text-truncate d-block">FR: {{ editingLesson.file_path_fr.split('/').pop() }}</small>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Document (EN)</label>
+                <input @change="handleFileEnChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                <small v-if="editingLesson?.file_path_en" class="text-muted text-truncate d-block">EN: {{ editingLesson.file_path_en.split('/').pop() }}</small>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Document (PT)</label>
+                <input @change="handleFilePtChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                <small v-if="editingLesson?.file_path_pt" class="text-muted text-truncate d-block">PT: {{ editingLesson.file_path_pt.split('/').pop() }}</small>
+              </div>
+            </div>
           </div>
 
           <div v-if="lessonForm.type === 'text'" class="mb-3">
@@ -244,8 +270,13 @@ const lessonForm = reactive({
   type: 'video',
   content: '',
   video_url: '',
+  video_url_fr: '',
+  video_url_en: '',
+  video_url_pt: '',
   duration: '',
-  file: null
+  file_fr: null,
+  file_en: null,
+  file_pt: null
 })
 
 let sectionModal = null
@@ -345,20 +376,36 @@ const openLessonModal = (sectionId, lesson = null) => {
     lessonForm.type = lesson.type
     lessonForm.content = lesson.content || ''
     lessonForm.video_url = lesson.video_url || ''
+    lessonForm.video_url_fr = lesson.video_url_fr || ''
+    lessonForm.video_url_en = lesson.video_url_en || ''
+    lessonForm.video_url_pt = lesson.video_url_pt || ''
     lessonForm.duration = lesson.duration || ''
   } else {
     lessonForm.title = ''
     lessonForm.type = 'video'
     lessonForm.content = ''
     lessonForm.video_url = ''
+    lessonForm.video_url_fr = ''
+    lessonForm.video_url_en = ''
+    lessonForm.video_url_pt = ''
     lessonForm.duration = ''
   }
-  lessonForm.file = null
+  lessonForm.file_fr = null
+  lessonForm.file_en = null
+  lessonForm.file_pt = null
   lessonModal.show()
 }
 
-const handleFileChange = (e) => {
-  lessonForm.file = e.target.files[0]
+const handleFileFrChange = (e) => {
+  lessonForm.file_fr = e.target.files[0]
+}
+
+const handleFileEnChange = (e) => {
+  lessonForm.file_en = e.target.files[0]
+}
+
+const handleFilePtChange = (e) => {
+  lessonForm.file_pt = e.target.files[0]
 }
 
 const saveLesson = async () => {
@@ -368,14 +415,23 @@ const saveLesson = async () => {
     formData.append('title', lessonForm.title)
     formData.append('type', lessonForm.type)
     formData.append('content', lessonForm.content)
-    formData.append('video_url', lessonForm.video_url)
+    formData.append('video_url', lessonForm.video_url_fr || lessonForm.video_url || '')
+    formData.append('video_url_fr', lessonForm.video_url_fr || '')
+    formData.append('video_url_en', lessonForm.video_url_en || '')
+    formData.append('video_url_pt', lessonForm.video_url_pt || '')
     formData.append('duration', lessonForm.duration)
-    if (lessonForm.file) {
-      formData.append('file', lessonForm.file)
+    
+    if (lessonForm.file_fr) {
+      formData.append('file_fr', lessonForm.file_fr)
+    }
+    if (lessonForm.file_en) {
+      formData.append('file_en', lessonForm.file_en)
+    }
+    if (lessonForm.file_pt) {
+      formData.append('file_pt', lessonForm.file_pt)
     }
 
     if (editingLesson.value) {
-      // Laravel sometimes has issues with PUT and FormData, so we use POST with _method or just POST
       await api(`/instructor/lessons/${editingLesson.value.id}`, {
         method: 'POST',
         body: formData

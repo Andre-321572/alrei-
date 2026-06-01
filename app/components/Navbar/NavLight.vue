@@ -9,7 +9,7 @@
                     <NuxtLink class="nav-brand fixed-logo" to="/">
                         <img :src="logo" class="logo" alt="" style="height:65px;width:auto;" />
                     </NuxtLink>
-                    <div class="nav-toggle" @click="toggle = !toggle"></div>
+                    <div class="nav-toggle" @click="toggle = !toggle"><i class="bi bi-list"></i></div>
                 </div>
                 <div :class="['nav-menus-wrapper', { 'nav-menus-wrapper-open': toggle }]">
                     <span class="nav-menus-wrapper-close-button" @click="toggle = !toggle">
@@ -18,68 +18,32 @@
                     <ul class="nav-menu">
                     
                         <li :class="['/', '/home-2', '/home-3', '/home-4', '/home-5', '/home-6', '/home-7', '/home-8', '/home-9', '/home-10', '/new-home-1', '/new-home-2', '/new-home-3'].includes(current) ? 'active' : ''">
-                            <a href="#">
-                                {{ $t('home') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
-                            </a>
-                            <!-- <ul class="nav-dropdown nav-submenu">
-                                <li :class="current === '/' ? 'active' : ''"><NuxtLink to="/">Home Layout 01</NuxtLink></li>
-                                <li :class="current === '/home-2' ? 'active' : ''"><NuxtLink to="/home-2">Home Layout 02</NuxtLink></li>
-                                <li :class="current === '/home-3' ? 'active' : ''"><NuxtLink to="/home-3">Home Layout 03</NuxtLink></li>
-                                <li :class="current === '/home-4' ? 'active' : ''"><NuxtLink to="/home-4">Home Layout 04</NuxtLink></li>
-                                <li :class="current === '/home-5' ? 'active' : ''"><NuxtLink to="/home-5">Home Layout 05</NuxtLink></li>
-                                <li :class="current === '/home-6' ? 'active' : ''"><NuxtLink to="/home-6">Home Layout 06</NuxtLink></li>
-                                <li :class="current === '/home-7' ? 'active' : ''"><NuxtLink to="/home-7">Home Layout 07</NuxtLink></li>
-                                <li :class="current === '/home-8' ? 'active' : ''"><NuxtLink to="/home-8">Home Layout 08</NuxtLink></li>
-                                <li :class="current === '/home-9' ? 'active' : ''"><NuxtLink to="/home-9">Home Layout 09</NuxtLink></li>
-                                <li :class="current === '/home-10' ? 'active' : ''"><NuxtLink to="/home-10">Home Layout 10</NuxtLink></li>
-                                <li :class="current === '/new-home-1' ? 'active' : ''"><NuxtLink to="/new-home-1">Home Layout 11</NuxtLink></li>
-                                <li :class="current === '/new-home-2' ? 'active' : ''"><NuxtLink to="/new-home-2">Home Layout 12</NuxtLink></li>
-                                <li :class="current === '/new-home-3' ? 'active' : ''"><NuxtLink to="/new-home-3">Home Layout 13</NuxtLink></li>
-                            </ul> -->
+                            <NuxtLink to="/">
+                                {{ $t('home') }}
+                            </NuxtLink>
                         </li>
                         
-                        <li v-if="!isInstructor && !isAdmin" :class="['/grid-with-sidebar','/grid-with-sidebar-2','/grid-with-sidebar-3','/list-with-sidebar','/full-width-course','/full-width-course-2','/full-width-course-3','/full-width-course-4','/detail','/detail-2','/detail-3','/detail-4','/detail-5','/detail-6','/find-instructor','/instructor-detail'].includes(current) ? 'active' : ''">
-                            <a href="#">
+                        <li v-if="!isInstructor && !isAdmin" :class="['/grid-with-sidebar','/list-with-sidebar','/full-width-course'].includes(current) ? 'active' : ''">
+                            <a href="#" @click.prevent="toggleSubmenu('courses')">
                                 {{ $t('courses') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
-                            <ul class="nav-dropdown nav-submenu">
-                                <li :class="['/grid-with-sidebar','/grid-with-sidebar-2','/grid-with-sidebar-3'].includes(current) ? 'active' : ''"><a href="#">{{ $t('courses_grid_sidebar') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
-                                        <li :class="current === '/grid-with-sidebar' ? 'active' : ''"><NuxtLink to="/grid-with-sidebar">{{ $t('sidebar_grid') }} 1</NuxtLink></li>
-                                        <li :class="current === '/grid-with-sidebar-2' ? 'active' : ''"><NuxtLink to="/grid-with-sidebar-2">{{ $t('sidebar_grid') }} 2</NuxtLink></li>
-                                        <li :class="current === '/grid-with-sidebar-3' ? 'active' : ''"><NuxtLink to="/grid-with-sidebar-3">{{ $t('sidebar_grid') }} 3</NuxtLink></li>
-                                    </ul>
-                                </li>
+                            <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['courses']) ? 'block !important' : '' }">
+                                <li :class="current === '/grid-with-sidebar' ? 'active' : ''"><NuxtLink to="/grid-with-sidebar">{{ $t('courses_grid_sidebar') }}</NuxtLink></li>
                                 <li :class="current === '/list-with-sidebar' ? 'active' : ''"><NuxtLink to="/list-with-sidebar">{{ $t('list_layout_sidebar') }}</NuxtLink></li>
-                                <li :class="['/full-width-course','/full-width-course-2','/full-width-course-3','/full-width-course-4'].includes(current) ? 'active' : ''"><a href="#">{{ $t('courses_grid_full') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
-                                        <li :class="current === '/full-width-course' ? 'active' : ''"><NuxtLink to="/full-width-course">{{ $t('courses_grid') }} 1</NuxtLink></li>
-                                        <li :class="current === '/full-width-course-2' ? 'active' : ''"><NuxtLink to="/full-width-course-2">{{ $t('courses_grid') }} 2</NuxtLink></li>
-                                        <li :class="current === '/full-width-course-3' ? 'active' : ''"><NuxtLink to="/full-width-course-3">{{ $t('courses_grid') }} 3</NuxtLink></li>
-                                    </ul>
-                                </li>
-                                <li :class="['/detail','/detail-2','/detail-3','/detail-4','/detail-5','/detail-6'].includes(current) ? 'active' : ''"><a href="#">{{ $t('courses_detail') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
-                                        <li :class="current === '/detail' ? 'active' : ''"><NuxtLink to="/detail">{{ $t('course_detail') }} 1</NuxtLink></li>
-                                        <li :class="current === '/detail-2' ? 'active' : ''"><NuxtLink to="/detail-2">{{ $t('course_detail') }} 2</NuxtLink></li>
-                                        <li :class="current === '/detail-3' ? 'active' : ''"><NuxtLink to="/detail-3">{{ $t('course_detail') }} 3</NuxtLink></li>
-                                        <li :class="current === '/detail-4' ? 'active' : ''"><NuxtLink to="/detail-4">{{ $t('course_detail') }} 4</NuxtLink></li>
-                                        <li :class="current === '/detail-5' ? 'active' : ''"><NuxtLink to="/detail-5">{{ $t('course_detail') }} 5</NuxtLink></li>
-                                        <li :class="current === '/detail-6' ? 'active' : ''"><NuxtLink to="/detail-6">{{ $t('course_detail') }} 6</NuxtLink></li>
-                                    </ul>
-                                </li>
-                                <li :class="current === '/find-instructor' ? 'active' : ''"><NuxtLink to="/find-instructor">{{ $t('find_instructor') }}</NuxtLink></li>
-                                <li :class="current === '/instructor-detail' ? 'active' : ''"><NuxtLink to="/instructor-detail">{{ $t('instructor_detail') }}</NuxtLink></li>
+                                <li :class="current === '/full-width-course' ? 'active' : ''"><NuxtLink to="/full-width-course">{{ $t('courses_grid_full') }}</NuxtLink></li>
                             </ul>
                         </li>
                         
                         <li v-if="!isAdmin" :class="['/about-us','/blog','/blog-detail','/pricing','/404','/register','/component','/contact','/privacy','/faq','/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
-                            <a href="#">
+                            <a href="#" @click.prevent="toggleSubmenu('pages')">
                                 {{ $t('pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
-                            <ul class="nav-dropdown nav-submenu">
-                                <li :class="['/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''"><a href="#">{{ $t('shop_pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
+                            <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['pages']) ? 'block !important' : '' }">
+                                <li :class="['/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
+                                    <a href="#" @click.prevent="toggleSubmenu('shop_pages')">
+                                        {{ $t('shop_pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
+                                    </a>
+                                    <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['shop_pages']) ? 'block !important' : '' }">
                                         <li :class="current === '/shop-full-width' ? 'active' : ''"><NuxtLink to="/shop-full-width">{{ $t('shop_full_width') }}</NuxtLink></li>
                                         <li :class="current === '/shop-left-sidebar' ? 'active' : ''"><NuxtLink to="/shop-left-sidebar">{{ $t('shop_sidebar_left') }}</NuxtLink></li>
                                         <li :class="current === '/shop-right-sidebar' ? 'active' : ''"><NuxtLink to="/shop-right-sidebar">{{ $t('shop_sidebar_right') }}</NuxtLink></li>
@@ -103,26 +67,29 @@
                             </ul>
                         </li>
                         
-                        <li v-if="isAuthenticated" :class="['/instructor-dashboard','/instructor-courses','/instructor-create-course','/instructor-course-added','/instructor-earning','/instructor-students','/instructor-orders','/instructor-reviews','/instructor-payout','/student-dashboard','/student-subscription','/student-course-resume','/student-wishlist','/student-payment-info','/profile-edit','/settings','/delete-account'].includes(current) ? 'active' : ''">
-                            <a href="#">
+                        <li v-if="isAuthenticated" :class="['/instructor-dashboard','/instructor-courses','/instructor-create-course','/instructor-course-added','/instructor-students','/instructor-reviews','/student-dashboard','/student-subscription','/student-course-resume','/student-wishlist','/student-payment-info','/profile-edit','/settings','/delete-account'].includes(current) ? 'active' : ''">
+                            <a href="#" @click.prevent="toggleSubmenu('accounts')">
                                 {{ $t('accounts') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
-                            <ul class="nav-dropdown nav-submenu">
-                                <li v-if="isInstructor" :class="['/instructor-dashboard','/instructor-courses','/instructor-create-course','/instructor-course-added','/instructor-earning','/instructor-students','/instructor-orders','/instructor-reviews','/instructor-payout'].includes(current) ? 'active' : ''"><a href="#"><i class="bi bi-person-check me-2"></i>{{ $t('instructor_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
-                                        <li :class="current === '/instructor-dashboard' ? 'active' : ''"><NuxtLink to="/instructor-dashboard" class="active"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                            <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['accounts']) ? 'block !important' : '' }">
+                                <li v-if="isInstructor" :class="['/instructor-dashboard','/instructor-courses','/instructor-create-course','/instructor-course-added','/instructor-students','/instructor-reviews'].includes(current) ? 'active' : ''">
+                                    <a href="#" @click.prevent="toggleSubmenu('instructor_dash')">
+                                        <i class="bi bi-person-check me-2"></i>{{ $t('instructor_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
+                                    </a>
+                                    <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['instructor_dash']) ? 'block !important' : '' }">
+                                        <li :class="current === '/instructor-dashboard' ? 'active' : ''"><NuxtLink to="/instructor-dashboard"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
                                         <li :class="current === '/instructor-courses' ? 'active' : ''"><NuxtLink to="/instructor-courses"><i class="bi bi-basket2 me-2"></i>{{ $t('courses') }}</NuxtLink></li>
                                         <li :class="current === '/instructor-create-course' ? 'active' : ''"><NuxtLink to="/instructor-create-course"><i class="bi bi-patch-plus me-2"></i>{{ $t('create_course') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-earning' ? 'active' : ''"><NuxtLink to="/instructor-earning"><i class="bi bi-coin me-2"></i>{{ $t('earning') }}</NuxtLink></li>
                                         <li :class="current === '/instructor-students' ? 'active' : ''"><NuxtLink to="/instructor-students"><i class="bi bi-people me-2"></i>{{ $t('students') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-orders' ? 'active' : ''"><NuxtLink to="/instructor-orders"><i class="bi bi-bag-check me-2"></i>{{ $t('my_orders') }}</NuxtLink></li>
                                         <li :class="current === '/instructor-reviews' ? 'active' : ''"><NuxtLink to="/instructor-reviews"><i class="bi bi-star-half me-2"></i>{{ $t('reviews') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-payout' ? 'active' : ''"><NuxtLink to="/instructor-payout"><i class="bi bi-wallet2 me-2"></i>{{ $t('payout') }}</NuxtLink></li>
                                         <li><a href="#"><i class="bi bi-question-octagon me-2"></i>{{ $t('help_support') }}</a></li>
                                     </ul>
                                 </li>
-                                <li v-if="isStudent" :class="['/student-dashboard','/student-subscription','/student-course-resume','/student-wishlist','/student-payment-info'].includes(current) ? 'active' : ''"><a href="#"><i class="bi bi-mortarboard me-2"></i>{{ $t('student_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span></a>
-                                    <ul class="nav-dropdown nav-submenu">
+                                <li v-if="isStudent" :class="['/student-dashboard','/student-subscription','/student-course-resume','/student-wishlist','/student-payment-info'].includes(current) ? 'active' : ''">
+                                    <a href="#" @click.prevent="toggleSubmenu('student_dash')">
+                                        <i class="bi bi-mortarboard me-2"></i>{{ $t('student_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
+                                    </a>
+                                    <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['student_dash']) ? 'block !important' : '' }">
                                         <li :class="current === '/student-dashboard' ? 'active' : ''"><NuxtLink to="/student-dashboard"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
                                         <li :class="current === '/student-subscription' ? 'active' : ''"><NuxtLink to="/student-subscription"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
                                         <li :class="current === '/student-course-resume' ? 'active' : ''"><NuxtLink to="/student-course-resume"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
@@ -138,7 +105,13 @@
                                 <li><a href="#" @click.prevent="logout"><i class="bi bi-box-arrow-right me-2"></i>{{ $t('logout') }}</a></li>
                             </ul>
                         </li>
-                        
+                        <li :class="current === '/blog' ? 'active' : ''">
+                             <NuxtLink to="/blog">{{ $t('blog_style') }}</NuxtLink>
+                         </li>
+                         <li :class="current === '/contact' ? 'active' : ''">
+                             <NuxtLink to="/contact">{{ $t('contact_us') }}</NuxtLink>
+                         </li>
+                         <LocaleSwitcher v-if="isMobile" />
                     </ul>
                     
                     <ul class="nav-menu nav-menu-social align-to-right">
@@ -148,7 +121,7 @@
                             <NuxtLink to="/become-tutor"><i class="bi bi-person-circle"></i>{{ $t('become_tutor') }}</NuxtLink>
                         </li>
                         <li v-if="!isAuthenticated" class="join-btn light">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#login"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</a>
+                            <NuxtLink to="/register"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</NuxtLink>
                         </li>
                         <li v-if="isAuthenticated" class="join-btn light">
                             <a href="#" @click.prevent="logout" class="bg-danger border-danger"><i class="bi bi-box-arrow-right"></i>{{ $t('logout') }}</a>
@@ -159,12 +132,9 @@
         </div>
     </div>
     <div class="clearfix"></div>
-
-    <LoginModal />
 </template>
 
 <script setup>
-import LoginModal from './LoginModal.vue'
 const logoLight = '/Logo alrei.png'
 const logo = '/Logo alrei.png'
 const logoIcon = '/Logo alrei.png'
@@ -181,6 +151,22 @@ const route = useRoute()
 const { isAuthenticated, isInstructor, isStudent, isAdmin, logout } = useAuth()
 
 const current = computed(() => route.path)
+
+const openSubmenus = ref({})
+
+const toggleSubmenu = (menuKey) => {
+  if (isMobile.value) {
+    openSubmenus.value[menuKey] = !openSubmenus.value[menuKey]
+  }
+}
+
+import { watch } from 'vue'
+watch(() => route.path, () => {
+  toggle.value = false
+  openSubmenus.value = {}
+  document.body.style.overflow = 'auto' // Force le scroll
+  document.body.classList.remove('offcanvas-open', 'modal-open') // Nettoyage Bootstrap
+})
 
 const checkIsMobile = () => {
   isMobile.value = window.innerWidth <= 992

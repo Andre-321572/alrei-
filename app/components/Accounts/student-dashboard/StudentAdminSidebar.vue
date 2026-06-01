@@ -15,6 +15,7 @@
             
             <div class="dashboard-navbar card p-3 pt-4 border">
         
+                <ClientOnly>
                 <div class="author-info-wwrap">
                     <div class="avatar-box d-flex justify-content-center mb-4">
                         <div class="square--120 circle shadow-sm border border-3 position-relative">
@@ -43,11 +44,18 @@
                         </div>
                     </div>
                 </div>
+                </ClientOnly>
                 
                 <div class="d-navigation">
                     <ul id="side-menu"> 
                         <li><NuxtLink to="/student-dashboard" :class="{ active: isActive('/student-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
                         <li><NuxtLink to="/student-all-courses" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-play-circle me-2"></i>{{ $t('all_courses') }}</NuxtLink></li>
+                        <li>
+                            <NuxtLink to="/messages" :class="{ active: isActive('/messages') }" class="d-flex justify-content-between align-items-center">
+                                <div><i class="bi bi-chat-dots me-2"></i>Messages</div>
+                                <span v-if="unreadCount > 0" class="badge bg-danger rounded-pill">{{ unreadCount }}</span>
+                            </NuxtLink>
+                        </li>
                         <li><NuxtLink to="/student-assignments" :class="{ active: isActive('/student-assignments') }"><i class="bi bi-file-earmark-text me-2"></i>{{ $t('my_assignments') }}</NuxtLink></li>
                         <li><NuxtLink to="/student-subscription" :class="{ active: isActive('/student-subscription') }"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
                         <li><NuxtLink to="/student-course-resume" :class="{ active: isActive('/student-course-resume') }"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
@@ -67,14 +75,29 @@
 
 <script setup lang="ts">
 import { useRoute } from '#app'
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import avatar1 from "@/assets/img/avatar-1.jpg";
+import { useAuth } from '@/composables/useAuth';
 
 const route = useRoute()
 const isActive = (path: string) => route.path === path
 
-const { user } = useAuth()
+const { user, api } = useAuth()
 const userAvatar = computed(() => user.value?.avatar || avatar1)
-const userName   = computed(() => user.value?.name   || 'Étudiant') // Maybe better to not translate 'Étudiant' here if it is a fallback name, but I can do: || useI18n().t('student'))
+const userName   = computed(() => user.value?.name   || 'Étudiant')
 const userRole   = computed(() => user.value?.role   || 'student')
+
+const unreadCount = ref(0)
+const fetchUnreadCount = async () => {
+    try {
+        const response = await api('/messages/unread-count')
+        unreadCount.value = response.data?.count || response.count || 0
+    } catch (error) {
+        console.error('Failed to fetch unread count:', error)
+    }
+}
+
+onMounted(() => {
+    fetchUnreadCount()
+})
 </script>

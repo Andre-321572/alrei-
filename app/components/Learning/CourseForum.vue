@@ -33,7 +33,7 @@
 
         <!-- Reply Form -->
         <div class="card border-0 shadow-sm rounded-4 p-3 mt-4">
-          <textarea v-model="newPostContent" class="form-control border-0 bg-light" rows="3" placeholder="Écrivez votre réponse..."></textarea>
+          <textarea v-model="newPostContent" class="form-control border-0 bg-light" rows="3" :placeholder="replyPlaceholder"></textarea>
           <div class="text-end mt-2">
             <button @click="submitPost" :disabled="!newPostContent || submitting" class="btn btn-primary btn-sm px-4 rounded-pill">
               <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>Répondre
@@ -45,13 +45,27 @@
 
     <div v-else class="topic-list">
       <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold mb-0">Forum d'entraide</h5>
+        <div class="d-flex align-items-center gap-2">
+          <h5 class="fw-bold mb-0">Forum d'entraide</h5>
+          <span class="badge forum-lang-badge rounded-pill">
+            <i class="bi bi-translate me-1"></i>{{ forumLanguageLabel }}
+          </span>
+        </div>
         <button @click="showCreateModal = true" class="btn btn-dark btn-sm px-4 rounded-pill">
           <i class="bi bi-plus-lg me-1"></i>Nouveau sujet
         </button>
       </div>
 
-      <div v-if="loading" class="text-center py-5">
+      <!-- Access Denied Message -->
+      <div v-if="accessDenied" class="alert alert-warning rounded-4 d-flex align-items-center gap-3 border-0 shadow-sm">
+        <i class="bi bi-lock-fill fs-4 text-warning"></i>
+        <div>
+          <p class="fw-bold mb-0">Forum restreint à votre langue d'inscription</p>
+          <small class="text-muted">Votre compte est configuré pour le forum <strong>{{ forumLanguageLabel }}</strong>. Vous ne pouvez accéder qu'à ce forum.</small>
+        </div>
+      </div>
+
+      <div v-else-if="loading" class="text-center py-5">
         <div class="spinner-border text-primary"></div>
       </div>
 
@@ -83,7 +97,7 @@
     <!-- Create Topic Modal -->
     <div v-if="showCreateModal" class="modal-overlay">
       <div class="modal-dialog modal-dialog-centered custom-modal">
-        <div class="modal-content border-0 shadow-xl rounded-4 overflow-hidden">
+        <div class="modal-content border-0 shadow-xl rounded-4 overflow-hidden bg-white">
           <div class="modal-header border-0 bg-light p-4">
             <h5 class="fw-bold mb-0 text-dark">Nouveau sujet de discussion</h5>
             <button @click="showCreateModal = false" class="btn-close"></button>
@@ -111,9 +125,6 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import { useApi } from '@/composables/useApi'
-
 const props = defineProps({
   courseId: {
     type: [Number, String],
@@ -122,11 +133,13 @@ const props = defineProps({
 })
 
 const api = useApi()
+const { user } = useAuth()
 const topics = ref([])
 const loading = ref(true)
 const selectedTopic = ref(null)
 const showCreateModal = ref(false)
 const submitting = ref(false)
+const accessDenied = ref(false)
 
 const newTopic = reactive({
   title: '',
@@ -135,24 +148,58 @@ const newTopic = reactive({
 
 const newPostContent = ref('')
 
+const forumLang = computed(() => user.value?.preferred_language || 'fr')
+
+const LANG_LABELS = {
+  fr: '🇫🇷 Français',
+  en: '🇬🇧 English',
+  pt: '🇧🇷 Português',
+}
+
+const forumLanguageLabel = computed(() => LANG_LABELS[forumLang.value] || forumLang.value.toUpperCase())
+
+const replyPlaceholder = computed(() => {
+  if (forumLang.value === 'en') return 'Write your reply...'
+  if (forumLang.value === 'pt') return 'Escreva sua resposta...'
+  return 'Écrivez votre réponse...'
+})
+
 const fetchTopics = async () => {
+  if (!props.courseId) return
   loading.value = true
+  accessDenied.value = false
   try {
-    const res = await api(`/courses/${props.courseId}/forum`)
+    const res = await api(`/courses/${props.courseId}/forum?lang=${forumLang.value}`)
     topics.value = res.data
   } catch (err) {
-    console.error(err)
+    if (err?.data?.status === 403 || err?.status === 403) {
+      accessDenied.value = true
+    } else {
+      console.error('Forum fetch error:', err)
+    }
+    topics.value = []
   } finally {
     loading.value = false
   }
 }
+
+watch(() => props.courseId, (newId) => {
+  if (newId) {
+    selectedTopic.value = null
+    fetchTopics()
+  }
+}, { immediate: true })
 
 const viewTopic = async (topicId) => {
   try {
     const res = await api(`/forum/topics/${topicId}`)
     selectedTopic.value = res.data
   } catch (err) {
-    console.error(err)
+    if (err?.data?.status === 403 || err?.status === 403) {
+      alert('Vous ne pouvez pas accéder à ce sujet (langue non autorisée).')
+    } else {
+      console.error(err)
+    }
   }
 }
 
@@ -161,7 +208,7 @@ const submitTopic = async () => {
   try {
     await api(`/courses/${props.courseId}/forum/topics`, {
       method: 'POST',
-      body: newTopic
+      body: { ...newTopic, language: forumLang.value }
     })
     newTopic.title = ''
     newTopic.content = ''
@@ -192,6 +239,7 @@ const submitPost = async () => {
 }
 
 const formatDate = (dateString) => {
+  if (!dateString) return ''
   return new Date(dateString).toLocaleDateString('fr-FR', {
     day: 'numeric',
     month: 'short',
@@ -248,5 +296,13 @@ onMounted(fetchTopics)
   align-items: center;
   justify-content: center;
   z-index: 1050;
+}
+.forum-lang-badge {
+  background: linear-gradient(135deg, #f2a900 0%, #e08c00 100%);
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 </style>

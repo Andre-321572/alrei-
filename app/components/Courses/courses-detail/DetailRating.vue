@@ -1,5 +1,5 @@
 <template>
-    <div class="rating-overview border">
+    <div class="rating-overview border-0 shadow-sm rounded-4 bg-white p-4 mb-4">
         <div class="rating-overview-box">
             <span class="rating-overview-box-total text-dark">4.2</span>
             <span class="rating-overview-box-percent">out of 5.0</span>

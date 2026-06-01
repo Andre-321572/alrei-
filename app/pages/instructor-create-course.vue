@@ -28,8 +28,7 @@
                             <div class="step-indicator mb-4">
                                 <div :class="{ active: activeTab >= 1 }"><span>1</span><p>Info</p></div>
                                 <div :class="{ active: activeTab >= 2 }"><span>2</span><p>Curriculum</p></div>
-                                <div :class="{ active: activeTab >= 3 }"><span>3</span><p>Pricing</p></div>
-                                <div :class="{ active: activeTab >= 4 }"><span>4</span><p>Publish</p></div>
+                                <div :class="{ active: activeTab >= 3 }"><span>3</span><p>Publish</p></div>
                             </div>
 
                             <form @submit.prevent="handleSubmit" id="multiStepForm">
@@ -55,6 +54,7 @@
                                         </select>
                                     </div>
                                     
+
                                     <div class="form-group mb-3">
                                         <label class="form-label">Courses Level</label>
                                         <select v-model="course.level" class="form-control" id="level">
@@ -63,6 +63,130 @@
                                             <option value="advanced">Advanced</option>
                                             <option value="all">All Levels</option>
                                         </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Langue principale du cours</label>
+                                        <select v-model="course.language" class="form-control" id="language">
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="pt">🇵🇹 Português</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- ===== CONTENU MULTILINGUE ===== -->
+                                    <div class="mb-4 mt-4">
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <div class="square--40 circle bg-light-primary">
+                                                <i class="bi bi-collection-play text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">Contenu du cours</h6>
+                                                <small class="text-muted">Choisissez le type de contenu et ajoutez les versions par langue.</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sélecteur Type de contenu -->
+                                        <div class="d-flex gap-3 flex-wrap mb-4">
+                                            <label
+                                                v-for="ct in contentTypes"
+                                                :key="ct.value"
+                                                class="content-type-option"
+                                                style="cursor:pointer;"
+                                            >
+                                                <input type="radio" v-model="contentType" :value="ct.value" class="d-none">
+                                                <div
+                                                    :class="['d-flex flex-column align-items-center justify-content-center gap-2 p-3 rounded-3 border-2 border', contentType === ct.value ? 'border-primary bg-light-primary shadow-sm' : 'border-light bg-white']"
+                                                    style="min-width:120px; transition: all .2s;"
+                                                >
+                                                    <i :class="[ct.icon, 'fs-2', contentType === ct.value ? ct.activeColor : 'text-muted']"></i>
+                                                    <span :class="['fw-semibold small', contentType === ct.value ? 'text-primary' : 'text-muted']">{{ ct.label }}</span>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <!-- Versions par langue (Document / Vidéo) -->
+                                        <div v-if="contentType !== 'youtube'">
+                                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                                <label class="form-label fw-semibold mb-0">
+                                                    Versions par langue
+                                                    <span class="badge bg-primary rounded-pill ms-1">{{ languageVersions.length }}</span>
+                                                </label>
+                                                <button
+                                                    v-if="languageVersions.length < 3"
+                                                    @click="addVersion"
+                                                    type="button"
+                                                    class="btn btn-outline-primary btn-sm rounded-pill"
+                                                >
+                                                    <i class="bi bi-plus-circle me-1"></i>Ajouter une langue
+                                                </button>
+                                            </div>
+
+                                            <div class="d-flex flex-column gap-2">
+                                                <div
+                                                    v-for="(version, idx) in languageVersions"
+                                                    :key="idx"
+                                                    class="border rounded-3 p-3"
+                                                    :style="{ borderLeft: '4px solid ' + (version.file ? '#198754' : '#dee2e6') + ' !important', background: version.file ? '#f0fdf4' : '#f8f9fa' }"
+                                                >
+                                                    <div class="row g-2 align-items-center">
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small text-muted mb-1">Langue</label>
+                                                            <select v-model="version.lang" class="form-select form-select-sm">
+                                                                <option value="fr">🇫🇷 Français</option>
+                                                                <option value="en">🇬🇧 English</option>
+                                                                <option value="pt">🇵🇹 Português</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <label class="form-label small text-muted mb-1">
+                                                                {{ contentType === 'document' ? 'Fichier (PDF, DOC, PPT…)' : 'Fichier vidéo (MP4, MOV…)' }}
+                                                            </label>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <input
+                                                                    @change="e => handleVersionFile(e, idx)"
+                                                                    type="file"
+                                                                    class="form-control form-control-sm"
+                                                                    :accept="contentType === 'document' ? '.pdf,.doc,.docx,.ppt,.pptx,.xlsx,.csv' : 'video/*'"
+                                                                >
+                                                                <span v-if="version.file" class="badge bg-success text-nowrap py-2">
+                                                                    <i class="bi bi-check-circle me-1"></i>Chargé
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 text-end">
+                                                            <button
+                                                                v-if="languageVersions.length > 1"
+                                                                @click="removeVersion(idx)"
+                                                                type="button"
+                                                                class="btn btn-outline-danger btn-sm rounded-circle"
+                                                                style="width:32px;height:32px;padding:0;"
+                                                                title="Supprimer"
+                                                            >
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Lien YouTube -->
+                                        <div v-if="contentType === 'youtube'">
+                                            <label class="form-label fw-semibold">Lien YouTube</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text text-white" style="background:#ff0000; border-color:#ff0000;">
+                                                    <i class="bi bi-youtube fs-5"></i>
+                                                </span>
+                                                <input
+                                                    v-model="youtubeUrl"
+                                                    type="url"
+                                                    class="form-control"
+                                                    placeholder="https://www.youtube.com/watch?v=..."
+                                                >
+                                            </div>
+                                            <small class="text-muted d-block mt-1">Collez l'URL complète de votre vidéo YouTube publique ou non-listée.</small>
+                                        </div>
                                     </div>
                                     
                                     <div class="form-group mb-3">
@@ -74,7 +198,6 @@
                                         <label class="form-label">Prerequisites</label>
                                         <textarea v-model="course.prerequisites" class="form-control" rows="2" placeholder="e.g. Basic knowledge of JavaScript"></textarea>
                                     </div>
-                                    
                                     <div class="mb-4">
                                         <h5 class="text-darks mb-0 lh-base">Course Media</h5>
                                         <p class="text-muted">Upload a professional thumbnail, a preview video, and any additional resources.</p>
@@ -107,22 +230,6 @@
                                 </div>
 
                                 <div v-show="activeTab === 3" class="step active">
-                                    
-                                    <div class="form-group mb-3">
-                                        <label class="form-label">Is this as a free course?</label>
-                                        <div class="form-check">
-                                            <input v-model="course.is_free" id="freecpurse" class="form-check-input" type="checkbox">
-                                            <label for="freecpurse" class="form-check-label text-muted-2">Check if this is a free course.</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div v-if="!course.is_free" class="form-group mb-3">
-                                        <label class="form-label">Course Price (FCFA)</label>
-                                        <input v-model="course.price" type="number" class="form-control" placeholder="e.g., 5000">
-                                    </div>
-                                </div>
-
-                                <div v-show="activeTab === 4" class="step active">
                                     <div class="mb-4 text-center">
                                         <h3>Ready to Publish?</h3>
                                         <p>Review your information before submitting.</p>
@@ -134,7 +241,7 @@
                                     <button v-if="activeTab > 1" type="button" class="btn btn-gray px-4" @click="prevTab">Previous</button>
                                     <div v-else></div>
                                     <button :disabled="submitting" type="button" class="btn btn-main px-4" @click="nextTabOrSubmit">
-                                        {{ submitting ? 'Submitting...' : (activeTab === 4 ? 'Submit' : 'Next') }}
+                                        {{ submitting ? 'Submitting...' : (activeTab === 3 ? 'Submit' : 'Next') }}
                                     </button>
                                 </div>
                             
@@ -153,7 +260,7 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import Preloader from '@/components/Preloader.vue';
 import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
@@ -165,12 +272,42 @@ const preview = ref('')
 const submitting = ref(false)
 const categories = ref([])
 
+// ===== Multilingual content =====
+const contentType = ref<'document' | 'video' | 'youtube'>('document')
+const languageVersions = ref([{ lang: 'fr', file: null as File | null }])
+const youtubeUrl = ref('')
+
+const contentTypes = [
+    { value: 'document', label: 'Document',  icon: 'bi bi-file-earmark-richtext', activeColor: 'text-primary' },
+    { value: 'video',    label: 'Vidéo',      icon: 'bi bi-camera-video-fill',     activeColor: 'text-danger'  },
+    { value: 'youtube',  label: 'YouTube',    icon: 'bi bi-youtube',               activeColor: 'text-danger'  },
+]
+
+const addVersion = () => {
+    const usedLangs = languageVersions.value.map(v => v.lang)
+    const next = ['fr', 'en', 'pt'].find(l => !usedLangs.includes(l))
+    if (next) languageVersions.value.push({ lang: next, file: null })
+}
+
+const removeVersion = (idx: number) => {
+    languageVersions.value.splice(idx, 1)
+}
+
+const handleVersionFile = (e: Event, idx: number) => {
+    const input = e.target as HTMLInputElement
+    if (input.files?.[0]) {
+        languageVersions.value[idx].file = input.files[0]
+    }
+}
+// ================================
+
 const course = reactive({
     title: '',
     category_id: '',
     level: 'beginner',
+    language: 'fr',
     description: '',
-    is_free: false,
+    is_free: true,
     price: 0,
     thumbnail: null,
     prerequisites: ''
@@ -196,7 +333,7 @@ const handleThumbnailChange = (e) => {
 }
 
 const nextTab = () => {
-  if (activeTab.value < 4) activeTab.value++
+  if (activeTab.value < 3) activeTab.value++
 }
 
 const prevTab = () => {
@@ -204,7 +341,7 @@ const prevTab = () => {
 }
 
 const nextTabOrSubmit = async () => {
-  if (activeTab.value < 4) {
+  if (activeTab.value < 3) {
     activeTab.value++
   } else {
     await handleSubmit()
@@ -218,12 +355,23 @@ const handleSubmit = async () => {
         formData.append('title', course.title)
         formData.append('category_id', course.category_id)
         formData.append('level', course.level)
+        formData.append('language', course.language)
         formData.append('description', course.description || '')
         formData.append('prerequisites', course.prerequisites || '')
-        formData.append('is_free', course.is_free ? 1 : 0)
-        formData.append('price', course.is_free ? 0 : course.price)
+        formData.append('is_free', '1')
+        formData.append('price', '0')
         if (course.thumbnail) {
             formData.append('thumbnail', course.thumbnail)
+        }
+        // Multilingual content
+        formData.append('content_type', contentType.value)
+        if (contentType.value === 'youtube') {
+            formData.append('youtube_url', youtubeUrl.value)
+        } else {
+            languageVersions.value.forEach((v, i) => {
+                formData.append(`versions[${i}][lang]`, v.lang)
+                if (v.file) formData.append(`versions[${i}][file]`, v.file)
+            })
         }
 
         await api('/instructor/courses', {

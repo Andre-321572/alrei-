@@ -11,7 +11,7 @@
                                 <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
                                     <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                 </div>
-                                <NuxtLink :to="`/course-detail/${item.slug}`"><img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid" alt=""></NuxtLink>
+                                <NuxtLink :to="`/course-detail/${item.slug}`"><img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid w-100 object-fit-cover" style="height: 180px;" alt=""></NuxtLink>
                             </div>
                             
                             <div class="education-body p-3">

@@ -50,28 +50,30 @@
                         </div>
                     </div>
                     
-                    <div class="row justify-content-center g-xl-3 g-4 mb-5">
+                    <div class="row g-4 mb-5">
                         
                         <div 
-                            class="col-xxl-3 col-xl-4 col-lg-4 col-md-6"
+                            class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12"
                             v-for="(item, index) in coursesData.slice(0, 8)"
                             :key="index"
                         >
-                            <div class="education_block_grid border">
+                            <div class="education_block_grid border course-card-premium rounded-4 overflow-hidden">
                             
                                 <div class="education-thumb position-relative">
-                                    <div class="save-course position-absolute top-0 end-0 me-3 mt-3">
+                                    <div class="save-course position-absolute top-0 end-0 me-3 mt-3" style="z-index:2">
                                         <a href="#" class="bookmark-button"><i class="bi bi-suit-heart"></i></a>
                                     </div>
-                                    <NuxtLink :to="`/course-detail/${item.id}`"><img :src="item.image" class="img-fluid" alt=""></NuxtLink>
-                                    <div class="course-hours position-absolute top-0 start-0 ms-3 mt-3">
-                                        <span class="badge bg-dark rounded-pill"><i class="bi bi-clock-history me-1"></i>{{item.time}}</span>
+                                    <NuxtLink :to="`/course-detail/${item.id}`">
+                                        <img :src="item.image || '/img/course-placeholder.jpg'" class="img-fluid course-thumb-img" alt="">
+                                    </NuxtLink>
+                                    <div class="course-hours position-absolute top-0 start-0 ms-3 mt-3" style="z-index:2">
+                                        <span class="badge bg-dark bg-opacity-75 rounded-pill"><i class="bi bi-clock-history me-1"></i>{{item.time}}</span>
                                     </div>
                                 </div>
                                 
                                 <div class="education-body p-3">
-                                    <div class="education-title">
-                                        <h4 class="fs-6 fw-medium"><NuxtLink :to="`/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
+                                    <div class="education-title mb-2">
+                                        <h4 class="fs-6 fw-semibold lh-sm"><NuxtLink :to="`/course-detail/${item.id}`">{{item.title}}</NuxtLink></h4>
                                     </div>
                                     
                                     <div class="cources-info">
@@ -84,7 +86,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="education-footer border-0 p-3 pt-2">
+                                <div class="education-footer border-top p-3 mt-auto">
                                     <a href="#" class="btn btn-md btn-outline-gray border-2 rounded-pill w-100">Enrolled Now<i class="bi bi-arrow-right ms-2"></i></a>
                                 </div>
                             </div>	
@@ -144,3 +146,21 @@ import ScrollToTop from '@/components/ScrollToTop.vue';
 import { coursesData } from '@/data/data.js'
 
 </script>
+
+<style scoped>
+.course-card-premium {
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  border-color: #e8ecf0 !important;
+}
+.course-card-premium:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+}
+.course-thumb-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+</style>
