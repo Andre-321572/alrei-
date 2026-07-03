@@ -17,12 +17,6 @@
         
                 <ClientOnly>
                 <div class="author-info-wwrap">
-                    <div class="avatar-box d-flex justify-content-center mb-4">
-                        <div class="square--120 circle shadow-sm border border-3 position-relative">
-                            <img :src="userAvatar" class="img-fluid circle" alt="Avatar">
-                            <span class="badge bg-green text-light rounded-pill position-absolute top-100 start-50 translate-middle text-capitalize">{{ userRole }}</span>
-                        </div>
-                    </div>
                     <div class="author-caps text-center mb-4">
                         <div class="d-flex flex-column gap-2">
                             <div class="d-flex align-items-center justify-content-center">
@@ -30,6 +24,9 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-center gap-1">
                                 <span class="text-mid text-muted-2">{{ user?.email }}</span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center mt-1">
+                                <span class="badge bg-green text-light rounded-pill text-capitalize">{{ userRole }}</span>
                             </div>
                         </div>
                     </div>
@@ -75,14 +72,12 @@
 
 <script setup lang="ts">
 import { useRoute } from '#app'
-import avatar1 from "@/assets/img/avatar-1.jpg";
 import { useAuth } from '@/composables/useAuth';
 
 const route = useRoute()
 const isActive = (path: string) => route.path === path
 
 const { user, api } = useAuth()
-const userAvatar = computed(() => user.value?.avatar || avatar1)
 const userName   = computed(() => user.value?.name   || 'Étudiant')
 const userRole   = computed(() => user.value?.role   || 'student')
 

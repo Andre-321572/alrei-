@@ -17,11 +17,6 @@
                 <div class="dashboard-navbar card p-3 pt-4 border">
 
                     <div class="author-info-wwrap">
-                        <div class="avatar-box d-flex justify-content-center mb-2">
-                            <div class="square--120 circle shadow-sm border border-3">
-                                <img :src="user?.avatar || avatar3" class="img-fluid circle" alt="Avatar">
-                            </div>
-                        </div>
                         <div class="author-caps text-center mb-4">
                             <div class="d-flex flex-column gap-2">
                                 <div class="d-flex align-items-center justify-content-center">
@@ -97,7 +92,7 @@
 </template>
 
 <script setup>
-import avatar3 from '@/assets/img/avatar-3.jpg';
+
 
 const props = defineProps({
     activeTab: { type: String, required: true },
