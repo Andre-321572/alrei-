@@ -35,7 +35,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const props = defineProps({

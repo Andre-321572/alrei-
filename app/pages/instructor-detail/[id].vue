@@ -2,10 +2,6 @@
 <template>
   <div>
 
-    <Preloader />
-
-    <NavDark />
-
     <section class="bg-gredient p-0">
         <div class="container-fluid px-0">
             <div class="ht-100"></div>
@@ -27,21 +23,13 @@
   </div>
 </template>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
 import { useRoute } from '#app'
 import { useApi } from '@/composables/useApi'
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import InstructorHeader from '@/components/Courses/instructor-detail/InstructorHeader.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const route = useRoute()
 const api = useApi()

@@ -39,7 +39,6 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
 import { reviewData } from '@/data/data.js'
 
 const { $tns } = useNuxtApp()

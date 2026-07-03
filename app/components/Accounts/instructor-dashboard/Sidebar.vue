@@ -64,11 +64,11 @@
 
 <script setup>
 import { useRoute } from '#app'
-import { ref, onMounted } from 'vue'
 import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const route = useRoute()
 const { user } = useAuth()
+const api = useApi()
 
 const isActive = (path) => route.path === path
 

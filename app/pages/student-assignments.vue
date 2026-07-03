@@ -1,6 +1,4 @@
 <template>
-    <Preloader />
-    <StudentNavbar />
 
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
@@ -92,19 +90,11 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
-import Preloader from '@/components/Preloader.vue'
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue'
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue'
-import FooterDark from '@/components/Footer/FooterDark.vue'
-import ScrollToTop from '@/components/ScrollToTop.vue'
-
 
 const api = useApi()
 const assignments = ref([])
@@ -114,11 +104,7 @@ const fetchAssignments = async () => {
     loading.value = true
     try {
         const response = await api('/my-assignments')
-        console.log('Assignments API Response:', response)
         assignments.value = response.data || response
-        if (response.debug) {
-            console.log('Debug Info:', response.debug)
-        }
     } catch (error) {
         console.error('Failed to fetch assignments:', error)
     } finally {
@@ -134,11 +120,10 @@ const hasSubmitted = (assignment) => {
     return !!getSubmission(assignment)
 }
 
-
-
 onMounted(fetchAssignments)
 
 definePageMeta({
+    layout: 'student',
     middleware: ['auth'],
 });
 </script>

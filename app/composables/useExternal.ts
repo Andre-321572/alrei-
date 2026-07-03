@@ -1,5 +1,3 @@
-import { ref } from 'vue'
-
 export const useExternal = () => {
     const api = useApi()
     const loading = ref(false)
@@ -9,7 +7,7 @@ export const useExternal = () => {
             const response = await api('/live-sessions', {
                 params: { course_id: courseId }
             })
-            return response.data || response
+            return (response as any).data || response
         } catch (error) {
             console.error('Failed to fetch live classes:', error)
             return []
@@ -18,20 +16,16 @@ export const useExternal = () => {
 
     const getMoodleLogin = async (courseId: number) => {
         loading.value = true
-        console.log(`Tentative de connexion Moodle pour le cours ID: ${courseId}`);
         try {
             const response: any = await api(`/courses/${courseId}/moodle-login`, {
                 method: 'POST'
             })
-            console.log('Réponse Moodle reçue:', response);
             if (response && response.url) {
                 window.open(response.url, '_blank')
-            } else {
-                console.warn('La réponse ne contient pas d\'URL:', response);
             }
             return response
         } catch (error: any) {
-            console.error('Erreur détaillée Moodle Login:', error.response?._data || error.message);
+            console.error('Moodle login error:', error.response?._data || error.message)
             throw error
         } finally {
             loading.value = false

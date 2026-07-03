@@ -75,7 +75,6 @@
 
 <script setup lang="ts">
 import { useRoute } from '#app'
-import { computed, ref, onMounted } from 'vue'
 import avatar1 from "@/assets/img/avatar-1.jpg";
 import { useAuth } from '@/composables/useAuth';
 

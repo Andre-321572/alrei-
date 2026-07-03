@@ -62,7 +62,6 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue'
 
 const props = defineProps({
   editingQuestion: { type: Object, default: null },

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Preloader />
     <StudentNavbar v-if="userRole === 'student'" />
     <InstructorNavbar v-else />
 
@@ -104,20 +103,12 @@
       </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useAuth } from '@/composables/useAuth'
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const api = useApi()
 const { user: currentUser } = useAuth()
@@ -205,6 +196,11 @@ const formatTime = (dateString) => {
 }
 
 onMounted(fetchConversations)
+
+definePageMeta({
+    layout: false,
+    middleware: ['auth'],
+});
 </script>
 
 <style scoped>

@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <NavDark />
-
     <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
@@ -62,21 +59,12 @@
         </div>
     </section>
 
-    <FooterTop />
-    <Footer />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
 
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import PricingOne from '@/components/Home/home-4/PricingOne.vue';
 import FaqTwo from '@/components/Home/home-9/FaqTwo.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import Footer from '@/components/Footer/Footer.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 import { brandImg } from '@/data/data.js'
 

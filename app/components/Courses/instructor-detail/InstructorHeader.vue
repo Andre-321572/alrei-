@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue'
 import { educationData } from '@/data/data'
 import CourseRating from '../courses-detail/CourseRating.vue';
 

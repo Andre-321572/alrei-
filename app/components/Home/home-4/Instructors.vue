@@ -40,7 +40,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 
 import { instructorsData } from '@/data/data.js'
 

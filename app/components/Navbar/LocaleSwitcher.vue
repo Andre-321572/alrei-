@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from '#app'
 
 const { locale, locales } = useI18n()

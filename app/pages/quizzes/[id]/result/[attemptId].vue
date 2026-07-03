@@ -63,4 +63,8 @@ const handleRetry = async () => {
 const handleBack = () => {
   navigateTo(`/student-course-resume?id=${result.value.quiz.course_id}`)
 }
+
+definePageMeta({
+  layout: 'student',
+});
 </script>

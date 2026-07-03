@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <StudentNavbar />
-
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-250"></div>
@@ -104,7 +101,7 @@
 
                             <div v-else class="text-center py-5 bg-white rounded-3 shadow-sm">
                                 <p class="text-muted">Your wishlist is empty.</p>
-                                <NuxtLink to="/grid-with-sidebar" class="btn btn-outline-main mt-2">Browse Courses</NuxtLink>
+                                <NuxtLink to="/student-all-courses" class="btn btn-outline-main mt-2">Browse Courses</NuxtLink>
                             </div>
 
                         </div>
@@ -118,23 +115,16 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const api = useApi()
 
 // Protège la route
 definePageMeta({
+    layout: 'student',
     middleware: ['auth'],
 });
 
@@ -169,8 +159,5 @@ onMounted(() => {
 })
 
 /* Banner Background */
-
-
-
 
 </script>

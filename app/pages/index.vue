@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <NavDark />
-
     <div class="half_banner bg-light-hero">
         <div class="container">
             <div class="row align-items-center g-4">
@@ -114,15 +111,9 @@
         </div>
     </section>
 
-    <FooterTop />
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import Trips from '@/components/Home/home-2/Trips.vue';
 import CategorySlider from '@/components/Home/home-2/CategorySlider.vue';
 import CoursesSliderTwo from '@/components/Home/home-2/CoursesSliderTwo.vue';
@@ -131,19 +122,13 @@ import LearningBenifit from '@/components/Home/home-2/LearningBenifit.vue';
 import CtaThree from '@/components/Home/home-7/CtaThree.vue';
 import Review from '@/components/Home/index/Review.vue';
 import BlogOne from '@/components/Home/index/BlogOne.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 import studentHero from '@/assets/img/student-hero.jpg'
-
-import { ref } from 'vue'
 
 const search = ref('')
 
 const handleSearch = () => {
     if (search.value.trim() === '') return
-    console.log('Searching for:', search.value)
     alert(`Searching for: ${search.value}`)
     search.value = ''
 }

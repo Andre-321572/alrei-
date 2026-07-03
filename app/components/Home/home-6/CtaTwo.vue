@@ -24,7 +24,6 @@
 
 <script setup>
 
-import { computed } from 'vue'
 
 import subscribeShapes from '@/assets/img/subscribe-shapes.png'
 

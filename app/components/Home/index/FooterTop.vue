@@ -22,7 +22,6 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
 
 
 
@@ -35,7 +34,6 @@ const sectionStyle = computed(() => ({
 }))
 
 const handleSubmit = () => {
-  console.log('Subscribed Email:', email.value)
   alert(`Subscribed successfully with: ${email.value}`)
   email.value = ''
 }

@@ -61,7 +61,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 
 const props = defineProps({
   quizzes: { type: Array, required: true },

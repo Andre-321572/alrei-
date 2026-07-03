@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <StudentNavbar />
-
     <section class="p-0 position-relative overflow-hidden bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-250"></div>
@@ -247,17 +244,10 @@
         </div>
     </section>
 
-    <ScrollToTop />
-
 </template>
 
 <script setup lang="ts">
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
-import { computed, ref, onMounted } from 'vue'
 
 const { fetchLiveClasses } = useExternal()
 const api = useApi()
@@ -316,7 +306,6 @@ const loadData = async () => {
             api('/my-assignments'),
             fetchMyQuizAttempts()
         ])
-        console.log('Dashboard Data Loaded:', { liveRes, coursesRes, assignRes, quizRes })
         liveClasses.value = liveRes
         enrolledCourses.value = coursesRes.data || coursesRes
         assignments.value = assignRes.data || assignRes
@@ -342,6 +331,7 @@ const aboutData = computed(() => {
 
 // Protège la route — seul un utilisateur connecté peut accéder
 definePageMeta({
+    layout: 'student',
     middleware: ['auth'],
 });
 </script>

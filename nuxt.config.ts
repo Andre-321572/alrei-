@@ -1,4 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const NON_DEFAULT_LOCALES = ['en', 'pt']
+const DYNAMIC_ROUTES = ['/instructor-detail', '/course-detail']
+
+const routeRules = Object.fromEntries(
+  DYNAMIC_ROUTES.flatMap(path => [
+    [`${path}/**`, { prerender: false }],
+    ...NON_DEFAULT_LOCALES.map(locale => [`/${locale}${path}/**`, { prerender: false }]),
+  ])
+)
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   srcDir: 'app',
@@ -9,28 +20,15 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'static',
     prerender: {
-      failOnError: false,
+      failOnError: true,
       crawlLinks: true,
     }
   },
 
-  // Routes dynamiques rendues côté client uniquement (données venant de l'API)
-  routeRules: {
-    '/instructor-detail/**': { prerender: false },
-    '/product-detail/**': { prerender: false },
-    '/course-detail/**': { prerender: false },
-    '/en/instructor-detail/**': { prerender: false },
-    '/en/product-detail/**': { prerender: false },
-    '/en/course-detail/**': { prerender: false },
-    '/pt/instructor-detail/**': { prerender: false },
-    '/pt/product-detail/**': { prerender: false },
-    '/pt/course-detail/**': { prerender: false },
-  },
+  routeRules,
 
-  // Désactiver les devtools pour économiser de la mémoire JS
   devtools: { enabled: false },
 
-  // Optimisation de la mémoire pour les builds et le dev
   sourcemap: {
     server: false,
     client: false,
@@ -40,7 +38,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'https://elearningbackend.alrei.org/api'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://127.0.0.1:8000/api'
     }
   },
 
@@ -53,12 +51,12 @@ export default defineNuxtConfig({
     defaultLocale: 'fr',
     langDir: 'locales/',
     strategy: 'prefix_except_default',
-    lazy: true,
   },
 
   css: [
     '~/assets/css/main.css',
     '~/assets/css/styles.css',
+    '@mdi/font/css/materialdesignicons.min.css',
   ],
 
   vite: {
@@ -83,17 +81,13 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "LearnUp - Plateforme d'Apprentissage",
+      title: "Alrei - Académie en ligne",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0" }
       ],
       link: [
-        { rel: "icon", href: "/favicon.ico" },
-        {
-          rel: "stylesheet",
-          href: "https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css"
-        }
+        { rel: "icon", href: "/favicon.ico" }
       ]
     }
   }

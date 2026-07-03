@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <InstructorNavbar />
-
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
@@ -128,15 +125,10 @@
         </div>
     </div>
 
-    <FooterDark />
-
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
 import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const api = useApi()
@@ -220,4 +212,8 @@ const exportGlobalCsv = () => {
 onMounted(() => {
     fetchStudents()
 })
+
+definePageMeta({
+    layout: 'instructor',
+});
 </script>

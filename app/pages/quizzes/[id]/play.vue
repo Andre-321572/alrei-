@@ -33,6 +33,7 @@ const { currentQuiz, currentAttempt, isSubmitting, startQuiz, saveAnswer, submit
 const loading = ref(true)
 
 definePageMeta({
+  layout: false,
   middleware: 'auth'
 })
 

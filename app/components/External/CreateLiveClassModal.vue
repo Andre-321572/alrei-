@@ -74,7 +74,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useExternal } from '@/composables/useExternal'
 
 const props = defineProps({

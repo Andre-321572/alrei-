@@ -19,7 +19,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { categoryOne } from '@/data/data.js'
 
 const categories = ref([])

@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <InstructorNavbar />
-
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
@@ -86,7 +83,7 @@
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <div class="w-15">
-                                                                <img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid rounded" alt="" @error="(e) => e.target.src = '/img/course-placeholder.jpg'">
+                                                                <img :src="item.thumbnail || '/img/course-placeholder.jpg'" class="img-fluid rounded" alt="" @error="(e) => { if (!e.target.src.endsWith('/img/course-placeholder.jpg')) e.target.src = '/img/course-placeholder.jpg'; }">
                                                             </div>
                                                             <div class="courses-info">
                                                                 <h6 class="mb-0 fw-semibold table-responsive-title">	
@@ -139,18 +136,10 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import Preloader from '@/components/Preloader.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const api = useApi()
 const courses = ref([])
@@ -178,4 +167,8 @@ const deleteCourse = async (id) => {
         }
     }
 }
+
+definePageMeta({
+    layout: 'instructor',
+});
 </script>

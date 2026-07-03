@@ -1,10 +1,6 @@
 <template>
 
-  <Preloader />
   
-  <div class="shadow-sm">
-      <NavDark />
-  </div>
 
   <CourseHeader />
 
@@ -37,11 +33,6 @@
       </div>
     </div>
   </section>
-
-  <FooterTop />
-  <FooterDark />
-  <ScrollToTop />
-
 
   <!-- Modal -->
   <div 
@@ -82,8 +73,6 @@
 </template>
 
 <script setup>
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
@@ -92,11 +81,6 @@ import CourseDetail from '@/components/Courses/courses-detail/CourseDetail.vue';
 import CourseRating from '@/components/Courses/courses-detail/CourseRating.vue';
 import ReviewForm from '@/components/Courses/courses-detail/ReviewForm.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
-
-import { ref } from 'vue'
 
 const modalRef = ref(null)
 

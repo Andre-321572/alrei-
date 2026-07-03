@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <InstructorNavbar />
-
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-200"></div>
@@ -120,18 +117,11 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import Preloader from '@/components/Preloader.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 import avatar1 from "@/assets/img/avatar-1.jpg";
 
 const { user, isAdmin, isInstructor, isStudent, fetchUser } = useAuth()
@@ -208,4 +198,8 @@ onMounted(async () => {
         await fetchUser()
     }
 })
+
+definePageMeta({
+    layout: 'instructor',
+});
 </script>

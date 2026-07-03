@@ -31,7 +31,6 @@
 
 import cta2 from '@/assets/img/2.png'
 
-import { computed } from 'vue'
 
 /* Banner Background */
 import becomebg from '@/assets/img/become-bg.png'

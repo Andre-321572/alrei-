@@ -1,13 +1,8 @@
 <template>
 
-  <Preloader />
   
-  <div class="shadow-sm">
-      <NavDark />
-  </div>
 
   <div v-if="loading">
-      <Preloader />
   </div>
 
   <div v-else-if="course">
@@ -22,7 +17,7 @@
               
               <Circullum :sections="course.sections" />
               
-              <DetailRating :course="course" />
+              <DetailRating :course="course" v-if="course" />
               
               <CourseDetail :course="course" />
               
@@ -48,11 +43,6 @@
       <h3>{{ $t('course_not_found') }}</h3>
       <NuxtLink to="/courses" class="btn btn-main mt-3">{{ $t('back_to_courses') }}</NuxtLink>
   </div>
-
-  <FooterTop />
-  <FooterDark />
-  <ScrollToTop />
-
 
   <!-- Modal -->
   <div 
@@ -93,9 +83,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
@@ -104,9 +91,6 @@ import CourseDetail from '@/components/Courses/courses-detail/CourseDetail.vue';
 import CourseRating from '@/components/Courses/courses-detail/CourseRating.vue';
 import ReviewForm from '@/components/Courses/courses-detail/ReviewForm.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const route = useRoute()
 const api = useApi()
@@ -125,5 +109,5 @@ onMounted(async () => {
   }
 })
 
-const modalRef = ref(null)
+
 </script>

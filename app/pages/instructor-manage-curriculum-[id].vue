@@ -1,6 +1,4 @@
 <template>
-  <Preloader />
-  <InstructorNavbar />
 
   <section class="bg-cover py-5" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
     <div class="container">
@@ -66,7 +64,7 @@
                 </div>
                 <div class="card-body p-0">
                   <div class="accordion accordion-flush" id="curriculumAccordion">
-                    <div v-for="(section, sIndex) in course.sections" :key="section.id" class="accordion-item border-bottom">
+                    <div v-for="section in course.sections" :key="section.id" class="accordion-item border-bottom">
                       <h2 class="accordion-header" :id="'heading' + section.id">
                         <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse' + section.id">
                           <div class="d-flex justify-content-between align-items-center w-100 me-3">
@@ -81,7 +79,7 @@
                       <div :id="'collapse' + section.id" class="accordion-collapse collapse" data-bs-parent="#curriculumAccordion">
                         <div class="accordion-body p-0">
                           <ul class="list-group list-group-flush">
-                            <li v-for="(lesson, lIndex) in section.lessons" :key="lesson.id" class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <li v-for="lesson in section.lessons" :key="lesson.id" class="list-group-item d-flex justify-content-between align-items-center p-3">
                               <div class="d-flex align-items-center">
                                 <i :class="getLessonIcon(lesson.type)" class="fs-5 text-muted me-3"></i>
                                 <div>
@@ -233,23 +231,17 @@
     </div>
   </div>
 
-  <FooterDark />
-  <ScrollToTop />
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'nuxt/app'
 
 definePageMeta({
+    layout: 'instructor',
   middleware: 'instructor'
 })
-import Preloader from '@/components/Preloader.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
 import QuizManager from '@/components/Instructor/QuizManager.vue';
 import AssignmentManager from '@/components/Instructor/AssignmentManager.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const route = useRoute()
 const courseId = route.params.id

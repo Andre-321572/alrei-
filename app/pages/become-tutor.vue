@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <NavDark />
-
     <div class="bg-cover hero_banner home-3" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;" data-overlay="4">
         <div class="container">
             <div class="row align-items-center justify-content-between g-4">
@@ -199,11 +196,6 @@
         </div>
     </section>
 
-    <FooterTop />
-    <FooterDark />
-    <ScrollToTop />
-
-
     <!-- Modal -->
     <div 
         class="modal fade" 
@@ -244,8 +236,6 @@
 
 <script setup>
 
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import PartnerOne from '@/components/Home/home-4/PartnerOne.vue';
 import CounterOne from '@/components/CounterOne.vue';
 import Review from '@/components/Home/index/Review.vue';
@@ -253,11 +243,6 @@ import AboutFour from '@/components/Home/home-8/AboutFour.vue';
 import AboutFive from '@/components/Home/home-8/AboutFive.vue';
 import CtaThree from '@/components/Home/home-7/CtaThree.vue';
 import BlogOne from '@/components/Home/index/BlogOne.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
-
-import { computed } from 'vue'
 
 import { aboutTwo } from '@/data/data.js'
 
@@ -271,7 +256,6 @@ const numBg = computed(() => ({
     backgroundPosition: 'center',
 }))
 
-import { ref, onMounted } from 'vue'
 const api = useApi()
 const { user, isAuthenticated, isInstructor, fetchUser } = useAuth()
 

@@ -1,8 +1,5 @@
 <template>
 
-    <Preloader />
-    <InstructorNavbar />
-
     <section class="bg-cover py-5" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
             <div class="row">
@@ -255,17 +252,9 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
-import Preloader from '@/components/Preloader.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 const activeTab = ref(1)
 const preview = ref('')
@@ -388,4 +377,8 @@ const handleSubmit = async () => {
     }
 }
 
+
+definePageMeta({
+    layout: 'instructor',
+});
 </script>

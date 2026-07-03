@@ -76,7 +76,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 
 const config = useRuntimeConfig()

@@ -1,7 +1,5 @@
 <template>
     
-    <Preloader />
-    <NavDark />
 
     <div class="bg-cover position-relative" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container">
@@ -169,19 +167,9 @@
         </div>
     </section>
 
-    <FooterTop />
-    <Footer />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import Footer from '@/components/Footer/Footer.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 import log from "@/assets/img/log.png";
 import logoIcon from "@/assets/img/Logo alrei.png"

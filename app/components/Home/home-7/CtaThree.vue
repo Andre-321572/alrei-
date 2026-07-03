@@ -81,7 +81,6 @@
 
 <script setup>
 
-import { computed } from 'vue'
 
 /* Banner Background */
 import tagBg from '@/assets/img/tag-bg.jpg'

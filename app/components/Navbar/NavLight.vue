@@ -17,50 +17,23 @@
                     </span>
                     <ul class="nav-menu">
                     
-                        <li :class="['/', '/home-2', '/home-3', '/home-4', '/home-5', '/home-6', '/home-7', '/home-8', '/home-9', '/home-10', '/new-home-1', '/new-home-2', '/new-home-3'].includes(current) ? 'active' : ''">
+                        <li :class="current === '/' ? 'active' : ''">
                             <NuxtLink to="/">
                                 {{ $t('home') }}
                             </NuxtLink>
                         </li>
                         
-                        <li v-if="!isInstructor && !isAdmin" :class="['/grid-with-sidebar','/list-with-sidebar','/full-width-course'].includes(current) ? 'active' : ''">
-                            <a href="#" @click.prevent="toggleSubmenu('courses')">
-                                {{ $t('courses') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
-                            </a>
-                            <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['courses']) ? 'block !important' : '' }">
-                                <li :class="current === '/grid-with-sidebar' ? 'active' : ''"><NuxtLink to="/grid-with-sidebar">{{ $t('courses_grid_sidebar') }}</NuxtLink></li>
-                                <li :class="current === '/list-with-sidebar' ? 'active' : ''"><NuxtLink to="/list-with-sidebar">{{ $t('list_layout_sidebar') }}</NuxtLink></li>
-                                <li :class="current === '/full-width-course' ? 'active' : ''"><NuxtLink to="/full-width-course">{{ $t('courses_grid_full') }}</NuxtLink></li>
-                            </ul>
-                        </li>
-                        
-                        <li v-if="!isAdmin" :class="['/about-us','/blog','/blog-detail','/pricing','/404','/register','/component','/contact','/privacy','/faq','/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
+                        <li v-if="!isAdmin" :class="['/about-us','/blog','/blog-detail','/pricing','/404','/register','/contact','/privacy','/faq'].includes(current) ? 'active' : ''">
                             <a href="#" @click.prevent="toggleSubmenu('pages')">
                                 {{ $t('pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
                             <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['pages']) ? 'block !important' : '' }">
-                                <li :class="['/shop-full-width','/shop-left-sidebar','/shop-right-sidebar','/product-detail','/add-to-cart','/product-wishlist','/checkout','/shop-order'].includes(current) ? 'active' : ''">
-                                    <a href="#" @click.prevent="toggleSubmenu('shop_pages')">
-                                        {{ $t('shop_pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
-                                    </a>
-                                    <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['shop_pages']) ? 'block !important' : '' }">
-                                        <li :class="current === '/shop-full-width' ? 'active' : ''"><NuxtLink to="/shop-full-width">{{ $t('shop_full_width') }}</NuxtLink></li>
-                                        <li :class="current === '/shop-left-sidebar' ? 'active' : ''"><NuxtLink to="/shop-left-sidebar">{{ $t('shop_sidebar_left') }}</NuxtLink></li>
-                                        <li :class="current === '/shop-right-sidebar' ? 'active' : ''"><NuxtLink to="/shop-right-sidebar">{{ $t('shop_sidebar_right') }}</NuxtLink></li>
-                                        <li :class="current === '/product-detail' ? 'active' : ''"><NuxtLink to="/product-detail">{{ $t('shop_detail') }}</NuxtLink></li>
-                                        <li :class="current === '/add-to-cart' ? 'active' : ''"><NuxtLink to="/add-to-cart">{{ $t('add_to_cart') }}</NuxtLink></li>
-                                        <li :class="current === '/product-wishlist' ? 'active' : ''"><NuxtLink to="/product-wishlist">{{ $t('wishlist') }}</NuxtLink></li>
-                                        <li :class="current === '/checkout' ? 'active' : ''"><NuxtLink to="/checkout">{{ $t('checkout') }}</NuxtLink></li>
-                                        <li :class="current === '/shop-order' ? 'active' : ''"><NuxtLink to="/shop-order">{{ $t('order') }}</NuxtLink></li>
-                                    </ul>
-                                </li>
                                 <li :class="current === '/about-us' ? 'active' : ''"><NuxtLink to="/about-us">{{ $t('about_us') }}</NuxtLink></li>
                                 <li :class="current === '/blog' ? 'active' : ''"><NuxtLink to="/blog">{{ $t('blog_style') }}</NuxtLink></li>
                                 <li :class="current === '/blog-detail' ? 'active' : ''"><NuxtLink to="/blog-detail">{{ $t('blog_detail') }}</NuxtLink></li>
                                 <li :class="current === '/pricing' ? 'active' : ''"><NuxtLink to="/pricing">{{ $t('pricing') }}</NuxtLink></li>
                                 <li :class="current === '/404' ? 'active' : ''"><NuxtLink to="/404">{{ $t('page_404') }}</NuxtLink></li>
                                 <li :class="current === '/register' ? 'active' : ''"><NuxtLink to="/register">{{ $t('register') }}</NuxtLink></li>
-                                <li :class="current === '/component' ? 'active' : ''"><NuxtLink to="/component">{{ $t('elements') }}</NuxtLink></li>
                                 <li :class="current === '/contact' ? 'active' : ''"><NuxtLink to="/contact">{{ $t('contact_us') }}</NuxtLink></li>
                                 <li :class="current === '/privacy' ? 'active' : ''"><NuxtLink to="/privacy">{{ $t('privacy_policy') }}</NuxtLink></li>
                                 <li :class="current === '/faq' ? 'active' : ''"><NuxtLink to="/faq">{{ $t('faqs') }}</NuxtLink></li>
@@ -140,7 +113,6 @@ const logo = '/Logo alrei.png'
 const logoIcon = '/Logo alrei.png'
 
 import LocaleSwitcher from './LocaleSwitcher.vue'
-import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute } from '#app'
 
 const isMobile = ref(false)
@@ -160,7 +132,6 @@ const toggleSubmenu = (menuKey) => {
   }
 }
 
-import { watch } from 'vue'
 watch(() => route.path, () => {
   toggle.value = false
   openSubmenus.value = {}

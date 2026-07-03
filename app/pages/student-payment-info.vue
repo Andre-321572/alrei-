@@ -1,7 +1,5 @@
 <template>
     
-    <Preloader />
-    <StudentNavbar />
 
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
@@ -194,9 +192,6 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
-
     <!-- Payment Modal -->
     <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -310,11 +305,7 @@
 
 <script setup>
 
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 import { cartData, paymentData } from '@/data/student.js'
 
@@ -322,11 +313,10 @@ import card1 from "@/assets/img/card-1.png";
 import card2 from "@/assets/img/card-2.png";
 import card3 from "@/assets/img/card-3.png";
 
-import { computed } from 'vue'
-
 /* Banner Background */
 
 
-
-
+definePageMeta({
+    layout: 'student',
+});
 </script>

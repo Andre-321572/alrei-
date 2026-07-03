@@ -43,7 +43,7 @@
                             <ul class="footer-menu">
 
                                 <li v-for="(item, index) in footerCat" :key="index">
-                                    <a href="#">{{ $t(item) }}</a>
+                                    <NuxtLink :to="item.link">{{ $t(item.name) }}</NuxtLink>
                                 </li>
                                 
                             </ul>
@@ -56,7 +56,7 @@
                             <ul class="footer-menu">
 
                                 <li v-for="(item, index) in footerHelp" :key="index">
-                                    <a href="#">{{ $t(item) }}</a>
+                                    <NuxtLink :to="item.link">{{ $t(item.name) }}</NuxtLink>
                                 </li>
                                 
                             </ul>
@@ -127,7 +127,6 @@
 <script setup>
 const logo = '/Logo alrei.png'
 
-import { computed } from 'vue'
 
 import { footerCat, footerHelp, footerLink1 } from '@/data/data.js'
 

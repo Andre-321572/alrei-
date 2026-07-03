@@ -153,7 +153,6 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
 
 const props = defineProps({

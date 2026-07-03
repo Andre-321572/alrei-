@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+definePageMeta({ layout: 'student', middleware: ['auth'] });
 const route = useRoute()
 const courseId = route.params.id
 const { quizList, fetchQuizzes, startQuiz } = useQuizStore()

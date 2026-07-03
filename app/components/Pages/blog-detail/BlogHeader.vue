@@ -285,7 +285,6 @@ import user2 from "@/assets/img/user-2.jpg";
 import user4 from "@/assets/img/user-4.jpg";
 import user5 from "@/assets/img/user-5.jpg";
 
-import { computed } from 'vue'
 
 import { blogCat, trandingPost, blogTag } from '@/data/data.js'
 

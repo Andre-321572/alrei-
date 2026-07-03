@@ -70,10 +70,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { useRoute } from '#app'
 
 definePageMeta({
+  layout: 'instructor',
   middleware: 'quiz-manage'
 })
 // Explicitly import components and composables to avoid auto-import issues on Windows

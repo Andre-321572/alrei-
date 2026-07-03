@@ -52,7 +52,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { coursesData } from '@/data/data.js'
 
 const { $tns } = useNuxtApp() 

@@ -1,11 +1,5 @@
 <template>
 
-    <Preloader />
-
-    <div class="shadow-sm">
-        <NavDark />
-    </div>
-
     <section class="error-wrap">
         <div class="container">
             <div class="row justify-content-center">
@@ -20,19 +14,9 @@
         </div>
     </section>
 
-    <FooterTop />
-    <Footer />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import Footer from '@/components/Footer/Footer.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 import ErrorI from "@/assets/img/404.png";
 

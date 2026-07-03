@@ -380,17 +380,25 @@ export const blogData = [
 export const footerLink1 = [
     { name:'about_us', link:'/about-us' },
     { name:'faqs', link:'/faq' },
-    { name:'checkout', link:'/checkout' },
+    { name:'pricing', link:'/pricing' },
     { name:'contact_us', link:'/contact' },
     { name:'blog', link:'/blog' },
 ]
 
 export const footerCat = [
-    'designing','business','software','wordpress','php'
+    { name:'designing', link:'/student-all-courses' },
+    { name:'business',  link:'/student-all-courses' },
+    { name:'software',  link:'/student-all-courses' },
+    { name:'wordpress', link:'/student-all-courses' },
+    { name:'php',       link:'/student-all-courses' },
 ]
 
 export const footerHelp = [
-    'documentation','live_chat', 'mail_us', 'privacy_policy', 'faqs'
+    { name:'documentation',  link:'/faq' },
+    { name:'live_chat',      link:'/contact' },
+    { name:'mail_us',        link:'/contact' },
+    { name:'privacy_policy', link:'/privacy' },
+    { name:'faqs',           link:'/faq' },
 ]
 
 export const tripsData = [ 

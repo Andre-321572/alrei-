@@ -1,6 +1,4 @@
 <template>
-    <InstructorNavbar /> <!-- We can reuse or create an AdminNavbar later -->
-
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
             <div class="ht-80"></div>
@@ -9,8 +7,15 @@
 
     <section class="pt-4">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
+            <div class="row gx-xl-5">
+                <div class="col-lg-3">
+                    <AdminSidebar
+                        v-model:activeTab="activeTab"
+                        :pending-certificates="pendingCertificatesCount"
+                        :pending-scholarships="pendingScholarshipsCount"
+                    />
+                </div>
+                <div class="col-lg-9 col-md-12">
                     <h2 class="mb-4">{{ $t('platform_administration') }}</h2>
                     
                     <div v-if="loading" class="text-center py-5">
@@ -34,74 +39,6 @@
                     </div>
 
                     <div class="card border rounded-3">
-                        <div class="card-header bg-white border-bottom py-3">
-                            <ul class="nav nav-tabs card-header-tabs border-0" id="adminTabs" role="tablist">
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'instructors' ? 'active' : '']" 
-                                        @click="activeTab = 'instructors'"
-                                    >
-                                        {{ $t('instructors') }}
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'students' ? 'active' : '']" 
-                                        @click="activeTab = 'students'"
-                                    >
-                                        {{ $t('students') }}
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'courses' ? 'active' : '']" 
-                                        @click="activeTab = 'courses'"
-                                    >
-                                        {{ $t('courses') }}
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'groups' ? 'active' : '']" 
-                                        @click="activeTab = 'groups'"
-                                    >
-                                        {{ $t('groups') }}
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'blogs' ? 'active' : '']" 
-                                        @click="activeTab = 'blogs'"
-                                    >
-                                        {{ $t('blogs') }}
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'certificates' ? 'active' : '']" 
-                                        @click="activeTab = 'certificates'"
-                                    >
-                                        Certificats ({{ pendingCertificatesCount }})
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'scholarships' ? 'active' : '']" 
-                                        @click="activeTab = 'scholarships'"
-                                    >
-                                        Bourses ({{ pendingScholarshipsCount }})
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button 
-                                        :class="['nav-link', activeTab === 'categories' ? 'active' : '']" 
-                                        @click="activeTab = 'categories'"
-                                    >
-                                        Catégories
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
                         <div class="card-body">
                             <!-- Actions Rapides -->
                             <div class="d-flex justify-content-end mb-3 gap-2">
@@ -916,7 +853,6 @@
         </div>
     </div>
 
-    <FooterDark />
     <!-- Category Modal -->
     <div class="modal fade" id="categoryModal" tabindex="-1">
         <div class="modal-dialog">
@@ -1015,12 +951,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
+import AdminSidebar from '@/components/Accounts/admin-dashboard/AdminSidebar.vue';
 
 // Protège la route — seul un admin peut accéder
 definePageMeta({
+    layout: 'instructor',
     middleware: ['admin'],
 });
 

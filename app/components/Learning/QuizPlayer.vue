@@ -99,7 +99,6 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 
 const props = defineProps({
   quiz: { type: Object, required: true },

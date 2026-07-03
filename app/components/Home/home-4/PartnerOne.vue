@@ -16,7 +16,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 
 import { partnerImg } from '@/data/data.js'
 

@@ -1,6 +1,4 @@
 <template>
-    <Preloader />
-    <StudentNavbar />
 
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
@@ -87,7 +85,7 @@
                                 </div>
                                 <h5 class="fw-bold">Aucun certificat pour le moment</h5>
                                 <p class="text-muted">Terminez vos cours à 100% pour obtenir vos certificats officiels.</p>
-                                <NuxtLink to="/grid-with-sidebar" class="btn btn-main mt-2 rounded-pill px-4">Parcourir les cours</NuxtLink>
+                                <NuxtLink to="/student-all-courses" class="btn btn-main mt-2 rounded-pill px-4">Parcourir les cours</NuxtLink>
                             </div>
                         </div>
                     </div>
@@ -96,19 +94,13 @@
         </div>
     </section>
 
-    <FooterDark />
-    <ScrollToTop />
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 definePageMeta({
+    layout: 'student',
     middleware: ['auth'],
 });
 
@@ -152,7 +144,5 @@ const downloadCert = async (cert) => {
 onMounted(() => {
     fetchCertificates()
 })
-
-
 
 </script>

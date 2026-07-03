@@ -46,7 +46,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
 
 const { $tns } = useNuxtApp()
 const api = useApi()

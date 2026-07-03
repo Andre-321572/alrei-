@@ -22,11 +22,8 @@
                 </div>
                 <del v-if="course.discount_price" class="text-muted fs-5">{{ course.price }} $</del>
             </div>
-            
+
             <div class="ed_view_link d-flex align-items-center justify-content-center flex-column gap-3 mt-4 p-0">
-                <button @click="handleAddToCart" class="btn btn-outline-dark rounded-pill w-100 py-2 fw-semibold" :disabled="isInCart">
-                    <i class="bi bi-basket2 me-2"></i>{{ isInCart ? $t('in_cart') : $t('add_to_cart') }}
-                </button>
                 <button @click="handleBuyNow" class="btn btn-main w-100 rounded-pill py-3 fw-bold shadow-sm" style="font-size: 1.1rem;">{{ $t('buy_now') }}</button>
                 <button v-if="course.access_key" @click="handleEnrollWithKey" class="btn btn-light border w-100 rounded-pill py-2 fw-medium text-dark">
                     <i class="bi bi-key me-2 text-warning"></i>{{ $t('enroll_with_key') }}
@@ -35,7 +32,7 @@
                     <i class="bi bi-heart me-2"></i>{{ $t('add_to_wishlist') }}
                 </button>
             </div>
-            
+
             <div v-if="scholarships.length > 0" class="mt-4 pt-4 border-top">
                 <h5 class="mb-3 text-primary fw-bold"><i class="bi bi-mortarboard me-2"></i>Bourses disponibles</h5>
                 <div v-for="sch in scholarships" :key="sch.id" class="card shadow-sm border-0 bg-light mb-3 rounded-3">
@@ -71,7 +68,7 @@
             </li>
         </ul>
     </div>
-    
+
     <!-- Motivation Modal -->
     <div class="modal fade" id="applyScholarshipModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -101,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+
 const props = defineProps({
     course: {
         type: Object,
@@ -119,7 +116,6 @@ const props = defineProps({
     }
 })
 
-const { addToCart, cart } = useCart()
 const { isAuthenticated } = useAuth()
 const router = useRouter()
 const api = useApi()
@@ -147,23 +143,19 @@ onMounted(async () => {
     }
 })
 
-const isInCart = computed(() => cart.value.some(item => item.id === props.course.id))
-
-const handleAddToCart = () => {
-    addToCart(props.course)
-}
-
 const handleBuyNow = () => {
-    addToCart(props.course)
-    router.push('/checkout')
+    if (!isAuthenticated.value) {
+        router.push('/')
+        return
+    }
+    router.push(`/course-detail/${props.course.id}`)
 }
 
 const handleAddToWishlist = async () => {
     if (!isAuthenticated.value) {
-        router.push('/login')
+        router.push('/')
         return
     }
-
     try {
         await api('/wishlist', {
             method: 'POST',
@@ -175,15 +167,14 @@ const handleAddToWishlist = async () => {
         alert('Failed to add to wishlist. Maybe it is already there?')
     }
 }
+
 const handleEnrollWithKey = async () => {
     if (!isAuthenticated.value) {
-        router.push('/login')
+        router.push('/')
         return
     }
-
     const key = prompt('Please enter the course access key:')
     if (!key) return
-
     try {
         await api(`/courses/${props.course.id}/enroll-with-key`, {
             method: 'POST',
@@ -199,12 +190,12 @@ const handleEnrollWithKey = async () => {
 
 const openMotivationModal = (sch) => {
     if (!isAuthenticated.value) {
-        router.push('/login')
+        router.push('/')
         return
     }
     selectedScholarship.value = sch
     motivationLetter.value = ''
-    if (process.client) {
+    if (import.meta.client) {
         const { $bootstrap } = useNuxtApp()
         if (!applyModalInstance) {
             applyModalInstance = new ($bootstrap).Modal(document.getElementById('applyScholarshipModal'))
@@ -221,7 +212,6 @@ const submitApplication = async () => {
         if (supportingDocumentFile.value) {
             formData.append('supporting_document', supportingDocumentFile.value)
         }
-
         await api(`/scholarships/${selectedScholarship.value.id}/apply`, {
             method: 'POST',
             body: formData
@@ -235,4 +225,4 @@ const submitApplication = async () => {
         applying.value = false
     }
 }
-</script>
+</script>

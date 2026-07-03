@@ -1,11 +1,5 @@
 <template>
 
-    <Preloader />
-
-    <div class="shadow-sm">
-        <NavDark />
-    </div>
-
     <section>
         <div class="container">
             <div class="row align-items-center justify-content-center">
@@ -126,29 +120,16 @@
         </div>
     </section>
 
-    <FooterTop />
-    <Footer />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
 
-import Preloader from '@/components/Preloader.vue';
-import NavDark from '@/components/Navbar/NavDark.vue';
 import TeamOne from '@/components/Pages/about-us/TeamOne.vue';
 import ReviewTwo from '@/components/Home/new-home-2/ReviewTwo.vue';
-import FooterTop from '@/components/Home/index/FooterTop.vue';
-import Footer from '@/components/Footer/Footer.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
-
-import { computed } from 'vue'
 
 import hero3 from "@/assets/img/hero-img-3.png";
 
 /* Banner Background */
-
-
 
 const aboutBgStyle = computed(() => ({
     backgroundImage: "url('/img/student-banner.png')",

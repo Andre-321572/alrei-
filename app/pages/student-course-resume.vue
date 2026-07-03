@@ -1,7 +1,5 @@
 <template>
     
-    <Preloader />
-    <StudentNavbar />
 
     <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
         <div class="container-fluid px-0">
@@ -248,25 +246,16 @@
         </div>
     </div>
 
-    <FooterDark />
-    <ScrollToTop />
-
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi';
 import { useRoute } from 'vue-router';
-import Preloader from '@/components/Preloader.vue';
-import StudentNavbar from '@/components/Navbar/StudentNavbar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
 import MoodleButton from '@/components/External/MoodleButton.vue';
 import LiveClassCard from '@/components/External/LiveClassCard.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
-import ScrollToTop from '@/components/ScrollToTop.vue';
 
 /* Banner Background */
-
 
 import QuizPlayer from '@/components/Learning/QuizPlayer.vue';
 import AssignmentPlayer from '@/components/Learning/AssignmentPlayer.vue';
@@ -427,7 +416,9 @@ onMounted(() => {
 })
 
 
-
+definePageMeta({
+    layout: 'student',
+});
 </script>
 
 <style scoped>

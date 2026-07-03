@@ -81,7 +81,6 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 
 const { course } = defineProps({ course: Object })
 

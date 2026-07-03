@@ -55,6 +55,7 @@
   "page_404": "Page 404",
   "register": "S'inscrire",
   "elements": "Éléments",
+  "contact": "Contact",
   "contact_us": "Nous contacter",
   "privacy_policy": "Politique de confidentialité",
   "faqs": "FAQs",
@@ -367,6 +368,8 @@
   "scheduled_live_classes": "Cours en direct planifiés",
   "no_live_classes_scheduled": "Aucun cours en direct planifié",
   "no_courses_enrolled": "Aucun cours inscrit pour le moment",
+  "search_courses": "Rechercher un cours...",
+  "no_courses_found": "Aucun cours trouvé",
   "no_assignments_found": "Aucun devoir trouvé",
   "no_reviews_yet": "Pas encore d'avis",
   "no_students_enrolled": "Aucun étudiant inscrit",
@@ -387,5 +390,11 @@
   "certificates": "Certificats",
   "no_quiz_attempts_yet": "Vous n'avez pas encore passé de quiz.",
   "certificate_claim_success": "Votre demande de certificat a été envoyée avec succès. Elle doit être validée par l'administration avant d'être disponible dans votre tableau de bord.",
-  "certificate_claim_error": "Une erreur est survenue lors de la génération du certificat. Assurez-vous d'avoir validé le devoir final."
+  "certificate_claim_error": "Une erreur est survenue lors de la génération du certificat. Assurez-vous d'avoir validé le devoir final.",
+  "student_type": "Type d'étudiant",
+  "paying_student": "Étudiant payant",
+  "scholarship_student": "Étudiant boursier",
+  "export_csv": "Exporter CSV",
+  "export_pdf": "Exporter PDF",
+  "scholarships": "Bourses"
 }

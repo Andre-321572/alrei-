@@ -1,6 +1,4 @@
 <template>
-    <Preloader />
-    <InstructorNavbar />
 
     <section class="bg-gredient p-0">
         <div class="container-fluid px-0">
@@ -53,16 +51,13 @@
         </div>
     </section>
 
-    <FooterDark />
 </template>
 
 <script setup lang="ts">
-import Preloader from '@/components/Preloader.vue';
-import InstructorNavbar from '@/components/Navbar/InstructorNavbar.vue';
-import FooterDark from '@/components/Footer/FooterDark.vue';
 
 // Protège la page : seul un instructeur connecté peut y accéder
 definePageMeta({
+  layout: 'instructor',
     middleware: ['auth'],
 });
 

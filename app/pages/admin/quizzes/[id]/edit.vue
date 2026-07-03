@@ -88,6 +88,7 @@
 
 <script setup>
 definePageMeta({
+  layout: 'instructor',
   middleware: 'quiz-manage'
 })
 const route = useRoute()
