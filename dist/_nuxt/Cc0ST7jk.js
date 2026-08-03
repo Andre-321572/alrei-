@@ -1,0 +1,1 @@
+import{a8 as i,B as n,x as s,a9 as o}from"./NKVXZcjV.js";const d=i(async()=>{let e,a;const{isAuthenticated:r,fetchUser:u,user:t}=n();if(!r.value)return s("/");if(t.value||([e,a]=o(()=>u()),await e,a()),t.value?.role!=="admin")return s("/")});export{d as default};
