@@ -3,10 +3,10 @@
         <div class="container">
             <nav id="navigation" :class="isMobile ? 'navigation navigation-portrait' : 'navigation navigation-landscape'">
                 <div class="nav-header">
-                    <NuxtLink class="nav-brand static-logo" to="/">
+                    <NuxtLink class="nav-brand static-logo" :to="localePath('/')">
                         <img :src="logoLight" class="logo" alt="" style="height:65px;width:auto;" />
                     </NuxtLink>
-                    <NuxtLink class="nav-brand fixed-logo" to="/">
+                    <NuxtLink class="nav-brand fixed-logo" :to="localePath('/')">
                         <img :src="logo" class="logo" alt="" style="height:65px;width:auto;" />
                     </NuxtLink>
                     <div class="nav-toggle" @click="toggle = !toggle"><i class="bi bi-list"></i></div>
@@ -18,7 +18,7 @@
                     <ul class="nav-menu">
                     
                         <li :class="current === '/' ? 'active' : ''">
-                            <NuxtLink to="/">
+                            <NuxtLink :to="localePath('/')">
                                 {{ $t('home') }}
                             </NuxtLink>
                         </li>
@@ -28,15 +28,15 @@
                                 {{ $t('pages') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                             </a>
                             <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['pages']) ? 'block !important' : '' }">
-                                <li :class="current === '/about-us' ? 'active' : ''"><NuxtLink to="/about-us">{{ $t('about_us') }}</NuxtLink></li>
-                                <li :class="current === '/blog' ? 'active' : ''"><NuxtLink to="/blog">{{ $t('blog_style') }}</NuxtLink></li>
-                                <li :class="current === '/blog-detail' ? 'active' : ''"><NuxtLink to="/blog-detail">{{ $t('blog_detail') }}</NuxtLink></li>
-                                <li :class="current === '/pricing' ? 'active' : ''"><NuxtLink to="/pricing">{{ $t('pricing') }}</NuxtLink></li>
-                                <li :class="current === '/404' ? 'active' : ''"><NuxtLink to="/404">{{ $t('page_404') }}</NuxtLink></li>
-                                <li :class="current === '/register' ? 'active' : ''"><NuxtLink to="/register">{{ $t('register') }}</NuxtLink></li>
-                                <li :class="current === '/contact' ? 'active' : ''"><NuxtLink to="/contact">{{ $t('contact_us') }}</NuxtLink></li>
-                                <li :class="current === '/privacy' ? 'active' : ''"><NuxtLink to="/privacy">{{ $t('privacy_policy') }}</NuxtLink></li>
-                                <li :class="current === '/faq' ? 'active' : ''"><NuxtLink to="/faq">{{ $t('faqs') }}</NuxtLink></li>
+                                <li :class="current === '/about-us' ? 'active' : ''"><NuxtLink :to="localePath('/about-us')">{{ $t('about_us') }}</NuxtLink></li>
+                                <li :class="current === '/blog' ? 'active' : ''"><NuxtLink :to="localePath('/blog')">{{ $t('blog_style') }}</NuxtLink></li>
+                                <li :class="current === '/blog-detail' ? 'active' : ''"><NuxtLink :to="localePath('/blog-detail')">{{ $t('blog_detail') }}</NuxtLink></li>
+                                <li :class="current === '/pricing' ? 'active' : ''"><NuxtLink :to="localePath('/pricing')">{{ $t('pricing') }}</NuxtLink></li>
+                                <li :class="current === '/404' ? 'active' : ''"><NuxtLink :to="localePath('/404')">{{ $t('page_404') }}</NuxtLink></li>
+                                <li :class="current === '/register' ? 'active' : ''"><NuxtLink :to="localePath('/register?tab=register')">{{ $t('register') }}</NuxtLink></li>
+                                <li :class="current === '/contact' ? 'active' : ''"><NuxtLink :to="localePath('/contact')">{{ $t('contact_us') }}</NuxtLink></li>
+                                <li :class="current === '/privacy' ? 'active' : ''"><NuxtLink :to="localePath('/privacy')">{{ $t('privacy_policy') }}</NuxtLink></li>
+                                <li :class="current === '/faq' ? 'active' : ''"><NuxtLink :to="localePath('/faq')">{{ $t('faqs') }}</NuxtLink></li>
                             </ul>
                         </li>
                         
@@ -50,11 +50,11 @@
                                         <i class="bi bi-person-check me-2"></i>{{ $t('instructor_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                                     </a>
                                     <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['instructor_dash']) ? 'block !important' : '' }">
-                                        <li :class="current === '/instructor-dashboard' ? 'active' : ''"><NuxtLink to="/instructor-dashboard"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-courses' ? 'active' : ''"><NuxtLink to="/instructor-courses"><i class="bi bi-basket2 me-2"></i>{{ $t('courses') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-create-course' ? 'active' : ''"><NuxtLink to="/instructor-create-course"><i class="bi bi-patch-plus me-2"></i>{{ $t('create_course') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-students' ? 'active' : ''"><NuxtLink to="/instructor-students"><i class="bi bi-people me-2"></i>{{ $t('students') }}</NuxtLink></li>
-                                        <li :class="current === '/instructor-reviews' ? 'active' : ''"><NuxtLink to="/instructor-reviews"><i class="bi bi-star-half me-2"></i>{{ $t('reviews') }}</NuxtLink></li>
+                                        <li :class="current === '/instructor-dashboard' ? 'active' : ''"><NuxtLink :to="localePath('/instructor-dashboard')"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                                        <li :class="current === '/instructor-courses' ? 'active' : ''"><NuxtLink :to="localePath('/instructor-courses')"><i class="bi bi-basket2 me-2"></i>{{ $t('courses') }}</NuxtLink></li>
+                                        <li :class="current === '/instructor-create-course' ? 'active' : ''"><NuxtLink :to="localePath('/instructor-create-course')"><i class="bi bi-patch-plus me-2"></i>{{ $t('create_course') }}</NuxtLink></li>
+                                        <li :class="current === '/instructor-students' ? 'active' : ''"><NuxtLink :to="localePath('/instructor-students')"><i class="bi bi-people me-2"></i>{{ $t('students') }}</NuxtLink></li>
+                                        <li :class="current === '/instructor-reviews' ? 'active' : ''"><NuxtLink :to="localePath('/instructor-reviews')"><i class="bi bi-star-half me-2"></i>{{ $t('reviews') }}</NuxtLink></li>
                                         <li><a href="#"><i class="bi bi-question-octagon me-2"></i>{{ $t('help_support') }}</a></li>
                                     </ul>
                                 </li>
@@ -63,26 +63,26 @@
                                         <i class="bi bi-mortarboard me-2"></i>{{ $t('student_dashboard') }}<span class="submenu-indicator"><span class='submenu-indicator-chevron'></span></span>
                                     </a>
                                     <ul class="nav-dropdown nav-submenu" :style="{ display: (isMobile && openSubmenus['student_dash']) ? 'block !important' : '' }">
-                                        <li :class="current === '/student-dashboard' ? 'active' : ''"><NuxtLink to="/student-dashboard"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
-                                        <li :class="current === '/student-subscription' ? 'active' : ''"><NuxtLink to="/student-subscription"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
-                                        <li :class="current === '/student-course-resume' ? 'active' : ''"><NuxtLink to="/student-course-resume"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
-                                        <li :class="current === '/student-wishlist' ? 'active' : ''"><NuxtLink to="/student-wishlist"><i class="bi bi-wallet2 me-2"></i>{{ $t('wishlist') }}</NuxtLink></li>
-                                        <li :class="current === '/student-payment-info' ? 'active' : ''"><NuxtLink to="/student-payment-info"><i class="bi bi-star-half me-2"></i>{{ $t('payment_info') }}</NuxtLink></li>
+                                        <li :class="current === '/student-dashboard' ? 'active' : ''"><NuxtLink :to="localePath('/student-dashboard')"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                                        <li :class="current === '/student-subscription' ? 'active' : ''"><NuxtLink :to="localePath('/student-subscription')"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
+                                        <li :class="current === '/student-course-resume' ? 'active' : ''"><NuxtLink :to="localePath('/student-course-resume')"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
+                                        <li :class="current === '/student-wishlist' ? 'active' : ''"><NuxtLink :to="localePath('/student-wishlist')"><i class="bi bi-wallet2 me-2"></i>{{ $t('wishlist') }}</NuxtLink></li>
+                                        <li :class="current === '/student-payment-info' ? 'active' : ''"><NuxtLink :to="localePath('/student-payment-info')"><i class="bi bi-star-half me-2"></i>{{ $t('payment_info') }}</NuxtLink></li>
                                         <li><a href="#"><i class="bi bi-question-octagon me-2"></i>{{ $t('help_support') }}</a></li>
                                     </ul>
                                 </li>
-                                <li v-if="isAdmin" :class="current === '/admin-dashboard' ? 'active' : ''"><NuxtLink to="/admin-dashboard"><i class="bi bi-shield-lock me-2"></i>{{ $t('administration') }}</NuxtLink></li>
-                                <li :class="current === '/profile-edit' ? 'active' : ''"><NuxtLink to="/profile-edit"><i class="bi bi-person-bounding-box me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
-                                <li :class="current === '/settings' ? 'active' : ''"><NuxtLink to="/settings"><i class="bi bi-gear me-2"></i>{{ $t('settings') }}</NuxtLink></li>
-                                <li :class="current === '/delete-account' ? 'active' : ''"><NuxtLink to="/delete-account"><i class="bi bi-trash3 me-2"></i>{{ $t('delete_accounts') }}</NuxtLink></li>
+                                <li v-if="isAdmin" :class="current === '/admin-dashboard' ? 'active' : ''"><NuxtLink :to="localePath('/admin-dashboard')"><i class="bi bi-shield-lock me-2"></i>{{ $t('administration') }}</NuxtLink></li>
+                                <li :class="current === '/profile-edit' ? 'active' : ''"><NuxtLink :to="localePath('/profile-edit')"><i class="bi bi-person-bounding-box me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
+                                <li :class="current === '/settings' ? 'active' : ''"><NuxtLink :to="localePath('/settings')"><i class="bi bi-gear me-2"></i>{{ $t('settings') }}</NuxtLink></li>
+                                <li :class="current === '/delete-account' ? 'active' : ''"><NuxtLink :to="localePath('/delete-account')"><i class="bi bi-trash3 me-2"></i>{{ $t('delete_accounts') }}</NuxtLink></li>
                                 <li><a href="#" @click.prevent="logout"><i class="bi bi-box-arrow-right me-2"></i>{{ $t('logout') }}</a></li>
                             </ul>
                         </li>
                         <li :class="current === '/blog' ? 'active' : ''">
-                             <NuxtLink to="/blog">{{ $t('blog_style') }}</NuxtLink>
+                             <NuxtLink :to="localePath('/blog')">{{ $t('blog_style') }}</NuxtLink>
                          </li>
                          <li :class="current === '/contact' ? 'active' : ''">
-                             <NuxtLink to="/contact">{{ $t('contact_us') }}</NuxtLink>
+                             <NuxtLink :to="localePath('/contact')">{{ $t('contact_us') }}</NuxtLink>
                          </li>
                          <LocaleSwitcher v-if="isMobile" />
                     </ul>
@@ -91,10 +91,10 @@
                         <LocaleSwitcher />
                         
                         <li v-if="!isAuthenticated" class="become-tutor light">
-                            <NuxtLink to="/become-tutor"><i class="bi bi-person-circle"></i>{{ $t('become_tutor') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/become-tutor')"><i class="bi bi-person-circle"></i>{{ $t('become_tutor') }}</NuxtLink>
                         </li>
                         <li v-if="!isAuthenticated" class="join-btn light">
-                            <NuxtLink to="/register"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/register?tab=login')"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</NuxtLink>
                         </li>
                         <li v-if="isAuthenticated" class="join-btn light">
                             <a href="#" @click.prevent="logout" class="bg-danger border-danger"><i class="bi bi-box-arrow-right"></i>{{ $t('logout') }}</a>
@@ -114,6 +114,8 @@ const logoIcon = '/Logo alrei.png'
 
 import LocaleSwitcher from './LocaleSwitcher.vue'
 import { useRoute } from '#app'
+
+const localePath = useLocalePath()
 
 const isMobile = ref(false)
 const toggle = ref(false)

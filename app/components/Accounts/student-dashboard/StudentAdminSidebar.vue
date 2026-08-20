@@ -45,21 +45,21 @@
                 
                 <div class="d-navigation">
                     <ul id="side-menu"> 
-                        <li><NuxtLink to="/student-dashboard" :class="{ active: isActive('/student-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-all-courses" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-play-circle me-2"></i>{{ $t('all_courses') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-dashboard')" :class="{ active: isActive('/student-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-all-courses')" :class="{ active: isActive('/student-all-courses') }"><i class="bi bi-play-circle me-2"></i>{{ $t('all_courses') }}</NuxtLink></li>
                         <li>
-                            <NuxtLink to="/messages" :class="{ active: isActive('/messages') }" class="d-flex justify-content-between align-items-center">
+                            <NuxtLink :to="localePath('/messages')" :class="{ active: isActive('/messages') }" class="d-flex justify-content-between align-items-center">
                                 <div><i class="bi bi-chat-dots me-2"></i>Messages</div>
                                 <span v-if="unreadCount > 0" class="badge bg-danger rounded-pill">{{ unreadCount }}</span>
                             </NuxtLink>
                         </li>
-                        <li><NuxtLink to="/student-assignments" :class="{ active: isActive('/student-assignments') }"><i class="bi bi-file-earmark-text me-2"></i>{{ $t('my_assignments') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-subscription" :class="{ active: isActive('/student-subscription') }"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-course-resume" :class="{ active: isActive('/student-course-resume') }"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-certificates" :class="{ active: isActive('/student-certificates') }"><i class="bi bi-award me-2"></i>{{ $t('my_certificates') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-wishlist" :class="{ active: isActive('/student-wishlist') }"><i class="bi bi-heart me-2"></i>{{ $t('wishlist') }}</NuxtLink></li>
-                        <li><NuxtLink to="/student-payment-info" :class="{ active: isActive('/student-payment-info') }"><i class="bi bi-credit-card me-2"></i>{{ $t('payments') }}</NuxtLink></li>
-                        <li><NuxtLink to="/profile-edit" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-assignments')" :class="{ active: isActive('/student-assignments') }"><i class="bi bi-file-earmark-text me-2"></i>{{ $t('my_assignments') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-subscription')" :class="{ active: isActive('/student-subscription') }"><i class="bi bi-basket2 me-2"></i>{{ $t('my_subscription') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-course-resume')" :class="{ active: isActive('/student-course-resume') }"><i class="bi bi-patch-plus me-2"></i>{{ $t('course_resume') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-certificates')" :class="{ active: isActive('/student-certificates') }"><i class="bi bi-award me-2"></i>{{ $t('my_certificates') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-wishlist')" :class="{ active: isActive('/student-wishlist') }"><i class="bi bi-heart me-2"></i>{{ $t('wishlist') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/student-payment-info')" :class="{ active: isActive('/student-payment-info') }"><i class="bi bi-credit-card me-2"></i>{{ $t('payments') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/profile-edit')" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
                         <li><a href="#"><i class="bi bi-question-octagon me-2"></i>{{ $t('help_support') }}</a></li>
                     </ul>
                 </div>
@@ -74,6 +74,7 @@
 import { useRoute } from '#app'
 import { useAuth } from '@/composables/useAuth';
 
+const localePath = useLocalePath()
 const route = useRoute()
 const isActive = (path: string) => route.path === path
 

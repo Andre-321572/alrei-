@@ -108,32 +108,32 @@
                             <form @submit.prevent="handleRegister">
                                 
                                 <div class="row g-2 mb-2">
-                                    <div class="col-6"><input v-model="regFirstName" type="text" class="form-control form-control-sm" placeholder="Prénom *" required></div>
-                                    <div class="col-6"><input v-model="regLastName" type="text" class="form-control form-control-sm" placeholder="Nom *" required></div>
+                                    <div class="col-6"><input v-model="regFirstName" type="text" class="form-control form-control-sm" :placeholder="$t('first_name') + ' *'" required></div>
+                                    <div class="col-6"><input v-model="regLastName" type="text" class="form-control form-control-sm" :placeholder="$t('last_name') + ' *'" required></div>
                                 </div>
 
                                 <div class="row g-2 mb-2">
                                     <div class="col-6">
                                         <select v-model="regCountry" class="form-control form-control-sm" required>
-                                            <option value="">-- Pays * --</option>
+                                            <option value="">{{ $t('select_country') }}</option>
                                             <option v-for="c in worldCountries" :key="c" :value="c">{{ c }}</option>
                                         </select>
                                     </div>
                                     <div class="col-6">
                                         <select v-model="regGender" class="form-control form-control-sm" required>
-                                            <option value="M">Masculin</option>
-                                            <option value="F">Féminin</option>
+                                            <option value="M">{{ $t('male') }}</option>
+                                            <option value="F">{{ $t('female') }}</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="row g-2 mb-2">
-                                    <div class="col-6"><input v-model="regOrganisation" type="text" class="form-control form-control-sm" placeholder="Organisation/Syndicat *" required></div>
-                                    <div class="col-6"><input v-model="regOrganisationEmail" type="email" class="form-control form-control-sm" placeholder="Email Organisation *" required></div>
+                                    <div class="col-6"><input v-model="regOrganisation" type="text" class="form-control form-control-sm" :placeholder="$t('organisation_union') + ' *'" required></div>
+                                    <div class="col-6"><input v-model="regOrganisationEmail" type="email" class="form-control form-control-sm" :placeholder="$t('organisation_email') + ' *'" required></div>
                                 </div>
                                 
                                 <div class="row g-2 mb-2">
-                                    <div class="col-6"><input v-model="regEmail" type="email" class="form-control form-control-sm" placeholder="Email personnel *" required></div>
+                                    <div class="col-6"><input v-model="regEmail" type="email" class="form-control form-control-sm" :placeholder="$t('personal_email') + ' *'" required></div>
                                     <div class="col-6">
                                         <InternationalPhoneInput
                                             v-model="regWhatsapp"
@@ -146,23 +146,24 @@
 
                                 <div class="row g-2 mb-2">
                                     <div class="col-5">
-                                        <input v-model="regBirthDate" type="date" class="form-control form-control-sm" title="Date de naissance *" required>
+                                        <input v-model="regBirthDate" type="date" class="form-control form-control-sm" :title="$t('birth_date') + ' *'" required>
                                     </div>
-                                    <div class="col-4"><input v-model.number="regExperienceYears" type="number" class="form-control form-control-sm" placeholder="Exp. (Ans)"></div>
+                                    <div class="col-4"><input v-model.number="regExperienceYears" type="number" class="form-control form-control-sm" :placeholder="$t('experience_years')"></div>
                                     <div class="col-3">
                                         <select v-model="preferredLanguage" class="form-control form-control-sm" required>
                                             <option value="fr">FR</option>
                                             <option value="en">EN</option>
+                                            <option value="pt">PT</option>
                                         </select>
                                     </div>
                                 </div>
                                 
                                 <div class="row g-2 mb-2">
                                     <div class="col-6">
-                                        <input v-model="regPassword" type="password" class="form-control form-control-sm" placeholder="Mot de passe *" minlength="8" required>
+                                        <input v-model="regPassword" type="password" class="form-control form-control-sm" :placeholder="$t('password') + ' *'" minlength="8" required>
                                     </div>
                                     <div class="col-6">
-                                        <input v-model="regPasswordConfirmation" type="password" class="form-control form-control-sm" placeholder="Confirmation *" minlength="8" required>
+                                        <input v-model="regPasswordConfirmation" type="password" class="form-control form-control-sm" :placeholder="$t('confirm_password') + ' *'" minlength="8" required>
                                     </div>
                                 </div>
 
@@ -171,12 +172,12 @@
                                 <div class="form-group mb-3">
                                     <button type="submit" class="btn btn-main w-100 py-2" :disabled="regLoading">
                                         <span v-if="regLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                        Créer mon compte
+                                        {{ $t('create_my_account') }}
                                     </button>
                                 </div>
                                 
                                 <div class="form-group mb-3">
-                                    <div class="text-center text-muted small">Vous avez déjà un compte ? <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold text-main">{{ $t('sign_in') }}</a></div>
+                                    <div class="text-center text-muted small">{{ $t('already_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold text-main">{{ $t('sign_in') }}</a></div>
                                 </div>
                                 
                             </form>

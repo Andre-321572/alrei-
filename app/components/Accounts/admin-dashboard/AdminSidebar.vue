@@ -37,7 +37,7 @@
                             </li>
                             <li>
                                 <a :class="{ active: activeTab === 'country_summary' }" @click.prevent="emit('update:activeTab', 'country_summary')" href="#">
-                                    <i class="bi bi-globe-americas text-primary"></i> Résumé par Pays
+                                    <i class="bi bi-globe-americas text-primary"></i> {{ $t('country_summary') }}
                                 </a>
                             </li>
                             <li>
@@ -74,16 +74,16 @@
                             </li>
                             <li>
                                 <a :class="{ active: activeTab === 'categories' }" @click.prevent="emit('update:activeTab', 'categories')" href="#">
-                                    <i class="bi bi-tags"></i>Catégories
+                                    <i class="bi bi-tags"></i>{{ $t('categories') }}
                                 </a>
                             </li>
                             <li class="mt-3 border-top pt-3">
-                                <NuxtLink to="/instructor-dashboard">
+                                <NuxtLink :to="localePath('/instructor-dashboard')">
                                     <i class="bi bi-ui-radios-grid"></i>{{ $t('instructor_dashboard') }}
                                 </NuxtLink>
                             </li>
                             <li>
-                                <NuxtLink to="/profile-edit">
+                                <NuxtLink :to="localePath('/profile-edit')">
                                     <i class="bi bi-person-circle"></i>{{ $t('my_profile') }}
                                 </NuxtLink>
                             </li>
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-
+const localePath = useLocalePath();
 
 const props = defineProps({
     activeTab: { type: String, required: true },

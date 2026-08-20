@@ -3,10 +3,10 @@
     <a class="nav-link dropdown-toggle" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click.prevent="toggleDropdown">
       <i class="bi bi-globe me-1"></i> {{ currentLocaleName }}
     </a>
-    <ul class="nav-dropdown nav-submenu dropdown-menu" aria-labelledby="langDropdown" :style="{ display: (isMobile && isOpen) ? 'block !important' : '' }">
-      <li v-for="locale in availableLocales" :key="locale.code">
-        <NuxtLink class="dropdown-item" :to="switchLocalePath(locale.code)">
-          {{ locale.name }}
+    <ul class="nav-dropdown nav-submenu dropdown-menu" aria-labelledby="langDropdown" :class="{ show: isOpen }" :style="{ display: (isMobile && isOpen) ? 'block !important' : '' }">
+      <li v-for="loc in availableLocales" :key="loc.code">
+        <NuxtLink class="dropdown-item" :to="switchLocalePath(loc.code)" @click="changeLocale(loc.code)">
+          {{ loc.name }}
         </NuxtLink>
       </li>
     </ul>
@@ -16,7 +16,7 @@
 <script setup>
 import { useRoute } from '#app'
 
-const { locale, locales } = useI18n()
+const { locale, locales, setLocale } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 const route = useRoute()
 
@@ -28,8 +28,17 @@ const availableLocales = computed(() => {
 })
 
 const currentLocaleName = computed(() => {
-  return locales.value.find(i => i.code === locale.value)?.name
+  return locales.value.find(i => i.code === locale.value)?.name || 'Français'
 })
+
+const changeLocale = async (code) => {
+  isOpen.value = false
+  await setLocale(code)
+  const target = switchLocalePath(code)
+  if (target && route.path !== target) {
+    await navigateTo(target)
+  }
+}
 
 const toggleDropdown = () => {
   if (isMobile.value) {

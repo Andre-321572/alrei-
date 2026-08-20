@@ -32,10 +32,10 @@
                         <div class="d-block mb-4">
                             <ul class="nav nav-tabs simple d-flex align-items-center justify-content-center border-0" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link px-md-5" id="signin-tab" data-bs-toggle="tab" data-bs-target="#signin-tab-pane" type="button" role="tab" aria-controls="signin-tab-pane" aria-selected="true">{{ $t('sign_in') }}</button>
+                                    <button class="nav-link px-md-5" :class="{ active: activeTab === 'login' }" id="signin-tab" type="button" role="tab" @click="activeTab = 'login'">{{ $t('sign_in') }}</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link px-md-5 active" id="register-tab" data-bs-toggle="tab" data-bs-target="#register-tab-pane" type="button" role="tab" aria-controls="register-tab-pane" aria-selected="false">{{ $t('register') }}</button>
+                                    <button class="nav-link px-md-5" :class="{ active: activeTab === 'register' }" id="register-tab" type="button" role="tab" @click="activeTab = 'register'">{{ $t('register') }}</button>
                                 </li>
                             </ul>
                         </div>
@@ -43,7 +43,7 @@
                         <div class="tab-content" id="myTabContent">
                             
                             <!-- Login tab -->
-                            <div class="tab-pane fade p-0" id="signin-tab-pane" role="tabpanel" aria-labelledby="signin-tab" tabindex="0">
+                            <div class="tab-pane fade p-0" :class="{ 'show active': activeTab === 'login' }" id="signin-tab-pane" role="tabpanel">
                                 <div class="login-form">
                                     <form @submit.prevent="handleLogin">
                                         
@@ -82,56 +82,56 @@
                             </div>
                             
                             <!-- Register tab -->
-                            <div class="tab-pane fade show active p-0" id="register-tab-pane" role="tabpanel" aria-labelledby="register-tab" tabindex="0">
+                            <div class="tab-pane fade p-0" :class="{ 'show active': activeTab === 'register' }" id="register-tab-pane" role="tabpanel">
                                 <div class="login-form">
                                     <form @submit.prevent="handleRegister">
                                         
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Prénom *</label>
-                                                <input v-model="regFirstName" type="text" class="form-control" placeholder="Prénom" required>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('first_name') }} *</label>
+                                                <input v-model="regFirstName" type="text" class="form-control" :placeholder="$t('first_name')" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Nom *</label>
-                                                <input v-model="regLastName" type="text" class="form-control" placeholder="Nom de famille" required>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('last_name') }} *</label>
+                                                <input v-model="regLastName" type="text" class="form-control" :placeholder="$t('last_name')" required>
                                             </div>
                                         </div>
 
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Pays de résidence *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('country_residence') }} *</label>
                                                 <select v-model="regCountry" class="form-control" required>
-                                                    <option value="">-- Sélectionner un pays --</option>
+                                                    <option value="">{{ $t('select_country') }}</option>
                                                     <option v-for="c in worldCountries" :key="c" :value="c">{{ c }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Genre *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('gender') }} *</label>
                                                 <select v-model="regGender" class="form-control" required>
-                                                    <option value="M">Masculin</option>
-                                                    <option value="F">Féminin</option>
+                                                    <option value="M">{{ $t('male') }}</option>
+                                                    <option value="F">{{ $t('female') }}</option>
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Organisation / Syndicat *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_union') }} *</label>
                                                 <input v-model="regOrganisation" type="text" class="form-control" placeholder="Ex: CNT, UDTS, USTN..." required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Email de l'organisation *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_email') }} *</label>
                                                 <input v-model="regOrganisationEmail" type="email" class="form-control" placeholder="org@syndicat.org" required>
                                             </div>
                                         </div>
 
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Email personnel *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('personal_email') }} *</label>
                                                 <input v-model="regEmail" type="email" class="form-control" placeholder="votre.email@gmail.com" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Numéro WhatsApp (International) *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('whatsapp_international') }} *</label>
                                                 <InternationalPhoneInput
                                                     v-model="regWhatsapp"
                                                     :residence-country="regCountry"
@@ -143,47 +143,48 @@
 
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-4">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Date de naissance *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('birth_date') }} *</label>
                                                 <input v-model="regBirthDate" type="date" class="form-control" required>
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Expérience (Ans)</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('experience_years') }}</label>
                                                 <input v-model.number="regExperienceYears" type="number" min="0" max="60" class="form-control" placeholder="Ex: 8">
                                             </div>
                                             <div class="col-md-4">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Langue *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('language') }} *</label>
                                                 <select v-model="preferredLanguage" class="form-control" required>
                                                     <option value="fr">Français</option>
                                                     <option value="en">English</option>
+                                                    <option value="pt">Português</option>
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="border rounded p-2 mb-3 bg-light">
                                             <div class="form-group mb-2">
-                                                <label class="form-label small fw-semibold mb-1">Lettre de nomination de l'organisation (PDF/Doc)</label>
+                                                <label class="form-label small fw-semibold mb-1">{{ $t('nomination_letter') }}</label>
                                                 <input type="file" @change="handleNominationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                             <div class="form-group mb-0">
-                                                <label class="form-label small fw-semibold mb-1">Lettre / Motivation de participation (PDF/Doc)</label>
+                                                <label class="form-label small fw-semibold mb-1">{{ $t('motivation_letter') }}</label>
                                                 <input type="file" @change="handleMotivationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                         </div>
 
                                         <div class="row g-2 mb-3">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Mot de passe *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('password') }} *</label>
                                                 <div class="position-relative">
-                                                    <input v-model="regPassword" :type="showRegPassword ? 'text' : 'password'" class="form-control" placeholder="Minimum 8 caractères" minlength="8" required>
+                                                    <input v-model="regPassword" :type="showRegPassword ? 'text' : 'password'" class="form-control" :placeholder="$t('min_8_chars')" minlength="8" required>
                                                     <span class="position-absolute top-50 end-0 translate-middle-y me-3" @click="showRegPassword = !showRegPassword" style="cursor: pointer;">
                                                         <i :class="['bi', showRegPassword ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">Confirmer le mot de passe *</label>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('confirm_password') }} *</label>
                                                 <div class="position-relative">
-                                                    <input v-model="regPasswordConfirmation" :type="showRegPasswordConfirm ? 'text' : 'password'" class="form-control" placeholder="Répéter le mot de passe" minlength="8" required>
+                                                    <input v-model="regPasswordConfirmation" :type="showRegPasswordConfirm ? 'text' : 'password'" class="form-control" :placeholder="$t('repeat_password')" minlength="8" required>
                                                     <span class="position-absolute top-50 end-0 translate-middle-y me-3" @click="showRegPasswordConfirm = !showRegPasswordConfirm" style="cursor: pointer;">
                                                         <i :class="['bi', showRegPasswordConfirm ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
                                                     </span>
@@ -196,7 +197,7 @@
                                         <div class="form-group mb-3">
                                             <button type="submit" class="btn btn-main w-100 py-2 fs-6" :disabled="regLoading">
                                                 <span v-if="regLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                                Créer mon compte
+                                                {{ $t('create_my_account') }}
                                             </button>
                                         </div>
                                     </form>
@@ -221,6 +222,25 @@ import logoIcon from "@/assets/img/Logo alrei.png"
 
 const { login, register } = useAuth();
 const router = useRouter();
+const route = useRoute();
+
+const activeTab = ref('register');
+
+const updateTabFromRoute = () => {
+    if (route.query.tab === 'login' || route.query.tab === 'signin' || route.path.endsWith('/login')) {
+        activeTab.value = 'login';
+    } else {
+        activeTab.value = 'register';
+    }
+};
+
+onMounted(() => {
+    updateTabFromRoute();
+});
+
+watch(() => [route.query.tab, route.path], () => {
+    updateTabFromRoute();
+});
 
 // Login Form
 const loginEmail = ref('');

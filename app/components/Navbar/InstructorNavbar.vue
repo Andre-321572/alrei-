@@ -3,14 +3,14 @@
         <div class="container">
             <nav id="navigation" class="navigation navigation-landscape">
                 <div class="nav-header d-flex align-items-center justify-content-between w-100">
-                    <NuxtLink class="nav-brand" to="/">
+                    <NuxtLink class="nav-brand" :to="localePath('/')">
                         <img :src="logo" class="logo" alt="" style="height:45px;width:auto;" />
                     </NuxtLink>
 
                     <div class="d-flex align-items-center gap-3">
                         <LocaleSwitcher />
 
-                        <NuxtLink to="/instructor-create-course" class="btn btn-sm btn-main rounded-pill px-4">
+                        <NuxtLink :to="localePath('/instructor-create-course')" class="btn btn-sm btn-main rounded-pill px-4">
                             <i class="bi bi-patch-plus-fill me-1"></i>{{ $t('create_course') }}
                         </NuxtLink>
 
@@ -31,11 +31,11 @@
                                     </div>
                                     <div class="dropdown-body">
                                         <ul>
-                                            <li><NuxtLink to="/instructor-dashboard"><i class="bi bi-ui-radios-grid"></i>{{ $t('dashboard') }}</NuxtLink></li>
-                                            <li><NuxtLink to="/instructor-courses"><i class="bi bi-basket2"></i>{{ $t('courses') }}</NuxtLink></li>
-                                            <li><NuxtLink to="/instructor-students"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
-                                            <li><NuxtLink to="/instructor-reviews"><i class="bi bi-star-half"></i>{{ $t('reviews') }}</NuxtLink></li>
-                                            <li><NuxtLink to="/profile-edit"><i class="bi bi-person-circle"></i>{{ $t('my_profile') }}</NuxtLink></li>
+                                            <li><NuxtLink :to="localePath('/instructor-dashboard')"><i class="bi bi-ui-radios-grid"></i>{{ $t('dashboard') }}</NuxtLink></li>
+                                            <li><NuxtLink :to="localePath('/instructor-courses')"><i class="bi bi-basket2"></i>{{ $t('courses') }}</NuxtLink></li>
+                                            <li><NuxtLink :to="localePath('/instructor-students')"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
+                                            <li><NuxtLink :to="localePath('/instructor-reviews')"><i class="bi bi-star-half"></i>{{ $t('reviews') }}</NuxtLink></li>
+                                            <li><NuxtLink :to="localePath('/profile-edit')"><i class="bi bi-person-circle"></i>{{ $t('my_profile') }}</NuxtLink></li>
                                             <li><a href="#" @click.prevent="logout"><i class="bi bi-box-arrow-right"></i>{{ $t('logout') }}</a></li>
                                         </ul>
                                     </div>
@@ -54,6 +54,7 @@
 import LocaleSwitcher from './LocaleSwitcher.vue';
 import avatar3 from "@/assets/img/avatar-3.jpg";
 
+const localePath = useLocalePath();
 const logo = '/Logo alrei.png';
 const isSticky = ref(false);
 

@@ -30,7 +30,7 @@
                             <ul class="footer-menu">
 
                                 <li v-for="(item, index) in footerLink1" :key="index">
-                                    <NuxtLink :to="item.link">{{ $t(item.name) }}</NuxtLink>
+                                    <NuxtLink :to="localePath(item.link)">{{ $t(item.name) }}</NuxtLink>
                                 </li>
                                
                             </ul>
@@ -43,7 +43,7 @@
                             <ul class="footer-menu">
 
                                 <li v-for="(item, index) in footerCat" :key="index">
-                                    <NuxtLink :to="item.link">{{ $t(item.name) }}</NuxtLink>
+                                    <NuxtLink :to="localePath(item.link)">{{ $t(item.name) }}</NuxtLink>
                                 </li>
                                 
                             </ul>
@@ -56,7 +56,7 @@
                             <ul class="footer-menu">
 
                                 <li v-for="(item, index) in footerHelp" :key="index">
-                                    <NuxtLink :to="item.link">{{ $t(item.name) }}</NuxtLink>
+                                    <NuxtLink :to="localePath(item.link)">{{ $t(item.name) }}</NuxtLink>
                                 </li>
                                 
                             </ul>
@@ -127,7 +127,7 @@
 <script setup>
 const logo = '/Logo alrei.png'
 
-
+const localePath = useLocalePath()
 import { footerCat, footerHelp, footerLink1 } from '@/data/data.js'
 
 const currentYear = computed(() => new Date().getFullYear())

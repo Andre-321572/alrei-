@@ -3,7 +3,7 @@
         <div class="container">
             <nav id="navigation" :class="isMobile ? 'navigation navigation-portrait' : 'navigation navigation-landscape'">
                 <div class="nav-header">
-                    <NuxtLink class="nav-brand" to="/">
+                    <NuxtLink class="nav-brand" :to="localePath('/')">
                         <img :src="logo" class="logo" alt="" style="height:65px;width:auto;" />
                     </NuxtLink>
                     <div class="nav-toggle" @click="toggle = !toggle"></div>
@@ -14,16 +14,16 @@
                     </span>
                     <ul class="nav-menu">
                         <li :class="current === '/' ? 'active' : ''">
-                            <NuxtLink to="/">{{ $t('home') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/')">{{ $t('home') }}</NuxtLink>
                         </li>
                         <li :class="current === '/courses' ? 'active' : ''">
-                            <NuxtLink to="/courses">{{ $t('courses') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/courses')">{{ $t('courses') }}</NuxtLink>
                         </li>
                         <li :class="current === '/blog' ? 'active' : ''">
-                            <NuxtLink to="/blog">{{ $t('blog') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/blog')">{{ $t('blog') }}</NuxtLink>
                         </li>
                         <li :class="current === '/contact' ? 'active' : ''">
-                            <NuxtLink to="/contact">{{ $t('contact') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/contact')">{{ $t('contact') }}</NuxtLink>
                         </li>
                         <LocaleSwitcher v-if="isMobile" />
                     </ul>
@@ -32,10 +32,10 @@
                         <LocaleSwitcher />
                         
                         <li v-if="!isAuthenticated" class="become-tutor">
-                            <NuxtLink to="/become-tutor"><i class="bi bi-person-circle"></i>{{ $t('become_tutor') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/become-tutor')"><i class="bi bi-person-circle"></i>{{ $t('become_tutor') }}</NuxtLink>
                         </li>
                         <li v-if="!isAuthenticated" class="join-btn">
-                            <NuxtLink to="/register"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/register?tab=login')"><i class="bi bi-box-arrow-in-right"></i>{{ $t('sign_in') }}</NuxtLink>
                         </li>
                         <li v-if="isAuthenticated" class="join-btn">
                             <a href="#" @click.prevent="logout" class="bg-danger border-danger"><i class="bi bi-box-arrow-right"></i>{{ $t('logout') }}</a>
@@ -54,6 +54,8 @@ const logoIcon = '/Logo alrei.png'
 
 import LocaleSwitcher from './LocaleSwitcher.vue'
 import { useRoute } from '#app'
+
+const localePath = useLocalePath()
 
 
 const isMobile = ref(false)
