@@ -1,0 +1,1 @@
+import{aa as i,D as n,z as s,ab as o}from"./DhRbyoFq.js";const d=i(async()=>{let e,a;const{isAuthenticated:r,fetchUser:u,user:t}=n();if(!r.value)return s("/");if(t.value||([e,a]=o(()=>u()),await e,a()),t.value?.role!=="admin")return s("/")});export{d as default};

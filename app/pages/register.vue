@@ -86,79 +86,124 @@
                                 <div class="login-form">
                                     <form @submit.prevent="handleRegister">
                                         
-                                        <div class="form-group mb-3">
-                                            <div class="row g-3">
-                                                <div class="form-group col-6"><input v-model="regFirstName" type="text" class="form-control" :placeholder="$t('first_name')" required></div>
-                                                <div class="form-group col-6"><input v-model="regLastName" type="text" class="form-control" :placeholder="$t('last_name')" required></div>
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Prénom *</label>
+                                                <input v-model="regFirstName" type="text" class="form-control" placeholder="Prénom" required>
                                             </div>
-                                        </div>
-                                        
-                                        <div class="form-group mb-3">
-                                            <input v-model="regEmail" type="email" class="form-control" placeholder="Enter your email.." required>
-                                        </div>
-                                        
-                                        <div class="form-group mb-3">
-                                            <div class="position-relative">
-                                                <input v-model="regPassword" type="password" class="form-control" placeholder="********" required>
-                                                <span class="position-absolute top-50 end-0 translate-middle-y me-3"><i class="bi bi-eye text-muted"></i></span>
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Nom *</label>
+                                                <input v-model="regLastName" type="text" class="form-control" placeholder="Nom de famille" required>
                                             </div>
                                         </div>
 
-                                        <div class="form-group mb-3">
-                                            <label class="form-label text-muted small uppercase fw-semibold">{{ $t('language') }}</label>
-                                            <select v-model="preferredLanguage" class="form-control">
-                                                <option value="fr">Français</option>
-                                                <option value="en">English</option>
-                                            </select>
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Pays de résidence *</label>
+                                                <select v-model="regCountry" class="form-control" required>
+                                                    <option value="">-- Sélectionner un pays --</option>
+                                                    <option v-for="c in worldCountries" :key="c" :value="c">{{ c }}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Genre *</label>
+                                                <select v-model="regGender" class="form-control" required>
+                                                    <option value="M">Masculin</option>
+                                                    <option value="F">Féminin</option>
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group mb-3">
-                                            <label class="form-label text-muted small uppercase fw-semibold">{{ $t('student_type') }}</label>
-                                            <select v-model="studentType" class="form-control">
-                                                <option value="regular">{{ $t('paying_student') }}</option>
-                                                <option value="scholarship">{{ $t('scholarship_student') }}</option>
-                                            </select>
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Organisation / Syndicat *</label>
+                                                <input v-model="regOrganisation" type="text" class="form-control" placeholder="Ex: CNT, UDTS, USTN..." required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Email de l'organisation *</label>
+                                                <input v-model="regOrganisationEmail" type="email" class="form-control" placeholder="org@syndicat.org" required>
+                                            </div>
                                         </div>
 
-                                        <div v-if="studentType === 'scholarship'" class="scholarship-fields border rounded p-3 mb-3 bg-light">
-                                            <div class="form-group mb-3">
-                                                <label class="form-label small fw-semibold">{{ $t('scholarship_letter') }} (PDF/Word)</label>
-                                                <input type="file" @change="handleLetterUpload" class="form-control" accept=".pdf,.doc,.docx" required>
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Email personnel *</label>
+                                                <input v-model="regEmail" type="email" class="form-control" placeholder="votre.email@gmail.com" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Numéro WhatsApp (International) *</label>
+                                                <InternationalPhoneInput
+                                                    v-model="regWhatsapp"
+                                                    :residence-country="regCountry"
+                                                    placeholder="90 00 00 00"
+                                                    :required="true"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Date de naissance *</label>
+                                                <input v-model="regBirthDate" type="date" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Expérience (Ans)</label>
+                                                <input v-model.number="regExperienceYears" type="number" min="0" max="60" class="form-control" placeholder="Ex: 8">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Langue *</label>
+                                                <select v-model="preferredLanguage" class="form-control" required>
+                                                    <option value="fr">Français</option>
+                                                    <option value="en">English</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="border rounded p-2 mb-3 bg-light">
+                                            <div class="form-group mb-2">
+                                                <label class="form-label small fw-semibold mb-1">Lettre de nomination de l'organisation (PDF/Doc)</label>
+                                                <input type="file" @change="handleNominationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                             <div class="form-group mb-0">
-                                                <label class="form-label small fw-semibold">{{ $t('other_documents') }}</label>
-                                                <input type="file" @change="handleDocsUpload" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" multiple>
+                                                <label class="form-label small fw-semibold mb-1">Lettre / Motivation de participation (PDF/Doc)</label>
+                                                <input type="file" @change="handleMotivationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Mot de passe *</label>
+                                                <div class="position-relative">
+                                                    <input v-model="regPassword" :type="showRegPassword ? 'text' : 'password'" class="form-control" placeholder="Minimum 8 caractères" minlength="8" required>
+                                                    <span class="position-absolute top-50 end-0 translate-middle-y me-3" @click="showRegPassword = !showRegPassword" style="cursor: pointer;">
+                                                        <i :class="['bi', showRegPassword ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label text-muted small fw-semibold mb-1">Confirmer le mot de passe *</label>
+                                                <div class="position-relative">
+                                                    <input v-model="regPasswordConfirmation" :type="showRegPasswordConfirm ? 'text' : 'password'" class="form-control" placeholder="Répéter le mot de passe" minlength="8" required>
+                                                    <span class="position-absolute top-50 end-0 translate-middle-y me-3" @click="showRegPasswordConfirm = !showRegPasswordConfirm" style="cursor: pointer;">
+                                                        <i :class="['bi', showRegPasswordConfirm ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                         
                                         <div v-if="regError" class="alert alert-danger py-2 mb-3">{{ regError }}</div>
                                         
                                         <div class="form-group mb-3">
-                                            <button type="submit" class="btn btn-main w-100" :disabled="regLoading">
+                                            <button type="submit" class="btn btn-main w-100 py-2 fs-6" :disabled="regLoading">
                                                 <span v-if="regLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                                {{ $t('sign_up') }}
+                                                Créer mon compte
                                             </button>
                                         </div>
-                                        
-                                        <div class="deider-wrap w-100 mt-4 mb-4">
-                                            <div class="d-block border-top position-relative">
-                                                <span class="position-absolute top-50 start-50 translate-middle square--40 circle bg-white text-muted z-1">{{ $t('or') }}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="social-login-wrap">
-                                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-4">
-                                                <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">{{ $t('signup_with') }}<i class="bi bi-apple ms-2"></i></a>
-                                                <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">{{ $t('signup_with') }}<i class="bi bi-google text-red ms-2"></i></a>
-                                            </div>
-                                        </div>
-                                        
                                     </form>
                                 </div>
                             </div>
                             
                         </div>
-                    
                     
                     </div>
                     
@@ -198,49 +243,99 @@ const handleLogin = async () => {
     }
 };
 
-// Register Form
+// Register Form - TULDA Fields
+import InternationalPhoneInput from '@/components/InternationalPhoneInput.vue';
+
 const regFirstName = ref('');
 const regLastName = ref('');
+const regCountry = ref('');
+const regGender = ref('M');
+const regOrganisation = ref('');
+const regOrganisationEmail = ref('');
 const regEmail = ref('');
+const regWhatsapp = ref('');
+const regBirthDate = ref('');
+const regExperienceYears = ref('');
+const preferredLanguage = ref('fr');
 const regPassword = ref('');
-const studentType = ref('regular');
-const scholarshipLetter = ref(null);
-const scholarshipDocs = ref([]);
+const regPasswordConfirmation = ref('');
+const showRegPassword = ref(false);
+const showRegPasswordConfirm = ref(false);
+
+const nominationLetter = ref(null);
+const motivationLetter = ref(null);
 const regLoading = ref(false);
 const regError = ref('');
 
-const { locale } = useI18n();
+const worldCountries = [
+    'Togo', 'Niger', 'Sénégal', 'Burkina Faso', 'Bénin', 'Côte d\'Ivoire', 'Mali', 'Guinée', 'Mauritanie',
+    'Comores', 'Tchad', 'Tunisie', 'Malawi', 'Nigeria', 'Congo', 'Rép. Dém. du Congo (RDC)', 'Cameroun',
+    'Gabon', 'Namibie', 'Algérie', 'Maroc', 'Égypte', 'Afrique du Sud', 'Ghana', 'Kenya', 'Éthiopie',
+    'Madagascar', 'Rwanda', 'Burundi', 'Djibouti', 'Érythrée', 'Guinée équatoriale', 'Guinée-Bissau',
+    'Lesotho', 'Libéria', 'Libye', 'Maurice', 'Mozambique', 'Rép. Centrafricaine', 'Sao Tomé-et-Principe',
+    'Seychelles', 'Sierra Leone', 'Somalie', 'Soudan', 'Soudan du Sud', 'Eswatini', 'Tanzanie', 'Ouganda',
+    'Zambie', 'Zimbabwe', 'France', 'Belgique', 'Suisse', 'Canada', 'États-Unis', 'Royaume-Uni', 'Allemagne',
+    'Espagne', 'Italie', 'Portugal', 'Pays-Bas', 'Suède', 'Norvège', 'Danemark', 'Finlande', 'Pologne',
+    'Russie', 'Turquie', 'Émirats arabes unis', 'Arabie saoudite', 'Qatar', 'Chine', 'Inde', 'Japon',
+    'Brésil', 'Mexique', 'Argentine', 'Australie'
+];
 
-const preferredLanguage = ref(locale.value || 'fr');
-
-const handleLetterUpload = (event) => {
-    scholarshipLetter.value = event.target.files[0];
+const handleNominationUpload = (event) => {
+    nominationLetter.value = event.target.files[0];
 };
 
-const handleDocsUpload = (event) => {
-    scholarshipDocs.value = Array.from(event.target.files);
+const handleMotivationUpload = (event) => {
+    motivationLetter.value = event.target.files[0];
 };
+
+const computedAge = computed(() => {
+    if (!regBirthDate.value) return '';
+    const birth = new Date(regBirthDate.value);
+    const now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    const m = now.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+    return age > 0 ? age : '';
+});
 
 const handleRegister = async () => {
-    regLoading.value = true;
     regError.value = '';
+
+    if (regPassword.value !== regPasswordConfirmation.value) {
+        regError.value = 'Les mots de passe ne correspondent pas.';
+        return;
+    }
+
+    if (regPassword.value.length < 8) {
+        regError.value = 'Le mot de passe doit contenir au moins 8 caractères.';
+        return;
+    }
+
+    regLoading.value = true;
     try {
         const formData = new FormData();
+        formData.append('first_name', regFirstName.value);
+        formData.append('last_name', regLastName.value);
         formData.append('name', `${regFirstName.value} ${regLastName.value}`);
         formData.append('email', regEmail.value);
         formData.append('password', regPassword.value);
-        formData.append('password_confirmation', regPassword.value);
+        formData.append('password_confirmation', regPasswordConfirmation.value);
         formData.append('role', 'student');
-        formData.append('student_type', studentType.value);
+        formData.append('country', regCountry.value);
+        formData.append('gender', regGender.value);
+        formData.append('organisation', regOrganisation.value);
+        formData.append('organisation_email', regOrganisationEmail.value);
+        formData.append('whatsapp_number', regWhatsapp.value);
+        formData.append('birth_date', regBirthDate.value || '');
+        formData.append('age', computedAge.value || '');
+        formData.append('experience_years', regExperienceYears.value || '');
         formData.append('preferred_language', preferredLanguage.value);
 
-        if (studentType.value === 'scholarship') {
-            if (scholarshipLetter.value) {
-                formData.append('scholarship_letter', scholarshipLetter.value);
-            }
-            scholarshipDocs.value.forEach((doc, index) => {
-                formData.append(`scholarship_documents[${index}]`, doc);
-            });
+        if (nominationLetter.value) {
+            formData.append('nomination_letter', nominationLetter.value);
+        }
+        if (motivationLetter.value) {
+            formData.append('motivation_letter', motivationLetter.value);
         }
 
         await register(formData);

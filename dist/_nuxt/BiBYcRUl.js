@@ -1,0 +1,1 @@
+import{_ as o}from"./DGuVZ1E1.js";import{c as e,b as t,o as r}from"./DhRbyoFq.js";import"./eNqzDVFw.js";import"./cv4e0nQq.js";import"./Brk8sK0s.js";import"./Cm1PaMIB.js";const a={class:"blog-page"},f={__name:"index",setup(s){return(c,_)=>(r(),e("div",a,[t(o)]))}};export{f as default};

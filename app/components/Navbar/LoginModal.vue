@@ -21,7 +21,7 @@
                         </div>
                         
                         <div class="social-login-wrap mb-4">
-                            <div class=" d-flex align-items-center justify-content-between gap-4">
+                            <div class="d-flex align-items-center justify-content-between gap-4">
                                 <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-apple"></i></a>
                                 <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-google text-red"></i></a>
                                 <a href="#" class="btn btn-outline-gray rounded-3 flex-fill"><i class="bi bi-twitter text-info"></i></a>
@@ -107,48 +107,76 @@
                         <div class="login-form">
                             <form @submit.prevent="handleRegister">
                                 
-                                <div class="form-group mb-3">
-                                    <div class="row g-3">
-                                        <div class="form-group col-6"><input v-model="regFirstName" type="text" class="form-control" :placeholder="$t('first_name')" required></div>
-                                        <div class="form-group col-6"><input v-model="regLastName" type="text" class="form-control" :placeholder="$t('last_name')" required></div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6"><input v-model="regFirstName" type="text" class="form-control form-control-sm" placeholder="Prénom *" required></div>
+                                    <div class="col-6"><input v-model="regLastName" type="text" class="form-control form-control-sm" placeholder="Nom *" required></div>
+                                </div>
+
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6">
+                                        <select v-model="regCountry" class="form-control form-control-sm" required>
+                                            <option value="">-- Pays * --</option>
+                                            <option v-for="c in worldCountries" :key="c" :value="c">{{ c }}</option>
+                                        </select>
                                     </div>
-                                </div>
-                                
-                                <div class="form-group mb-3">
-                                    <input v-model="regEmail" type="email" class="form-control" placeholder="Enter your email.." required>
-                                </div>
-                                
-                                <div class="form-group mb-3">
-                                    <div class="position-relative">
-                                        <input v-model="regPassword" type="password" class="form-control" placeholder="********" required>
-                                        <span class="position-absolute top-50 end-0 translate-middle-y me-3"><i class="bi bi-eye text-muted"></i></span>
+                                    <div class="col-6">
+                                        <select v-model="regGender" class="form-control form-control-sm" required>
+                                            <option value="M">Masculin</option>
+                                            <option value="F">Féminin</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div v-if="regError" class="alert alert-danger py-2 mb-3">{{ regError }}</div>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6"><input v-model="regOrganisation" type="text" class="form-control form-control-sm" placeholder="Organisation/Syndicat *" required></div>
+                                    <div class="col-6"><input v-model="regOrganisationEmail" type="email" class="form-control form-control-sm" placeholder="Email Organisation *" required></div>
+                                </div>
+                                
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6"><input v-model="regEmail" type="email" class="form-control form-control-sm" placeholder="Email personnel *" required></div>
+                                    <div class="col-6">
+                                        <InternationalPhoneInput
+                                            v-model="regWhatsapp"
+                                            :residence-country="regCountry"
+                                            placeholder="WhatsApp *"
+                                            :required="true"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="row g-2 mb-2">
+                                    <div class="col-5">
+                                        <input v-model="regBirthDate" type="date" class="form-control form-control-sm" title="Date de naissance *" required>
+                                    </div>
+                                    <div class="col-4"><input v-model.number="regExperienceYears" type="number" class="form-control form-control-sm" placeholder="Exp. (Ans)"></div>
+                                    <div class="col-3">
+                                        <select v-model="preferredLanguage" class="form-control form-control-sm" required>
+                                            <option value="fr">FR</option>
+                                            <option value="en">EN</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6">
+                                        <input v-model="regPassword" type="password" class="form-control form-control-sm" placeholder="Mot de passe *" minlength="8" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <input v-model="regPasswordConfirmation" type="password" class="form-control form-control-sm" placeholder="Confirmation *" minlength="8" required>
+                                    </div>
+                                </div>
+
+                                <div v-if="regError" class="alert alert-danger py-1 fs-7 mb-2">{{ regError }}</div>
                                 
                                 <div class="form-group mb-3">
-                                    <button type="submit" class="btn btn-main w-100" :disabled="regLoading">
+                                    <button type="submit" class="btn btn-main w-100 py-2" :disabled="regLoading">
                                         <span v-if="regLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                        {{ $t('sign_up') }}
+                                        Créer mon compte
                                     </button>
                                 </div>
                                 
                                 <div class="form-group mb-3">
-                                    <div class="text-center text-muted">{{ $t('already_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold">{{ $t('sign_in') }}</a></div>
-                                </div>
-                                
-                                <div class="deider-wrap w-100 mt-4 mb-4">
-                                    <div class="d-block border-top position-relative">
-                                        <span class="position-absolute top-50 start-50 translate-middle square--40 circle bg-white text-muted z-1">{{ $t('or') }}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="social-login-wrap">
-                                    <div class=" d-flex align-items-center justify-content-between gap-4">
-                                        <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">{{ $t('signup_with') }}<i class="bi bi-apple ms-2"></i></a>
-                                        <a href="#" class="btn btn-md btn-gray rounded-3 border-2 flex-fill">{{ $t('signup_with') }}<i class="bi bi-google text-red ms-2"></i></a>
-                                    </div>
+                                    <div class="text-center text-muted small">Vous avez déjà un compte ? <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold text-main">{{ $t('sign_in') }}</a></div>
                                 </div>
                                 
                             </form>
@@ -184,14 +212,12 @@ const handleLogin = async () => {
             password: loginPassword.value
         });
         
-        // Fermer le modal proprement
         if (process.client) {
             const modalElement = document.getElementById('login');
             const { $bootstrap } = useNuxtApp();
             const modalInstance = $bootstrap.Modal.getInstance(modalElement);
             if (modalInstance) modalInstance.hide();
             
-            // Forcer la suppression du backdrop si nécessaire
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             document.body.style.paddingRight = '';
@@ -206,23 +232,79 @@ const handleLogin = async () => {
 };
 
 // Register Form
+import InternationalPhoneInput from '@/components/InternationalPhoneInput.vue';
 const regFirstName = ref('');
 const regLastName = ref('');
+const regCountry = ref('');
+const regGender = ref('M');
+const regOrganisation = ref('');
+const regOrganisationEmail = ref('');
 const regEmail = ref('');
+const regWhatsapp = ref('');
+const regBirthDate = ref('');
+const regExperienceYears = ref('');
+const preferredLanguage = ref('fr');
 const regPassword = ref('');
+const regPasswordConfirmation = ref('');
+
 const regLoading = ref(false);
 const regError = ref('');
 
+const worldCountries = [
+    'Togo', 'Niger', 'Sénégal', 'Burkina Faso', 'Bénin', 'Côte d\'Ivoire', 'Mali', 'Guinée', 'Mauritanie',
+    'Comores', 'Tchad', 'Tunisie', 'Malawi', 'Nigeria', 'Congo', 'Rép. Dém. du Congo (RDC)', 'Cameroun',
+    'Gabon', 'Namibie', 'Algérie', 'Maroc', 'Égypte', 'Afrique du Sud', 'Ghana', 'Kenya', 'Éthiopie',
+    'Madagascar', 'Rwanda', 'Burundi', 'Djibouti', 'Érythrée', 'Guinée équatoriale', 'Guinée-Bissau',
+    'Lesotho', 'Libéria', 'Libye', 'Maurice', 'Mozambique', 'Rép. Centrafricaine', 'Sao Tomé-et-Principe',
+    'Seychelles', 'Sierra Leone', 'Somalie', 'Soudan', 'Soudan du Sud', 'Eswatini', 'Tanzanie', 'Ouganda',
+    'Zambie', 'Zimbabwe', 'France', 'Belgique', 'Suisse', 'Canada', 'États-Unis', 'Royaume-Uni', 'Allemagne',
+    'Espagne', 'Italie', 'Portugal', 'Pays-Bas', 'Suède', 'Norvège', 'Danemark', 'Finlande', 'Pologne',
+    'Russie', 'Turquie', 'Émirats arabes unis', 'Arabie saoudite', 'Qatar', 'Chine', 'Inde', 'Japon',
+    'Brésil', 'Mexique', 'Argentine', 'Australie'
+];
+
+const computedAge = computed(() => {
+    if (!regBirthDate.value) return null;
+    const birth = new Date(regBirthDate.value);
+    const now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    const m = now.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) age--;
+    return age > 0 ? age : null;
+});
+
 const handleRegister = async () => {
-    regLoading.value = true;
     regError.value = '';
+
+    if (regPassword.value !== regPasswordConfirmation.value) {
+        regError.value = 'Les mots de passe ne correspondent pas.';
+        return;
+    }
+
+    if (regPassword.value.length < 8) {
+        regError.value = 'Le mot de passe doit contenir au moins 8 caractères.';
+        return;
+    }
+
+    regLoading.value = true;
     try {
         await register({
+            first_name: regFirstName.value,
+            last_name: regLastName.value,
             name: `${regFirstName.value} ${regLastName.value}`,
             email: regEmail.value,
             password: regPassword.value,
-            password_confirmation: regPassword.value,
-            role: 'student'
+            password_confirmation: regPasswordConfirmation.value,
+            role: 'student',
+            country: regCountry.value,
+            gender: regGender.value,
+            organisation: regOrganisation.value,
+            organisation_email: regOrganisationEmail.value,
+            whatsapp_number: regWhatsapp.value,
+            birth_date: regBirthDate.value || null,
+            age: computedAge.value,
+            experience_years: regExperienceYears.value || null,
+            preferred_language: preferredLanguage.value,
         });
         
         if (process.client) {

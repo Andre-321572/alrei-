@@ -1,1 +1,0 @@
-import{a8 as i,B as a,x as n,a9 as o}from"./NKVXZcjV.js";const f=i(async()=>{let e,t;const{isAuthenticated:s,fetchUser:u}=a();if(!s.value)return n("/");const{user:r}=a();r.value||([e,t]=o(()=>u()),await e,t())});export{f as default};

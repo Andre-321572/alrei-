@@ -80,7 +80,11 @@ const handleResize = () => {
 }
 
 const handleScroll = () => {
-  isSticky.value = window.scrollY > 100
+  if (window.scrollY > 150) {
+    isSticky.value = true;
+  } else if (window.scrollY < 40) {
+    isSticky.value = false;
+  }
 }
 
 onMounted(() => {

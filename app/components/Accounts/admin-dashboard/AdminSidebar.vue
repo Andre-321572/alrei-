@@ -14,7 +14,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
             </div>
             <div class="offcanvas-body pt-4 pt-lg-0 p-lg-0 overlio">
-                <div class="dashboard-navbar card p-3 pt-4 border">
+                <div class="dashboard-navbar card p-3 pt-4 border shadow-sm" style="position: sticky; top: 100px; z-index: 10;">
 
                     <div class="author-info-wwrap">
                         <div class="author-caps text-center mb-4">
@@ -33,6 +33,11 @@
                             <li>
                                 <a :class="{ active: activeTab === 'instructors' }" @click.prevent="emit('update:activeTab', 'instructors')" href="#">
                                     <i class="bi bi-person-badge"></i>{{ $t('instructors') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a :class="{ active: activeTab === 'country_summary' }" @click.prevent="emit('update:activeTab', 'country_summary')" href="#">
+                                    <i class="bi bi-globe-americas text-primary"></i> Résumé par Pays
                                 </a>
                             </li>
                             <li>

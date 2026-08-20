@@ -1,0 +1,1 @@
+import{aa as i,D as a,z as n,ab as o}from"./DhRbyoFq.js";const f=i(async()=>{let e,t;const{isAuthenticated:s,fetchUser:u}=a();if(!s.value)return n("/");const{user:r}=a();r.value||([e,t]=o(()=>u()),await e,t())});export{f as default};

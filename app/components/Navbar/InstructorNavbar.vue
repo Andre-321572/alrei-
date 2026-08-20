@@ -62,7 +62,13 @@ const userAvatar = computed(() => user.value?.avatar || avatar3);
 const userName   = computed(() => user.value?.name  || 'Guest');
 const userRole   = computed(() => user.value?.role  || '');
 
-const handleScroll = () => { isSticky.value = window.scrollY > 100; };
+const handleScroll = () => {
+    if (window.scrollY > 150) {
+        isSticky.value = true;
+    } else if (window.scrollY < 40) {
+        isSticky.value = false;
+    }
+};
 onMounted(() => window.addEventListener('scroll', handleScroll));
 onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 </script>
