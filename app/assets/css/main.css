@@ -3,3 +3,6 @@
 
 /* Import Tiny Slider */
 @import "tiny-slider/dist/tiny-slider.css";
+
+/* Import Material Design Icons */
+@import "@mdi/font/css/materialdesignicons.min.css";

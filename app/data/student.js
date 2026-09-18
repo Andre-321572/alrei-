@@ -5,131 +5,121 @@ import courses6 from "@/assets/img/courses-6.jpg";
 import courses7 from "@/assets/img/courses-7.jpg";
 import courses8 from "@/assets/img/courses-8.jpg";
 
-import card1 from "@/assets/img/card-1.png";
-import card2 from "@/assets/img/card-2.png";
-import card3 from "@/assets/img/card-3.png";
-import card4 from "@/assets/img/card-4.png";
-
 export const aboutData = [
     {
         icon:'bi bi-laptop text-green',
-        value:'42',
-        title:'Total Courses',
+        value:'05',
+        title:'Domaines de Formation ALREI',
         theme:'green'
     },
     {
         icon:'fas fa-user-graduate text-red',
-        value:'38',
-        title:'Complete Lesson',
+        value:'12',
+        title:'Modules Complétés',
         theme:'red'
     },
     {
         icon:'bi bi-shield-lock text-main',
         value:'04',
-        title:'Achieved Certificates',
+        title:'Attestations Syndicales',
         theme:'main'
     },
 ]
 
 export const coursesData = [
     {
-        image:courses3,
-        time:'10h 50m',
-        name:`UX/UI Design Essentials: Designing User-Centered Interfaces`,
-        lesson:'12 of 12 lessons complete',
-        progress:'100%'
+        image: courses3,
+        time: '15h 30m',
+        name: `Leadership syndical & gouvernance démocratique`,
+        lesson: '12 de 12 leçons terminées',
+        progress: '100%'
     },
     {
-        image:courses4,
-        time:'20h 10m',
-        name:`Backend Development with Node.js: Building Scalable Web Apps`,
-        lesson:'7 of 18 lessons complete',
-        progress:'40%'
+        image: courses4,
+        time: '20h 10m',
+        name: `Syndicalisation & Négociation collective en Afrique`,
+        lesson: '7 de 18 leçons terminées',
+        progress: '40%'
     },
     {
-        image:courses5,
-        time:'12h 40m',
-        name:`Web Development Bootcamp: Learn to Build Modern Websites`,
-        lesson:'17 of 17 lessons complete',
-        progress:'100%'
+        image: courses5,
+        time: '12h 40m',
+        name: `Recherche sur le travail & Politique économique`,
+        lesson: '17 de 17 leçons terminées',
+        progress: '100%'
     },
     {
-        image:courses6,
-        time:'17h 15m',
-        name:`The Complete AI Guide: Learn ChatGPT, Generative AI & More..`,
-        lesson:'6 of 10 lessons complete',
-        progress:'60%'
+        image: courses6,
+        time: '18h 15m',
+        name: `Changement climatique & Transition juste pour les travailleurs`,
+        lesson: '6 de 10 leçons terminées',
+        progress: '60%'
     },
     {
-        image:courses7,
-        time:'14h 20m',
-        name:`Advanced WordPress Techniques: Dive Deep into Styling and Layout`,
-        lesson:'32 of 32 lessons complete',
-        progress:'100%'
-    },
-    {
-        image:courses8,
-        time:'22h 10m',
-        name:`Backend Development with Node.js: Building Scalable Web Apps`,
-        lesson:'15 of 22 lessons complete',
-        progress:'70%'
-    },
+        image: courses7,
+        time: '14h 20m',
+        name: `Numérisation & L'Avenir du travail en Afrique`,
+        lesson: '10 de 10 leçons terminées',
+        progress: '100%'
+    }
 ]
 
-export const cartData = [
+export const fundingMethodsData = [
     {
-        image:card1,
-        title:'Master Card ending in 1644',
-        time:'Expires in 30/2032'
+        id: 'bourse-alrei',
+        title: 'Bourse d\'Études Syndicale ALREI / CSI-Afrique',
+        badge: 'Prise en charge à 100%',
+        badgeClass: 'bg-success bg-opacity-10 text-success',
+        icon: 'bi bi-award-fill text-success fs-4',
+        description: 'Couvre l\'intégralité des frais pédagogiques et des accès aux programmes en ligne pour les membres d\'organisations syndicales affiliées à la CSI-Afrique.'
     },
     {
-        image:card2,
-        title:'Via Card ending in 7654',
-        time:'Expires in 10/2035'
+        id: 'prise-en-charge-syndicale',
+        title: 'Prise en Charge par Organisation Syndicale Affiliée',
+        badge: 'Conventionné',
+        badgeClass: 'bg-primary bg-opacity-10 text-primary',
+        icon: 'bi bi-building-check text-primary fs-4',
+        description: 'Prise en charge directe des attestations certifiantes et séminaires par votre centrale syndicale nationale.'
     },
     {
-        image:card3,
-        title:'American Expressd ending in 7892',
-        time:'Expires in 25/2028'
-    },
-    {
-        image:card4,
-        title:'Crowd Pay Card ending in 6593',
-        time:'Expires in 10/2044'
-    },
+        id: 'virement-institutionnel',
+        title: 'Virement Bancaire Institutionnel (Compte Officiel ALREI)',
+        badge: 'Facturation Organisation',
+        badgeClass: 'bg-warning bg-opacity-10 text-warning',
+        icon: 'bi bi-bank text-warning fs-4',
+        description: 'Compte bancaire institutionnel ALREI / ITUC-Africa (Lomé, Togo) réservé aux réglements de groupes et contributions de partenaires.'
+    }
 ]
 
-export const paymentData = [
+export const alreiPaymentHistoryData = [
     {
-        date:'10 May 2027',
-        name:'WordPress Tutorial for Beginners',
-        image:card1,
-        cardNo: '****5695',
-        status:'Paid',
-        value:'$465.99'
+        id: 1,
+        date: '15 Fév 2026',
+        courseName: 'Leadership syndical & gouvernance démocratique',
+        fundingMethod: 'Bourse Ouvrière ALREI / CSI-Afrique',
+        status: 'Pris en charge',
+        statusClass: 'bg-success bg-opacity-10 text-success',
+        amount: '0 CFA (Pris en charge)',
+        certificateUrl: '#'
     },
     {
-        date:'05 Apr 2027',
-        name:'Figma To HTML Tutorials',
-        image:card2,
-        cardNo: '****6935',
-        status:'Paid',
-        value:'$392'
+        id: 2,
+        date: '10 Jan 2026',
+        courseName: 'Syndicalisation & Négociation collective en Afrique',
+        fundingMethod: 'Prise en charge Syndicale (CNTS/CSI-Afrique)',
+        status: 'Pris en charge',
+        statusClass: 'bg-success bg-opacity-10 text-success',
+        amount: '0 CFA (Pris en charge)',
+        certificateUrl: '#'
     },
     {
-        date:'02 Mar 2027',
-        name:'The Complete Web Development in PHP',
-        image:card3,
-        cardNo: '****9863',
-        status:'Pending',
-        value:'$549.20'
-    },
-    {
-        date:'16 Feb 2027',
-        name:'Learning Laravel with JavaScript',
-        image:card4,
-        cardNo: '****6942',
-        status:'Cancel',
-        value:'$425'
-    },
+        id: 3,
+        date: '05 Nov 2025',
+        courseName: 'Changement climatique & Transition juste pour les travailleurs',
+        fundingMethod: 'Bourse d\'études ALREI',
+        status: 'Pris en charge',
+        statusClass: 'bg-success bg-opacity-10 text-success',
+        amount: '0 CFA (Pris en charge)',
+        certificateUrl: '#'
+    }
 ]

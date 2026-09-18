@@ -364,11 +364,9 @@ html body .db {
 }
 .ht-100{
 	height:100%;
-	min-height:580px;
 }
 .h-100{
-	height:100vh;
-	min-height:580px;
+	height:100% !important;
 }
 .hts-100{
 	height:100%;
@@ -1321,8 +1319,8 @@ div[data-overlay] p{
 /*-------------- Global Settings: Background Colors ----------------*/
 .bg-gredient{
 	background-color: var(--alrei-green);
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25' preserveAspectRatio='xMinYMin slice'%3E%3Crect x='-20' y='-20' width='450' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='-20' y='90' width='350' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3Crect x='-20' y='200' width='250' height='90' rx='45' fill='rgba(255,255,255,0.06)'/%3E%3C/svg%3E");
-    background-position: left top;
+	background-image: url("/img/student-banner.png");
+    background-position: center;
     background-size: cover;
 }
 .bg-main {

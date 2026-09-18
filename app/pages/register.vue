@@ -24,8 +24,8 @@
                         
                         <div class="login-caps mb-4">
                             <div class="text-center">
-                                <h2 class="fw-semibold m-0">{{ $t('hi_welcome_to') }}</h2>
-                                <h3 class="fw-semibold m-0">{{ $t('online_study_center') }}</h3>
+                                <h2 class="fw-bold fs-4 text-dark mb-1">Centre ALREI de formation des travailleurs</h2>
+                                <p class="small text-muted mb-0">Plateforme e-learning de l'Institut africain de recherche et d'éducation ouvrière (CSI-Afrique)</p>
                             </div>
                         </div>
                         

@@ -1,71 +1,113 @@
 <template>
-
-    <section class="bg-cover page-title" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    <div class="pageTitle-wrap text-center">
-                        <h1 class="text-light">{{ $t('pricing_packages') }}</h1>
-                        <p class="text-light">{{ $t('contact_intro') }}</p>
-                    </div>
-                </div>
-            </div>
+  <div>
+    <!-- Hero Banner with Background Image -->
+    <section class="py-5 text-white position-relative overflow-hidden bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
+      <div class="container py-4 position-relative z-1">
+        <div class="row">
+          <div class="col-lg-8">
+            <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-semibold mb-3 fs-7 shadow-sm">
+              {{ $t('pricing_badge') }}
+            </span>
+            <h1 class="display-5 fw-bold mb-3 text-white lh-sm">
+              {{ $t('pricing_hero_title') }}
+            </h1>
+            <p class="lead text-white-50 mb-0 fs-6">
+              {{ $t('pricing_hero_subtitle') }}
+            </p>
+          </div>
         </div>
+      </div>
     </section>
 
-    <section class="pt-5">
-        <div class="container">
-            
-            <PricingOne />
-            
-        </div>
-    </section>
-
-    <section class="bg-light">
-        <div class="container">
-            <div class="row justify-content-center mb-5">
-                <div class="col-lg-7 col-md-8 col-sm-12">
-                    <div class="text-center">
-                        <h6 class="fw-semibold">{{ $t('trusted_partners') }}</h6>
-                    </div>
-                </div>
+    <!-- Pricing Cards / Access Modalities -->
+    <section class="py-5 bg-light-subtle">
+      <div class="container py-3">
+        <div class="row g-4 mb-5">
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white text-dark border">
+              <div class="mb-3">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-semibold">
+                  {{ $t('pricing_free_badge') }}
+                </span>
+              </div>
+              <h4 class="fw-bold text-dark mb-2">{{ $t('pricing_free_title') }}</h4>
+              <p class="text-muted fs-7 mb-4">
+                {{ $t('pricing_free_desc') }}
+              </p>
+              <div class="mt-auto border-top pt-3 fs-7 text-secondary">
+                <p class="mb-1"><strong class="text-dark">{{ $t('target_public') }}</strong> {{ $t('pricing_free_target') }}</p>
+                <NuxtLink :to="localePath('/courses')" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-semibold">
+                  {{ $t('pricing_free_btn') }}
+                </NuxtLink>
+              </div>
             </div>
-            
-            <div class="row row-cols-3 row-cols-xl-6 row-cols-lg-5 row-cols-md-4 g-4 justify-content-center">
-            
-                <div class="col" v-for="(item, index) in brandImg" :key="index">
-                    <div class="single-brand text-center px-3 px-lg-4">
-                        <img :src="item" class="img-fluid" alt="Brand Name">
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    </section>
+          </div>
 
-    <section>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-7 col-md-8 col-sm-12">
-                    <div class="sec-heading center">
-                        <p>{{ $t('faqs') }}</p>
-                        <h2>{{ $t('frequently_asked_questions') }}</h2>
-                    </div>
-                </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-lg rounded-4 p-4 bg-white text-dark position-relative border border-warning" style="border-width: 2px !important;">
+              <div class="position-absolute top-0 end-0 m-3">
+                <span class="badge rounded-pill px-3 py-1 fw-bold text-dark" style="background-color: #f0a500;">
+                  {{ $t('pricing_cohort_badge') }}
+                </span>
+              </div>
+              <div class="mb-3">
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2 fw-semibold">
+                  {{ $t('pricing_cohort_subbadge') }}
+                </span>
+              </div>
+              <h4 class="fw-bold text-dark mb-2">{{ $t('pricing_cohort_title') }}</h4>
+              <p class="text-muted fs-7 mb-4">
+                {{ $t('pricing_cohort_desc') }}
+              </p>
+              <div class="mt-auto border-top pt-3 fs-7 text-secondary">
+                <p class="mb-1"><strong class="text-dark">{{ $t('target_public') }}</strong> {{ $t('pricing_cohort_target') }}</p>
+                <NuxtLink :to="localePath('/courses')" class="btn w-100 mt-3 fw-bold text-white rounded-pill shadow-sm" style="background-color: #f0a500; border: none;">
+                  {{ $t('pricing_cohort_btn') }}
+                </NuxtLink>
+              </div>
             </div>
-            
-            <FaqTwo />
-            
-        </div>
-    </section>
+          </div>
 
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white text-dark border">
+              <div class="mb-3">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-3 py-2 fw-semibold">
+                  {{ $t('pricing_custom_card_badge') }}
+                </span>
+              </div>
+              <h4 class="fw-bold text-dark mb-2">{{ $t('pricing_custom_card_title') }}</h4>
+              <p class="text-muted fs-7 mb-4">
+                {{ $t('pricing_custom_card_desc') }}
+              </p>
+              <div class="mt-auto border-top pt-3 fs-7 text-secondary">
+                <p class="mb-1"><strong class="text-dark">{{ $t('target_public') }}</strong> {{ $t('pricing_custom_card_target') }}</p>
+                <NuxtLink :to="localePath('/contact')" class="btn btn-outline-dark rounded-pill w-100 mt-3 fw-semibold">
+                  {{ $t('pricing_custom_card_btn') }}
+                </NuxtLink>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Training Banner -->
+        <div class="bg-white rounded-4 p-4 p-md-5 border shadow-sm">
+          <h4 class="fw-bold text-dark mb-2">{{ $t('custom_training_title') }}</h4>
+          <p class="text-secondary fs-6 mb-4">{{ $t('custom_training_desc') }}</p>
+          <NuxtLink :to="localePath('/contact')" class="btn btn-success rounded-pill px-4 py-2 fw-semibold" style="background-color: #193822; border: none;">
+            {{ $t('contact_alrei') }} <i class="bi bi-arrow-right ms-2"></i>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup>
-
-import PricingOne from '@/components/Home/home-4/PricingOne.vue';
-import FaqTwo from '@/components/Home/home-9/FaqTwo.vue';
-
-import { brandImg } from '@/data/data.js'
-
+definePageMeta({ layout: 'default' })
+const localePath = useLocalePath()
+const { t } = useI18n()
 </script>
+
+<style scoped>
+.fs-7 { font-size: 0.875rem; }
+</style>

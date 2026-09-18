@@ -21,18 +21,25 @@
     </div>
 
     <div v-else class="row g-3">
-      <div v-for="quiz in quizList" :key="quiz.id" class="col-md-6 col-lg-3">
+      <div v-for="quiz in quizList" :key="quiz.id" class="col-md-6 col-lg-4">
         <div class="card shadow-sm border-0 rounded-lg">
           <div class="card-body p-3">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <div>
                 <h6 class="fw-bold mb-1 text-dark">{{ quiz.title }}</h6>
-                <p class="small text-muted mb-0">
-                  {{ quiz.questions_count }} Questions • Note de passage: {{ quiz.passing_score }}%
+                <div class="small text-muted mb-2">
+                  <span><i class="bi bi-question-circle me-1"></i>{{ quiz.questions_count || 0 }} Questions</span>
                   <span v-if="quiz.duration_minutes"> • {{ quiz.duration_minutes }} min</span>
-                  <br>
-                  <span v-if="quiz.is_final" class="badge bg-danger mt-1"><i class="bi bi-star-fill me-1"></i> Évaluation Finale</span>
-                </p>
+                </div>
+                <div class="d-flex flex-wrap gap-1 mb-2">
+                  <span class="badge bg-success-subtle text-success border border-success-subtle">
+                    <i class="bi bi-check-circle me-1"></i>Min. valider: {{ quiz.passing_score }}%
+                  </span>
+                  <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                    <i class="bi bi-award me-1"></i>Max: {{ quiz.max_score || quiz.total_points || 100 }} pts
+                  </span>
+                  <span v-if="quiz.is_final" class="badge bg-danger"><i class="bi bi-star-fill me-1"></i> Finale</span>
+                </div>
               </div>
               <div class="dropdown">
                 <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
@@ -45,7 +52,7 @@
                 </ul>
               </div>
             </div>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 mt-3">
               <button @click="goToQuestions(quiz.id)" class="btn btn-outline-warning btn-sm flex-grow-1 fw-bold">
                 <i class="bi bi-list-check me-1"></i> Questions
               </button>
@@ -127,23 +134,30 @@
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label fw-semibold">Titre du quiz</label>
-              <input v-model="quizForm.title" type="text" class="form-control rounded-lg" :class="{'is-invalid': errors.title}" placeholder="Ex: Évaluation finale">
+              <label class="form-label fw-semibold">Titre du questionnaire</label>
+              <input v-model="quizForm.title" type="text" class="form-control rounded-lg" :class="{'is-invalid': errors.title}" placeholder="Ex: Évaluation de fin de module">
               <div v-if="errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Description (facultative)</label>
-              <textarea v-model="quizForm.description" class="form-control rounded-lg" rows="3"></textarea>
+              <label class="form-label fw-semibold">Description / Consignes (facultatives)</label>
+              <textarea v-model="quizForm.description" class="form-control rounded-lg" rows="3" placeholder="Description des objectifs du quiz..."></textarea>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Note de passage (%)</label>
-                <input v-model="quizForm.passing_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.passing_score}" min="0" max="100">
+                <label class="form-label fw-semibold">Score min. pour valider (%)</label>
+                <input v-model="quizForm.passing_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.passing_score}" min="0" max="100" placeholder="Ex: 70">
+                <small class="text-muted d-block mt-1">Note minimum de passage (ex: 70%)</small>
                 <div v-if="errors.passing_score" class="invalid-feedback">{{ errors.passing_score[0] }}</div>
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Limite de temps (min)</label>
-                <input v-model="quizForm.duration_minutes" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.duration_minutes}" placeholder="Optionnel">
+                <label class="form-label fw-semibold">Point maximum (Note max)</label>
+                <input v-model="quizForm.max_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.max_score}" min="1" placeholder="Ex: 100">
+                <small class="text-muted d-block mt-1">Total de points maximum (ex: 100 pts)</small>
+                <div v-if="errors.max_score" class="invalid-feedback">{{ errors.max_score[0] }}</div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label class="form-label fw-semibold">Limite de temps (en minutes)</label>
+                <input v-model="quizForm.duration_minutes" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.duration_minutes}" placeholder="Ex: 30 (laisser vide si illimité)">
                 <div v-if="errors.duration_minutes" class="invalid-feedback">{{ errors.duration_minutes[0] }}</div>
               </div>
             </div>
@@ -193,6 +207,7 @@ const quizForm = reactive({
   title: '',
   description: '',
   passing_score: 70,
+  max_score: 100,
   duration_minutes: null,
   is_final: false
 })
@@ -241,12 +256,14 @@ const openQuizModal = async (quiz = null) => {
     quizForm.title = quiz.title
     quizForm.description = quiz.description || ''
     quizForm.passing_score = quiz.passing_score
+    quizForm.max_score = quiz.max_score || quiz.total_points || 100
     quizForm.duration_minutes = quiz.duration_minutes
     quizForm.is_final = quiz.is_final ? true : false
   } else {
     quizForm.title = ''
     quizForm.description = ''
     quizForm.passing_score = 70
+    quizForm.max_score = 100
     quizForm.duration_minutes = null
     quizForm.is_final = false
   }

@@ -5,7 +5,7 @@
         <span class="visually-hidden">Chargement...</span>
       </div>
       <h4 class="fw-bold text-dark mb-2">Authentification en cours</h4>
-      <p class="text-muted">Veuillez patienter pendant que nous vous connectons à votre compte Alrei...</p>
+      <p class="text-muted">Veuillez patienter pendant que nous vous connectons à votre compte ALREI...</p>
     </div>
   </div>
 </template>

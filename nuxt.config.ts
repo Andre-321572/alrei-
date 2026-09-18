@@ -56,7 +56,6 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/main.css',
     '~/assets/css/styles.css',
-    '@mdi/font/css/materialdesignicons.min.css',
   ],
 
   vite: {

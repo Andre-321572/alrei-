@@ -1,27 +1,23 @@
 <template>
-    <div class="blog-page">
-
-        <BlogHeader :blog="BlogData" />
-
-    </div>
+  <div class="blog-detail-page">
+    <BlogHeader :blog="BlogData" />
+  </div>
 </template>
 
 <script setup>
-import BlogHeader from '@/components/Pages/blog-detail/BlogHeader.vue';
+definePageMeta({ layout: 'default' })
 
+import BlogHeader from '@/components/Pages/blog-detail/BlogHeader.vue'
 import { blogData } from '@/data/data.js'
-
 import { useRoute } from '#app'
 
-// ROUTE PARAMS
 const route = useRoute()
 const param = computed(() => route.params.id)
 
-// GET Blog DATA BASED ON ID OR SLUG
 const BlogData = computed(() => {
   if (!param.value) return blogData[0]
   
-  // Match by slug (e.g. "economie-informelle-2026")
+  // Match by slug (e.g. "tulda-2026", "economie-informelle-2026", "transition-juste-2026")
   const matchedBySlug = blogData.find(item => item.slug === param.value)
   if (matchedBySlug) return matchedBySlug
 
@@ -34,5 +30,4 @@ const BlogData = computed(() => {
 
   return blogData[0]
 })
-
 </script>

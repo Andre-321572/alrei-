@@ -6,10 +6,10 @@
         <div class="col-xl-12">
           <div class="d-flex align-items-center justify-content-between">
             <div class="text-light">
-              <h1 class="text-light mb-1">Manage Curriculum</h1>
+              <h1 class="text-light mb-1">{{ $t('manage_curriculum') }}</h1>
               <p class="mb-0">{{ course.title }}</p>
             </div>
-            <NuxtLink to="/instructor-courses" class="btn btn-outline-light">Back to Courses</NuxtLink>
+            <NuxtLink :to="localePath('/instructor-courses')" class="btn btn-outline-light">{{ $t('back_to_courses') }}</NuxtLink>
           </div>
         </div>
       </div>
@@ -22,16 +22,16 @@
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-3 text-muted small">Chargement du cours...</p>
+        <p class="mt-3 text-muted small">{{ $t('loading_course') }}</p>
       </div>
 
       <div v-else-if="fetchError" class="alert alert-danger mx-3 mt-4 d-flex align-items-center gap-3">
         <i class="bi bi-exclamation-triangle-fill fs-4"></i>
         <div>
-          <strong>Impossible de charger le cours</strong>
+          <strong>{{ $t('unable_to_load_course') }}</strong>
           <p class="mb-1 small">{{ fetchError }}</p>
           <button @click="fetchCourse" class="btn btn-sm btn-outline-danger mt-1">
-            <i class="bi bi-arrow-clockwise me-1"></i> Réessayer
+            <i class="bi bi-arrow-clockwise me-1"></i> {{ $t('retry') }}
           </button>
         </div>
       </div>
@@ -42,13 +42,13 @@
           <!-- Navigation Tabs -->
           <ul class="nav nav-pills nav-fill mb-4 bg-white p-2 rounded-4 shadow-sm" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-              <button class="nav-link active rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-curriculum" type="button">Curriculum</button>
+              <button class="nav-link active rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-curriculum" type="button">{{ $t('curriculum') }}</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-quizzes" type="button">Quizzes</button>
+              <button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-quizzes" type="button">{{ $t('quizzes') }}</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-assignments" type="button">Assignments</button>
+              <button class="nav-link rounded-pill" data-bs-toggle="pill" data-bs-target="#pills-assignments" type="button">{{ $t('assignments') }}</button>
             </li>
           </ul>
 
@@ -57,9 +57,9 @@
             <div class="tab-pane fade show active" id="pills-curriculum">
               <div class="card shadow-sm border-0">
                 <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center p-3">
-                  <h5 class="mb-0">Course Content</h5>
+                  <h5 class="mb-0">{{ $t('course_content') }}</h5>
                   <button @click="openSectionModal()" class="btn btn-primary btn-sm">
-                    <i class="bi bi-plus-lg me-1"></i> Add Section
+                    <i class="bi bi-plus-lg me-1"></i> {{ $t('add_section') }}
                   </button>
                 </div>
                 <div class="card-body p-0">
@@ -70,8 +70,8 @@
                           <div class="d-flex justify-content-between align-items-center w-100 me-3">
                             <span class="fw-bold">{{ section.title }}</span>
                             <div class="btn-group btn-group-sm">
-                              <button @click.stop="openSectionModal(section)" class="btn btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
-                              <button @click.stop="deleteSection(section.id)" class="btn btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
+                              <button @click.stop="openSectionModal(section)" class="btn btn-outline-secondary border-0" :title="$t('edit')"><i class="bi bi-pencil"></i></button>
+                              <button @click.stop="deleteSection(section.id)" class="btn btn-outline-danger border-0" :title="$t('delete')"><i class="bi bi-trash"></i></button>
                             </div>
                           </div>
                         </button>
@@ -84,17 +84,17 @@
                                 <i :class="getLessonIcon(lesson.type)" class="fs-5 text-muted me-3"></i>
                                 <div>
                                   <h6 class="mb-0">{{ lesson.title }}</h6>
-                                  <small class="text-muted text-capitalize">{{ lesson.type }} • {{ lesson.duration ? lesson.duration + ' min' : 'No duration' }}</small>
+                                  <small class="text-muted text-capitalize">{{ lesson.type }} • {{ lesson.duration ? lesson.duration + ' min' : $t('no_duration') }}</small>
                                 </div>
                               </div>
                               <div class="btn-group btn-group-sm">
-                                <button @click="openLessonModal(section.id, lesson)" class="btn btn-outline-secondary border-0"><i class="bi bi-pencil"></i></button>
-                                <button @click="deleteLesson(lesson.id)" class="btn btn-outline-danger border-0"><i class="bi bi-trash"></i></button>
+                                <button @click="openLessonModal(section.id, lesson)" class="btn btn-outline-secondary border-0" :title="$t('edit')"><i class="bi bi-pencil"></i></button>
+                                <button @click="deleteLesson(lesson.id)" class="btn btn-outline-danger border-0" :title="$t('delete')"><i class="bi bi-trash"></i></button>
                               </div>
                             </li>
                             <li class="list-group-item bg-white text-center p-3">
                               <button @click="openLessonModal(section.id)" class="btn btn-outline-primary btn-sm border-dashed w-100">
-                                <i class="bi bi-plus-lg me-1"></i> Add Lesson
+                                <i class="bi bi-plus-lg me-1"></i> {{ $t('add_lesson') }}
                               </button>
                             </li>
                           </ul>
@@ -104,7 +104,7 @@
                   </div>
                   <div v-if="course.sections && course.sections.length === 0" class="text-center py-5">
                     <i class="bi bi-folder2-open display-1 text-muted"></i>
-                    <p class="mt-3 text-muted">No sections yet. Start by adding your first section.</p>
+                    <p class="mt-3 text-muted">{{ $t('no_sections_yet') || 'Aucune section pour le moment. Commencez par ajouter votre première section.' }}</p>
                   </div>
                 </div>
               </div>
@@ -130,19 +130,19 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ editingSection ? 'Edit Section' : 'Add Section' }}</h5>
+          <h5 class="modal-title">{{ editingSection ? $t('edit_section') : $t('add_section') }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Section Title</label>
-            <input v-model="sectionForm.title" type="text" class="form-control" placeholder="e.g. Introduction to Nuxt.js">
+            <label class="form-label">{{ $t('section_title') }}</label>
+            <input v-model="sectionForm.title" type="text" class="form-control" :placeholder="$t('section_title_placeholder')">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
           <button @click="saveSection" type="button" class="btn btn-primary" :disabled="saving">
-            {{ saving ? 'Saving...' : 'Save Section' }}
+            {{ saving ? $t('saving') : $t('save') }}
           </button>
         </div>
       </div>
@@ -154,22 +154,22 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ editingLesson ? 'Edit Lesson' : 'Add Lesson' }}</h5>
+          <h5 class="modal-title">{{ editingLesson ? $t('edit_lesson') : $t('add_lesson') }}</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Lesson Title</label>
-              <input v-model="lessonForm.title" type="text" class="form-control" placeholder="e.g. Setting up the environment">
+              <label class="form-label">{{ $t('lesson_title') }}</label>
+              <input v-model="lessonForm.title" type="text" class="form-control" :placeholder="$t('lesson_title_placeholder')">
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Lesson Type</label>
+              <label class="form-label">{{ $t('type') }}</label>
               <select v-model="lessonForm.type" class="form-select">
-                <option value="video">Video</option>
-                <option value="document">Document (PDF/Doc)</option>
-                <option value="text">HTML Text Content</option>
-                <option value="quiz">Quiz</option>
+                <option value="video">{{ $t('lesson_type_video') }}</option>
+                <option value="document">{{ $t('lesson_type_document') }}</option>
+                <option value="text">{{ $t('lesson_type_text') }}</option>
+                <option value="quiz">{{ $t('quiz') }}</option>
               </select>
             </div>
           </div>
@@ -177,15 +177,15 @@
           <div v-if="lessonForm.type === 'video'" class="mb-3">
             <div class="row">
               <div class="col-md-4 mb-2">
-                <label class="form-label">Video URL (FR)</label>
+                <label class="form-label">{{ $t('video_url') }} (FR)</label>
                 <input v-model="lessonForm.video_url_fr" type="url" class="form-control" placeholder="https://youtube.com/...">
               </div>
               <div class="col-md-4 mb-2">
-                <label class="form-label">Video URL (EN)</label>
+                <label class="form-label">{{ $t('video_url') }} (EN)</label>
                 <input v-model="lessonForm.video_url_en" type="url" class="form-control" placeholder="https://youtube.com/...">
               </div>
               <div class="col-md-4 mb-2">
-                <label class="form-label">Video URL (PT)</label>
+                <label class="form-label">{{ $t('video_url') }} (PT)</label>
                 <input v-model="lessonForm.video_url_pt" type="url" class="form-control" placeholder="https://youtube.com/...">
               </div>
             </div>
@@ -194,17 +194,17 @@
           <div v-if="lessonForm.type === 'document'" class="mb-3">
             <div class="row">
               <div class="col-md-4">
-                <label class="form-label">Document (FR)</label>
+                <label class="form-label">{{ $t('document_file') }} (FR)</label>
                 <input @change="handleFileFrChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
                 <small v-if="editingLesson?.file_path_fr" class="text-muted text-truncate d-block">FR: {{ editingLesson.file_path_fr.split('/').pop() }}</small>
               </div>
               <div class="col-md-4">
-                <label class="form-label">Document (EN)</label>
+                <label class="form-label">{{ $t('document_file') }} (EN)</label>
                 <input @change="handleFileEnChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
                 <small v-if="editingLesson?.file_path_en" class="text-muted text-truncate d-block">EN: {{ editingLesson.file_path_en.split('/').pop() }}</small>
               </div>
               <div class="col-md-4">
-                <label class="form-label">Document (PT)</label>
+                <label class="form-label">{{ $t('document_file') }} (PT)</label>
                 <input @change="handleFilePtChange" type="file" class="form-control" accept=".pdf,.doc,.docx,.ppt,.pptx">
                 <small v-if="editingLesson?.file_path_pt" class="text-muted text-truncate d-block">PT: {{ editingLesson.file_path_pt.split('/').pop() }}</small>
               </div>
@@ -212,19 +212,19 @@
           </div>
 
           <div v-if="lessonForm.type === 'text'" class="mb-3">
-            <label class="form-label">Content (HTML/Text)</label>
+            <label class="form-label">{{ $t('description') }} (HTML/Text)</label>
             <textarea v-model="lessonForm.content" class="form-control" rows="5"></textarea>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Duration (minutes)</label>
+            <label class="form-label">{{ $t('duration') }}</label>
             <input v-model="lessonForm.duration" type="number" class="form-control" placeholder="10">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
           <button @click="saveLesson" type="button" class="btn btn-primary" :disabled="saving">
-            {{ saving ? 'Saving...' : 'Save Lesson' }}
+            {{ saving ? $t('saving') : $t('save') }}
           </button>
         </div>
       </div>
@@ -243,6 +243,7 @@ definePageMeta({
 import QuizManager from '@/components/Instructor/QuizManager.vue';
 import AssignmentManager from '@/components/Instructor/AssignmentManager.vue';
 
+const localePath = useLocalePath()
 const route = useRoute()
 const courseId = route.params.id
 const api = useApi()

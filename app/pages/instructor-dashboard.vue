@@ -28,6 +28,69 @@
                         </div>
                     </div>
                     
+                    <!-- Statistics Cards -->
+                    <div class="row gy-3 mb-4">
+                        <div 
+                            class="col-xl-3 col-lg-3 col-md-6 col-sm-6"
+                            v-for="(item, index) in instructorAbout" 
+                            :key="index"
+                        >
+                            <div class="card rounded-3 border px-3 py-3 shadow-sm h-100">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div :class="`square--50 circle bg-light-${item.theme} fs-4`">
+                                        <i :class="item.icon"></i>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <h3 class="fw-bold m-0">{{item.value}}</h3>
+                                        <span class="text-muted small">{{item.title}}</span>
+                                    </div>
+                                </div>
+                            </div>	
+                        </div>
+                    </div>
+
+                    <!-- Raccourcis Gestion Quiz & Devoirs -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-white shadow-sm rounded-3 p-3 h-100">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="square--50 circle bg-light-warning text-warning fs-4">
+                                            <i class="bi bi-patch-question"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark">Quiz & Évaluations</h6>
+                                            <p class="small text-muted mb-0">Créer des quiz avec note min & max</p>
+                                        </div>
+                                    </div>
+                                    <NuxtLink to="/instructor-quizzes" class="btn btn-warning text-white btn-sm rounded-pill px-3 fw-bold">
+                                        Gérer <i class="bi bi-arrow-right ms-1"></i>
+                                    </NuxtLink>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-white shadow-sm rounded-3 p-3 h-100">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="square--50 circle bg-light-primary text-primary fs-4">
+                                            <i class="bi bi-journal-check"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-1 text-dark">Devoirs & Travaux</h6>
+                                            <p class="small text-muted mb-0">Évaluer les travaux et soumissions</p>
+                                        </div>
+                                    </div>
+                                    <NuxtLink to="/instructor-assignments" class="btn btn-primary btn-sm rounded-pill px-3 fw-bold">
+                                        Gérer <i class="bi bi-arrow-right ms-1"></i>
+                                    </NuxtLink>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cours En Direct Planifiés -->
                     <div class="row mb-5">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
@@ -59,27 +122,6 @@
                         </div>
                     </div>
 
-                    <div class="row gy-3 mb-4">
-                
-                        <div 
-                            class="col-xl-4 col-lg-4 col-md-6 col-sm-6"
-                            v-for="(item, index) in instructorAbout" 
-                            :key="index"
-                        >
-                            <div class="card rounded-3 border px-3 py-4">
-                                <div class="d-flex align-items-center gap-3">
-                                    <div :class="`square--60 circle bg-light-${item.theme} fs-3`">
-                                        <i :class="item.icon"></i>
-                                    </div>
-                                    <div class="d-flex flex-column gap-1">
-                                        <h2 class="fw-semibold m-0">{{item.value}}</h2><span class="text-muted">{{item.title}}</span>
-                                    </div>
-                                </div>
-                            </div>	
-                        </div>
-                        
-                    </div>
-                    
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             
