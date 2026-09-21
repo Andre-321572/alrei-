@@ -1,75 +1,25 @@
-# Nuxt Minimal Starter
+# 🎓 ALREI (Learnup) LMS Platform
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Pour une présentation complète du projet, de son architecture système, du modèle de données, de la stack technique (Nuxt 3 / Laravel / Flutter / Zoom) et de la stratégie business, veuillez consulter le fichier :
 
-## Setup
+📖 **[PROJECT_PRESENTATION.md](file:///c:/Learnup_NuxtJs_v1.0.0/PROJECT_PRESENTATION.md)**
 
-Make sure to install dependencies:
+---
 
+## 🚀 Démarrage Rapide (Frontend Nuxt 3)
+
+### 1. Installation des dépendances
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+### 2. Démarrer le serveur de développement
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+L'application sera accessible sur `http://localhost:3000`.
 
-## Production
-
-Build the application for production:
-
+### 3. Build de production
 ```bash
-# npm
 npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
