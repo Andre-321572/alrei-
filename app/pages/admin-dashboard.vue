@@ -1006,32 +1006,45 @@
 
     <!-- Modal Créer Groupe -->
     <div class="modal fade" id="groupModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ $t('create_group') }}</h5>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-light border-0 px-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="square--45 rounded-circle bg-warning-subtle text-warning-emphasis d-flex align-items-center justify-content-center fs-4">
+                            <i class="bi bi-people-fill text-warning"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold m-0 text-dark">{{ $t('create_group') }}</h5>
+                            <span class="text-muted extra-small">Regroupez vos étudiants pour leur assigner des cours facilement</span>
+                        </div>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form @submit.prevent="submitGroup">
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('group_name') }}</label>
-                            <input type="text" class="form-control" v-model="groupForm.name" required>
+                            <label class="form-label fw-semibold text-dark">{{ $t('group_name') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control rounded-3 py-2" v-model="groupForm.name" placeholder="Ex: Promotion 2026, Groupe A..." required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('description') }}</label>
-                            <textarea class="form-control" v-model="groupForm.description"></textarea>
+                            <label class="form-label fw-semibold text-dark">{{ $t('description') }}</label>
+                            <textarea class="form-control rounded-3 py-2" v-model="groupForm.description" rows="2" placeholder="Description optionnelle du groupe..."></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('select_students') }}</label>
-                            <select multiple class="form-select" v-model="groupForm.user_ids" style="height: 150px;">
-                                <option v-for="student in students" :key="student.id" :value="student.id">
-                                    {{ student.name }} ({{ student.email }})
-                                </option>
-                            </select>
-                            <small class="text-muted">{{ $t('hold_ctrl_to_select_multiple') }}</small>
+                            <label class="form-label fw-semibold text-dark mb-2">{{ $t('select_students') }}</label>
+                            <StudentMultiSelect
+                                v-model="groupForm.user_ids"
+                                :students="students"
+                            />
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" :disabled="submitting">{{ $t('save') }}</button>
+                        <div class="d-flex align-items-center justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Fermer</button>
+                            <button type="submit" class="btn btn-warning text-white fw-bold rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 shadow-sm" :disabled="submitting">
+                                <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                <i v-else class="bi bi-check-lg"></i>
+                                {{ $t('save') }}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1290,6 +1303,7 @@
 
 <script setup lang="ts">
 import AdminSidebar from '@/components/Accounts/admin-dashboard/AdminSidebar.vue';
+import StudentMultiSelect from '@/components/Accounts/admin-dashboard/StudentMultiSelect.vue';
 
 // Protège la route — seul un admin peut accéder
 definePageMeta({
@@ -1378,7 +1392,7 @@ const exportStudentsPdf = async () => {
             
             doc.setFontSize(10)
             doc.setTextColor(100)
-            doc.text('African Labour Research and Education Institute', 48, 22)
+            doc.text('Centre ALREI de formation des travailleurs', 48, 22)
             
             doc.setFontSize(14)
             doc.setTextColor(0)
@@ -1546,7 +1560,7 @@ const exportCountrySummaryPdf = async () => {
         doc.setFont('helvetica', 'normal')
         doc.setFontSize(9)
         doc.setTextColor(100, 100, 100)
-        doc.text('African Labour Research and Education Institute — Rapport des Délégués Officiels par Pays', 14, 21)
+        doc.text('Centre ALREI de formation des travailleurs — Rapport des Délégués Officiels par Pays', 14, 21)
 
         // Metadata Strip
         doc.setFontSize(9)

@@ -10,7 +10,8 @@
       <div class="container">
         <div class="row gx-xl-5">
           <div class="col-lg-3">
-            <Sidebar />
+            <Sidebar v-if="isAdmin || isInstructor" />
+            <StudentAdminSidebar v-else />
           </div>
 
           <div class="col-lg-9 col-md-12 col-sm-12">
@@ -67,8 +68,10 @@
 
 <script setup>
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue'
+import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue'
 import QuizManager from '@/components/Instructor/QuizManager.vue'
 
+const { isAdmin, isInstructor } = useAuth()
 const api = useApi()
 const courses = ref([])
 const selectedCourseId = ref(null)
@@ -86,5 +89,10 @@ onMounted(async () => {
   } finally {
     loadingCourses.value = false
   }
+})
+
+definePageMeta({
+  layout: 'instructor',
+  middleware: ['auth']
 })
 </script>

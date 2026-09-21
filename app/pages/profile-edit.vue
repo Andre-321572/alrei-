@@ -39,8 +39,8 @@
                                 <div class="card-body">
                                     <div class="d-lg-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center mb-4 mb-lg-0">
-                                            <div class="position-relative">
-                                                <img :src="avatarPreview || user?.avatar || avatar1" class="img-fluid circle w-20 shadow-sm" alt="avatar Image">
+                                             <div class="position-relative">
+                                                <img :src="avatarPreview || getAvatarUrl(user?.avatar, user?.name)" class="img-fluid circle shadow-sm" style="width: 80px; height: 80px; object-fit: cover;" alt="avatar Image">
                                                 <input type="file" ref="fileInput" @change="handleFileChange" class="d-none" accept="image/*">
                                             </div>
                                             <div class="ms-3">
@@ -94,8 +94,7 @@
                                                     <textarea v-model="form.instructor_data.bio" class="form-control" rows="4" placeholder="Parlez-nous de vous..."></textarea>
                                                 </div>
                                             </template>
-
-                                            <div class="col-12 mt-4">
+                                             <div class="col-12 mt-4">
                                                 <button class="btn btn-main px-5" type="submit" :disabled="loading">
                                                     <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>
                                                     {{ $t('update_profile') }}
@@ -103,6 +102,59 @@
                                             </div>
                                         
                                         </form>
+
+                                        <hr class="my-5">
+
+                                        <!-- Formulaire Modifier le mot de passe -->
+                                        <div class="form-section">
+                                            <h4 class="mb-1 text-dark fw-bold">Modifier le mot de passe</h4>
+                                            <p class="text-muted mb-4 small">Mettez à jour votre mot de passe pour garantir la sécurité de votre compte.</p>
+                                            
+                                            <form class="row g-3" @submit.prevent="updatePassword">
+                                                <div class="col-12 col-md-4">
+                                                    <label class="form-label fw-semibold">Mot de passe actuel</label>
+                                                    <input 
+                                                        v-model="passwordForm.current_password" 
+                                                        type="password" 
+                                                        class="form-control" 
+                                                        placeholder="Mot de passe actuel" 
+                                                        required
+                                                    >
+                                                </div>
+                                                
+                                                <div class="col-12 col-md-4">
+                                                    <label class="form-label fw-semibold">Nouveau mot de passe</label>
+                                                    <input 
+                                                        v-model="passwordForm.new_password" 
+                                                        type="password" 
+                                                        class="form-control" 
+                                                        placeholder="Au moins 6 caractères" 
+                                                        minlength="6"
+                                                        required
+                                                    >
+                                                </div>
+
+                                                <div class="col-12 col-md-4">
+                                                    <label class="form-label fw-semibold">Confirmer le mot de passe</label>
+                                                    <input 
+                                                        v-model="passwordForm.new_password_confirmation" 
+                                                        type="password" 
+                                                        class="form-control" 
+                                                        placeholder="Répétez le nouveau mot de passe" 
+                                                        minlength="6"
+                                                        required
+                                                    >
+                                                </div>
+
+                                                <div class="col-12 mt-4">
+                                                    <button class="btn btn-warning text-white fw-bold px-4 py-2 rounded-pill shadow-sm" type="submit" :disabled="updatingPassword">
+                                                        <span v-if="updatingPassword" class="spinner-border spinner-border-sm me-2"></span>
+                                                        <i v-else class="bi bi-shield-lock me-1"></i>
+                                                        Changer le mot de passe
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -122,14 +174,21 @@
 <script setup>
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
-import avatar1 from "@/assets/img/avatar-1.jpg";
 
 const { user, isAdmin, isInstructor, isStudent, fetchUser } = useAuth()
+const { getAvatarUrl } = useAvatar()
 const api = useApi()
 
 const loading = ref(false)
 const avatarPreview = ref(null)
 const selectedFile = ref(null)
+
+const passwordForm = ref({
+    current_password: '',
+    new_password: '',
+    new_password_confirmation: ''
+})
+const updatingPassword = ref(false)
 
 const form = ref({
     name: user.value?.name || '',
@@ -158,7 +217,6 @@ const handleFileChange = (event) => {
 const removeAvatar = () => {
     selectedFile.value = null
     avatarPreview.value = null
-    // Note: On pourrait appeler une API pour supprimer l'avatar, mais ici on attend la soumission
 }
 
 const updateProfile = async () => {
@@ -189,6 +247,53 @@ const updateProfile = async () => {
         alert('Erreur lors de la mise à jour du profil.')
     } finally {
         loading.value = false
+    }
+}
+
+const updatePassword = async () => {
+    if (passwordForm.value.new_password !== passwordForm.value.new_password_confirmation) {
+        alert('Le nouveau mot de passe et sa confirmation ne correspondent pas.')
+        return
+    }
+
+    updatingPassword.value = true
+    try {
+        let response
+        try {
+            response = await api('/profile/change-password', {
+                method: 'POST',
+                body: passwordForm.value
+            })
+        } catch (e1) {
+            if (e1?.status === 404 || e1?.statusCode === 404) {
+                try {
+                    response = await api('/profile/password', {
+                        method: 'POST',
+                        body: passwordForm.value
+                    })
+                } catch (e2) {
+                    response = await api('/change-password', {
+                        method: 'POST',
+                        body: passwordForm.value
+                    })
+                }
+            } else {
+                throw e1
+            }
+        }
+
+        alert('✅ Mot de passe mis à jour avec succès !')
+        passwordForm.value = {
+            current_password: '',
+            new_password: '',
+            new_password_confirmation: ''
+        }
+    } catch (err) {
+        console.error('Update password failed:', err)
+        const msg = err.data?.message || err.data?.error || 'Erreur lors de la modification du mot de passe.'
+        alert(msg)
+    } finally {
+        updatingPassword.value = false
     }
 }
 

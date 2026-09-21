@@ -1,25 +1,34 @@
 <template>
 
-    <section class="bg-cover py-5" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12 col-lg-12 col-12">
-                    <div class="text-center">
-                        <h1 class="text-light">Add New Course</h1>
-                        <p class="fs-6 text-light">Just fill the form carefully and create your new courses.</p>
-                    </div>
-                </div>
-            </div>
+    <section class="p-0 bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
+        <div class="container-fluid px-0">
+            <div class="ht-200"></div>
         </div>
     </section>
 
-    <section class="bg-light py-5">
-        <div class="container">			
-            <div class="row align-items-center justify-content-center">
-            
-                <div class="col-xl-10 col-lg-12">
-                
-                    <div class="card shadow-sm">
+    <section class="pt-4 pb-5">
+        <div class="container">
+            <div class="row gx-xl-5">
+                <div class="col-lg-3">
+                    <Sidebar v-if="isAdmin || isInstructor" />
+                    <StudentAdminSidebar v-else />
+                </div>
+
+                <div class="col-lg-9 col-md-12">
+
+                    <div class="row mb-3">
+                        <div class="col-lg-12">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><NuxtLink to="/">Accueil</NuxtLink></li>
+                                    <li class="breadcrumb-item"><NuxtLink to="/instructor-dashboard">Tableau de bord</NuxtLink></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Créer un cours</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm border">
                         <div class="card-body p-4 p-lg-5">
 
                             <div class="step-indicator mb-4">
@@ -29,36 +38,35 @@
                             </div>
 
                             <form @submit.prevent="handleSubmit" id="multiStepForm">
-                            
+
                                 <div v-show="activeTab === 1" class="step active">
-                                    
+
                                     <div class="mb-4">
-                                        <h5 class="text-darks mb-0 lh-base">Basic Information</h5>
-                                        <p class="text-muted">Fill basic information regarding your course.</p>
+                                        <h5 class="text-darks mb-0 lh-base">Informations de base</h5>
+                                        <p class="text-muted">Remplissez les informations de base relatives à votre cours.</p>
                                     </div>
-                                    
+
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Course Title</label>
-                                        <input v-model="course.title" type="text" class="form-control" placeholder="Enter course title">
-                                        <small class="text-muted">Write a 60 character course title.</small>
+                                        <label class="form-label">Titre du cours</label>
+                                        <input v-model="course.title" type="text" class="form-control" placeholder="Entrez le titre du cours">
+                                        <small class="text-muted d-block mt-1">Écrivez un titre de cours percutant (60 caractères max).</small>
                                     </div>
-                                    
+
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Courses category</label>
+                                        <label class="form-label">Catégorie du cours</label>
                                         <select v-model="course.category_id" class="form-control form-select" id="c-category">
-                                            <option value="">Select Category</option>
+                                            <option value="">Sélectionner une catégorie</option>
                                             <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                                         </select>
                                     </div>
-                                    
 
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Courses Level</label>
+                                        <label class="form-label">Niveau du cours</label>
                                         <select v-model="course.level" class="form-control" id="level">
-                                            <option value="beginner">Beginner</option>
-                                            <option value="intermediate">Intermediate</option>
-                                            <option value="advanced">Advanced</option>
-                                            <option value="all">All Levels</option>
+                                            <option value="beginner">Débutant</option>
+                                            <option value="intermediate">Intermédiaire</option>
+                                            <option value="advanced">Avancé</option>
+                                            <option value="all">Tous niveaux</option>
                                         </select>
                                     </div>
 
@@ -185,69 +193,70 @@
                                             <small class="text-muted d-block mt-1">Collez l'URL complète de votre vidéo YouTube publique ou non-listée.</small>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Course Description</label>
-                                        <textarea v-model="course.description" class="form-control" rows="3" placeholder="Enter description"></textarea>
+                                        <label class="form-label">Description du cours</label>
+                                        <textarea v-model="course.description" class="form-control" rows="3" placeholder="Entrez la description du cours"></textarea>
                                     </div>
-                                    
+
                                     <div class="form-group mb-3">
-                                        <label class="form-label">Prerequisites</label>
-                                        <textarea v-model="course.prerequisites" class="form-control" rows="2" placeholder="e.g. Basic knowledge of JavaScript"></textarea>
-                                    </div>
-                                    <div class="mb-4">
-                                        <h5 class="text-darks mb-0 lh-base">Course Media</h5>
-                                        <p class="text-muted">Upload a professional thumbnail, a preview video, and any additional resources.</p>
+                                        <label class="form-label">Prérequis</label>
+                                        <textarea v-model="course.prerequisites" class="form-control" rows="2" placeholder="Ex: Connaissances de base en informatique"></textarea>
                                     </div>
 
                                     <div class="mb-4">
-                                        <label class="form-label">Course Thumbnail <span class="text-danger">*</span></label>
+                                        <h5 class="text-darks mb-0 lh-base">Image / Miniature du cours</h5>
+                                        <p class="text-muted">Téléversez une image miniature professionnelle.</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="form-label">Miniature du cours <span class="text-danger">*</span></label>
                                         <div class="border rounded d-flex align-items-center justify-content-between p-3">
                                             <div class="d-flex align-items-center">
                                                 <i class="bi bi-image fs-4 text-primary me-3"></i>
                                                 <input @change="handleThumbnailChange" type="file" id="thumbnailInput" class="form-control" accept="image/*">
                                             </div>
-                                            <img v-if="preview" :src="preview" id="thumbnailPreview" class="img-thumbnail ms-3" style="width: 100px;" alt="Preview">
+                                            <img v-if="preview" :src="preview" id="thumbnailPreview" class="img-thumbnail ms-3" style="width: 100px;" alt="Aperçu">
                                         </div>
-                                        <small class="text-muted d-block mt-2">Recommended: 800x600px | JPG/PNG</small>
+                                        <small class="text-muted d-block mt-2">Recommandé: 800x600px | JPG/PNG</small>
                                     </div>
                                 </div>
-                                
+
                                 <div v-show="activeTab === 2" class="step active">
                                     <div class="mb-4">
-                                        <h5 class="lh-base m-0">Course Curriculum</h5>
-                                        <p class="text-muted">Add course sections and lessons below. You can add as many as needed.</p>
+                                        <h5 class="lh-base m-0">Programme du cours</h5>
+                                        <p class="text-muted">Ajoutez les modules et le contenu de votre cours.</p>
                                     </div>
 
                                     <div id="curriculumContainer">
                                         <div class="section border p-3 rounded mb-4">
-                                            <p class="text-muted">Curriculum management will be available after basic course creation.</p>
+                                            <p class="text-muted">La gestion détaillée du programme sera disponible après la création initiale du cours.</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div v-show="activeTab === 3" class="step active">
                                     <div class="mb-4 text-center">
-                                        <h3>Ready to Publish?</h3>
-                                        <p>Review your information before submitting.</p>
+                                        <h3>Prêt à publier ?</h3>
+                                        <p>Vérifiez vos informations avant d'envoyer.</p>
                                     </div>
                                 </div>
 
-                                <!-- Buttons -->
+                                <!-- Boutons de navigation -->
                                 <div class="d-flex justify-content-between mt-4">
-                                    <button v-if="activeTab > 1" type="button" class="btn btn-gray px-4" @click="prevTab">Previous</button>
+                                    <button v-if="activeTab > 1" type="button" class="btn btn-gray px-4" @click="prevTab">Précédent</button>
                                     <div v-else></div>
                                     <button :disabled="submitting" type="button" class="btn btn-main px-4" @click="nextTabOrSubmit">
-                                        {{ submitting ? 'Submitting...' : (activeTab === 3 ? 'Submit' : 'Next') }}
+                                        {{ submitting ? 'Envoi en cours...' : (activeTab === 3 ? 'Publier' : 'Suivant') }}
                                     </button>
                                 </div>
-                            
+
                             </form>
                         </div>
-                    </div>						
-                    
-                </div>	
-            
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </section>
@@ -255,13 +264,17 @@
 </template>
 
 <script setup lang="ts">
+import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
+import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
+
+const { isAdmin, isInstructor } = useAuth()
 
 const activeTab = ref(1)
 const preview = ref('')
 const submitting = ref(false)
-const categories = ref([])
+const categories = ref<any[]>([])
 
-// ===== Multilingual content =====
+// ===== Contenu multilingue =====
 const contentType = ref<'document' | 'video' | 'youtube'>('document')
 const languageVersions = ref([{ lang: 'fr', file: null as File | null }])
 const youtubeUrl = ref('')
@@ -298,7 +311,7 @@ const course = reactive({
     description: '',
     is_free: true,
     price: 0,
-    thumbnail: null,
+    thumbnail: null as File | null,
     prerequisites: ''
 })
 
@@ -313,16 +326,13 @@ onMounted(async () => {
     }
 })
 
-const handleThumbnailChange = (e) => {
-  const file = e.target.files[0]
+const handleThumbnailChange = (e: Event) => {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
   if (file) {
       course.thumbnail = file
       preview.value = URL.createObjectURL(file)
   }
-}
-
-const nextTab = () => {
-  if (activeTab.value < 3) activeTab.value++
 }
 
 const prevTab = () => {
@@ -371,14 +381,13 @@ const handleSubmit = async () => {
         navigateTo('/instructor-courses')
     } catch (error) {
         console.error('Failed to create course:', error)
-        alert('Error creating course. Please check all fields.')
+        alert('Erreur lors de la création du cours. Veuillez vérifier tous les champs.')
     } finally {
         submitting.value = false
     }
 }
 
-
 definePageMeta({
     layout: 'instructor',
 });
-</script>
+</script>

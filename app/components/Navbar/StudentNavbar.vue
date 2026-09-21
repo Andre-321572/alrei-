@@ -52,14 +52,15 @@
 
 <script setup lang="ts">
 import LocaleSwitcher from './LocaleSwitcher.vue';
-import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const localePath = useLocalePath();
 const logo = '/Logo alrei.png';
 const isSticky = ref(false);
 
 const { user, logout, fetchUser, isAuthenticated } = useAuth();
-const userAvatar = computed(() => user.value?.avatar || avatar3);
+const { getAvatarUrl } = useAvatar();
+
+const userAvatar = computed(() => getAvatarUrl(user.value?.avatar, user.value?.name));
 const userName   = computed(() => user.value?.name  || 'Invité');
 const userRole   = computed(() => user.value?.role  || '');
 

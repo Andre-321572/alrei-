@@ -17,7 +17,10 @@
         
                 <div class="author-info-wwrap">
                     <div class="author-caps text-center mb-4">
-                        <div class="d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-2 align-items-center">
+                            <div class="square--70 circle mb-1 overflow-hidden shadow-xs border">
+                                <img :src="userAvatar" class="img-fluid circle w-100 h-100" style="object-fit: cover;" alt="Avatar">
+                            </div>
                             <div class="d-flex align-items-center justify-content-center">
                                 <h5 class="fw-medium m-0">{{ user?.name }}</h5>
                                 <span v-if="user?.role === 'instructor' || user?.role === 'admin'" class="verified text-green ms-2">
@@ -31,25 +34,25 @@
                 
                 <div class="d-navigation">
                     <ul id="side-menu">
-                        <li v-if="user?.role === 'admin'"><NuxtLink :to="localePath('/admin-dashboard')" :class="{ active: isActive('/admin-dashboard') }"><i class="bi bi-shield-lock"></i>{{ $t('admin_dashboard') }}</NuxtLink></li>
+                        <li v-if="user?.role === 'admin'"><NuxtLink :to="localePath('/admin-dashboard')" :class="{ active: isActive('/admin-dashboard') }"><i class="bi bi-shield-lock me-2"></i>{{ $t('admin_dashboard') }}</NuxtLink></li>
                         
                         <template v-if="user?.role === 'instructor' || user?.role === 'admin'">
-                            <li><NuxtLink :to="localePath('/instructor-dashboard')" :class="{ active: isActive('/instructor-dashboard') }"><i class="bi bi-ui-radios-grid"></i>{{ $t('instructor_dashboard') }}</NuxtLink></li>
-                            <li><NuxtLink :to="localePath('/instructor-courses')" :class="{ active: isActive('/instructor-courses') }"><i class="bi bi-basket2"></i>{{ $t('my_courses') }}</NuxtLink></li>
-                            <li><NuxtLink :to="localePath('/instructor-quizzes')" :class="{ active: isActive('/instructor-quizzes') }"><i class="bi bi-patch-question"></i>Quiz & Évaluations</NuxtLink></li>
-                            <li><NuxtLink :to="localePath('/instructor-assignments')" :class="{ active: isActive('/instructor-assignments') }"><i class="bi bi-journal-check"></i>Devoirs & Travaux</NuxtLink></li>
-                            <li><NuxtLink :to="localePath('/instructor-students')" :class="{ active: isActive('/instructor-students') }"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-dashboard')" :class="{ active: isActive('/instructor-dashboard') }"><i class="bi bi-ui-radios-grid me-2"></i>{{ $t('instructor_dashboard') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-courses')" :class="{ active: isActive('/instructor-courses') }"><i class="bi bi-basket2 me-2"></i>{{ $t('my_courses') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-quizzes')" :class="{ active: isActive('/instructor-quizzes') }"><i class="bi bi-patch-question me-2"></i>Quiz & Évaluations</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-assignments')" :class="{ active: isActive('/instructor-assignments') }"><i class="bi bi-journal-check me-2"></i>Devoirs & Travaux</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-students')" :class="{ active: isActive('/instructor-students') }"><i class="bi bi-people me-2"></i>{{ $t('students') }}</NuxtLink></li>
                             <li>
                                 <NuxtLink :to="localePath('/messages')" :class="{ active: isActive('/messages') }" class="d-flex justify-content-between align-items-center">
-                                    <div><i class="bi bi-chat-dots"></i>Messages</div>
+                                    <div><i class="bi bi-chat-dots me-2"></i>Messages</div>
                                     <span v-if="unreadCount > 0" class="badge bg-danger rounded-pill">{{ unreadCount }}</span>
                                 </NuxtLink>
                             </li>
-                            <li><NuxtLink :to="localePath('/instructor-create-course')" :class="{ active: isActive('/instructor-create-course') }"><i class="bi bi-patch-plus"></i>{{ $t('create_course') }}</NuxtLink></li>
-                            <li><NuxtLink :to="localePath('/instructor-integrations')" :class="{ active: isActive('/instructor-integrations') }"><i class="bi bi-plugin"></i>{{ $t('integrations') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-create-course')" :class="{ active: isActive('/instructor-create-course') }"><i class="bi bi-patch-plus me-2"></i>{{ $t('create_course') }}</NuxtLink></li>
+                            <li><NuxtLink :to="localePath('/instructor-integrations')" :class="{ active: isActive('/instructor-integrations') }"><i class="bi bi-plugin me-2"></i>{{ $t('integrations') }}</NuxtLink></li>
                         </template>
 
-                        <li><NuxtLink :to="localePath('/profile-edit')" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle"></i>{{ $t('my_profile') }}</NuxtLink></li>
+                        <li><NuxtLink :to="localePath('/profile-edit')" :class="{ active: isActive('/profile-edit') }"><i class="bi bi-person-circle me-2"></i>{{ $t('my_profile') }}</NuxtLink></li>
                     </ul>
                 </div>
                 
@@ -66,8 +69,14 @@ const localePath = useLocalePath()
 const route = useRoute()
 const { user } = useAuth()
 const api = useApi()
+const { getAvatarUrl } = useAvatar()
 
-const isActive = (path) => route.path === path
+const userAvatar = computed(() => getAvatarUrl(user.value?.avatar, user.value?.name))
+
+const isActive = (path) => {
+    const targetPath = localePath(path)
+    return route.path === path || route.path === targetPath || (path !== '/' && route.path.endsWith(path))
+}
 
 const unreadCount = ref(0)
 const fetchUnreadCount = async () => {

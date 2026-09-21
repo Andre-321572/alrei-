@@ -63,8 +63,8 @@
                                                 <tr v-for="student in students" :key="student.id + student.course_title">
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
-                                                            <div class="square--40 circle overflow-hidden border">
-                                                                <img :src="student.avatar || avatar3" class="img-fluid" alt="Avatar">
+                                                             <div class="square--40 circle overflow-hidden border">
+                                                                <img :src="getAvatarUrl(student.avatar, student.name)" class="img-fluid circle w-100 h-100" style="object-fit: cover;" alt="Avatar">
                                                             </div>
                                                             <div>
                                                                 <div class="fw-bold">{{ student.name }}</div>
@@ -103,23 +103,28 @@
     <!-- Message Modal -->
     <div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ $t('send_message_to') }} {{ selectedStudent?.name }}</h5>
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header border-bottom py-3">
+                    <h5 class="modal-title fw-bold">{{ $t('send_message_to') }} {{ selectedStudent?.name }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label">{{ $t('your_message') }}</label>
-                        <textarea v-model="messageContent" class="form-control" rows="4" :placeholder="$t('write_your_message_here')"></textarea>
+                        <label class="form-label fw-semibold">{{ $t('your_message') }}</label>
+                        <textarea v-model="messageContent" class="form-control rounded-3" rows="4" :placeholder="$t('write_your_message_here')"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
-                    <button @click="sendMessage" class="btn btn-primary" :disabled="sending || !messageContent.trim()">
-                        <span v-if="sending" class="spinner-border spinner-border-sm me-1" role="status"></span>
-                        {{ $t('send') }}
-                    </button>
+                <div class="modal-footer bg-light border-top py-3 d-flex justify-content-between">
+                    <NuxtLink v-if="selectedStudent" :to="`/messages?user_id=${selectedStudent.id}`" class="btn btn-outline-info btn-sm rounded-pill" data-bs-dismiss="modal">
+                        <i class="bi bi-box-arrow-up-right me-1"></i> Discussion complète
+                    </NuxtLink>
+                    <div class="d-flex gap-2 ms-auto">
+                        <button type="button" class="btn btn-light btn-sm rounded-pill px-3" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
+                        <button @click="sendMessage" class="btn btn-primary btn-sm rounded-pill px-4" :disabled="sending || !messageContent.trim()">
+                            <span v-if="sending" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                            {{ $t('send') }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -129,9 +134,9 @@
 
 <script setup lang="ts">
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
-import avatar3 from "@/assets/img/avatar-3.jpg";
 
 const api = useApi()
+const { getAvatarUrl } = useAvatar()
 const students = ref<any[]>([])
 const loading = ref(true)
 
@@ -155,10 +160,14 @@ const fetchStudents = async () => {
 const openMessageModal = (student: any) => {
     selectedStudent.value = student
     messageContent.value = ''
-    if (!messageModalInstance && process.client && (window as any).bootstrap) {
-        messageModalInstance = new (window as any).bootstrap.Modal(document.getElementById('messageModal'))
+    if (process.client) {
+        const { $bootstrap } = useNuxtApp()
+        const modalEl = document.getElementById('messageModal')
+        if (modalEl) {
+            messageModalInstance = ($bootstrap as any).Modal.getInstance(modalEl) || new ($bootstrap as any).Modal(modalEl)
+            messageModalInstance.show()
+        }
     }
-    messageModalInstance?.show()
 }
 
 const sendMessage = async () => {
@@ -173,7 +182,16 @@ const sendMessage = async () => {
                 content: messageContent.value
             }
         })
-        messageModalInstance?.hide()
+        if (messageModalInstance) {
+            messageModalInstance.hide()
+        } else if (process.client) {
+            const { $bootstrap } = useNuxtApp()
+            const modalEl = document.getElementById('messageModal')
+            if (modalEl) {
+                const modal = ($bootstrap as any).Modal.getInstance(modalEl)
+                modal?.hide()
+            }
+        }
         alert('Message envoyé avec succès')
     } catch (err) {
         console.error('Send message error:', err)

@@ -18,7 +18,10 @@
                 <ClientOnly>
                 <div class="author-info-wwrap">
                     <div class="author-caps text-center mb-4">
-                        <div class="d-flex flex-column gap-2">
+                        <div class="d-flex flex-column gap-2 align-items-center">
+                            <div class="square--70 circle mb-1 overflow-hidden shadow-xs border">
+                                <img :src="userAvatar" class="img-fluid circle w-100 h-100" style="object-fit: cover;" alt="Avatar">
+                            </div>
                             <div class="d-flex align-items-center justify-content-center">
                                 <h5 class="fw-semibold m-0">{{ userName }}</h5>
                             </div>
@@ -28,16 +31,6 @@
                             <div class="d-flex align-items-center justify-content-center mt-1">
                                 <span class="badge bg-green text-light rounded-pill text-capitalize">{{ userRole }}</span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <div class="d-flex flex-column justify-content-center align-items-center gap-1">
-                            <h6 class="text-dark lh-1 fw-semibold m-0">12</h6>
-                            <span class="text-muted-2 m-0">{{ $t('done_courses') }}</span>
-                        </div>
-                        <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                            <h6 class="text-dark lh-1 fw-semibold m-0">156</h6>
-                            <span class="text-muted-2 m-0">{{ $t('done_lessons') }}</span>
                         </div>
                     </div>
                 </div>
@@ -76,9 +69,15 @@ import { useAuth } from '@/composables/useAuth';
 
 const localePath = useLocalePath()
 const route = useRoute()
-const isActive = (path: string) => route.path === path
+const isActive = (path: string) => {
+    const targetPath = localePath(path)
+    return route.path === path || route.path === targetPath || (path !== '/' && route.path.endsWith(path))
+}
 
 const { user, api } = useAuth()
+const { getAvatarUrl } = useAvatar()
+
+const userAvatar = computed(() => getAvatarUrl(user.value?.avatar, user.value?.name))
 const userName   = computed(() => user.value?.name   || 'Étudiant')
 const userRole   = computed(() => user.value?.role   || 'student')
 

@@ -80,7 +80,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "Alrei - Académie en ligne",
+      title: "Centre ALREI de formation des travailleurs",
       meta: [
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1.0" }
