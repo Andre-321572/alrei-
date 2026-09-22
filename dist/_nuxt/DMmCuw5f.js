@@ -1,0 +1,1 @@
+import{l as t,s as a,g as s,c as r,o as c}from"./B69G67JE.js";const p={__name:"login",setup(n){const e=t(),o=a();return s(()=>{o.replace(e("/register?tab=login"))}),(l,u)=>(c(),r("div"))}};export{p as default};
