@@ -83,7 +83,7 @@
                 <div class="row align-items-center g-3">
                     <div class="col-md-12 text-center">
                         <p class="mb-0 footer-text">
-                            © 2026 ALREI, CSI-Afrique. Tous droits réservés.
+                            {{ $t('footer_rights') || '© 2026 ALREI, ITUC-Africa. Tous droits réservés.' }}
                         </p>
                     </div>
                 </div>

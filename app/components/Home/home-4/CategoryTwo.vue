@@ -11,7 +11,7 @@
                     <a class="pic-main" href="#"><img :src="item.image" class="img-fluid" alt="" /></a>
                 </div>
                 <div class="edu_cat_data">
-                    <h4 class="title"><a href="#">{{item.title}}</a></h4>
+                    <h4 class="title"><a href="#">{{ $t(item.titleKey) || item.title }}</a></h4>
                     <ul class="meta">
                         <li class="video"><i class="ti-video-clapper"></i>{{item.class}} Classes</li>
                     </ul>

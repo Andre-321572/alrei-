@@ -1,17 +1,17 @@
 <template>
   <div>
     <!-- Hero Banner with Background Image -->
-    <section class="py-5 text-white position-relative overflow-hidden bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
+    <section class="py-5 text-white position-relative overflow-hidden bg-cover" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.65) 0%, rgba(15, 35, 20, 0.2) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
       <div class="container py-4 position-relative z-1">
         <div class="row">
-          <div class="col-lg-8">
-            <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-semibold mb-3 fs-7 shadow-sm">
+          <div class="col-lg-9">
+            <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold mb-3 fs-7 shadow-sm">
               {{ $t('privacy_badge') }}
             </span>
-            <h1 class="display-5 fw-bold mb-3 text-white lh-sm">
+            <h1 class="display-5 fw-extrabold mb-3 text-white lh-sm">
               {{ $t('privacy_hero_title') }}
             </h1>
-            <p class="lead text-white-50 mb-0 fs-6">
+            <p class="lead text-white mb-0 fs-5 fw-medium lh-base" style="opacity: 0.95;">
               {{ $t('privacy_hero_subtitle') }}
             </p>
           </div>

@@ -16,8 +16,8 @@
                             <i :class="audience.icon"></i>
                         </div>
                         <div>
-                            <h6 class="fs-6 fw-bold mb-1 text-dark">{{ audience.title }}</h6>
-                            <p class="small text-muted mb-0 lh-sm audience-desc">{{ audience.desc }}</p>
+                            <h6 class="fs-6 fw-bold mb-1 text-dark">{{ $t(audience.titleKey) || audience.title }}</h6>
+                            <p class="small text-muted mb-0 lh-sm audience-desc">{{ $t(audience.descKey) || audience.desc }}</p>
                         </div>
                     </div>
                 </div>
@@ -28,12 +28,12 @@
 
 <script setup>
 const audiences = [
-    { icon: "bi bi-person-badge-fill", title: "Dirigeants syndicaux & Élus", desc: "Renforcez la gouvernance, le leadership stratégique et le plaidoyer de vos organisations." },
-    { icon: "bi bi-megaphone-fill", title: "Organisateurs & Délégués", desc: "Mobilisez sur le lieu de travail, menez des campagnes et défendez les droits des membres." },
-    { icon: "bi bi-gender-ambiguous", title: "Jeunes & Femmes syndicalistes", desc: "Favorisez l'égalité des genres, l'inclusion et l'émergence des nouveaux leaders du travail." },
-    { icon: "bi bi-journal-bookmark-fill", title: "Éducateurs & Chercheurs", desc: "Accédez à des méthodologies participatives et des données pour la recherche sur le travail." },
-    { icon: "bi bi-briefcase-fill", title: "Économie formelle & Informelle", desc: "Accompagnez tous les travailleurs (salariés, informel, plateformes numériques, emplois atypiques)." },
-    { icon: "bi bi-building-check", title: "Organisations partenaires", desc: "Institutions agrées, syndicats affiliés et partenaires engagés pour le travail décent." }
+    { icon: "bi bi-person-badge-fill", titleKey: "audience_1_title", descKey: "audience_1_desc", title: "Dirigeants syndicaux & Élus", desc: "Renforcez la gouvernance, le leadership stratégique et le plaidoyer de vos organisations." },
+    { icon: "bi bi-megaphone-fill", titleKey: "audience_2_title", descKey: "audience_2_desc", title: "Organisateurs & Délégués", desc: "Mobilisez sur le lieu de travail, menez des campagnes et défendez les droits des membres." },
+    { icon: "bi bi-gender-ambiguous", titleKey: "audience_3_title", descKey: "audience_3_desc", title: "Jeunes & Femmes syndicalistes", desc: "Favorisez l'égalité des genres, l'inclusion et l'émergence des nouveaux leaders du travail." },
+    { icon: "bi bi-journal-bookmark-fill", titleKey: "audience_4_title", descKey: "audience_4_desc", title: "Éducateurs & Chercheurs", desc: "Accédez à des méthodologies participatives et des données pour la recherche sur le travail." },
+    { icon: "bi bi-briefcase-fill", titleKey: "audience_5_title", descKey: "audience_5_desc", title: "Économie formelle & Informelle", desc: "Accompagnez tous les travailleurs (salariés, informel, plateformes numériques, emplois atypiques)." },
+    { icon: "bi bi-building-check", titleKey: "audience_6_title", descKey: "audience_6_desc", title: "Organisations partenaires", desc: "Institutions agréées, syndicats affiliés et partenaires engagés pour le travail décent." }
 ]
 </script>
 

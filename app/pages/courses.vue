@@ -1,13 +1,12 @@
 <template>
     <div>
-        <div class="bg-cover py-5 border-bottom text-white" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
-            <div class="container py-3">
+        <div class="bg-cover py-5 border-bottom text-white" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.65) 0%, rgba(15, 35, 20, 0.2) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
+            <div class="container py-4 position-relative z-1">
                 <div class="row align-items-center g-4">
                     <div class="col-lg-7">
-                        <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold mb-2">Catalogue des programmes</span>
-                        <h1 class="display-6 fw-bold text-white mb-3">Découvrir les formations</h1>
-                        <p class="text-white opacity-75 lead mb-0">
-                            Trouvez des modules à suivre à votre rythme, des formations animées, des webinaires et des programmes hybrides conçus pour les travailleurs et les acteurs syndicaux. Effectuez une recherche par thème, langue, format ou modalité d'accès.
+                        <h1 class="display-5 fw-extrabold text-white mb-3 lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6);">{{ $t('courses_hero_title') || 'Découvrir les formations' }}</h1>
+                        <p class="lead text-white mb-0 fs-5 fw-medium lh-base" style="opacity: 0.95; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">
+                            {{ $t('courses_hero_subtitle') || "Trouvez des modules à suivre à votre rythme, des formations animées, des webinaires et des programmes hybrides conçus pour les travailleurs et les acteurs syndicaux. Effectuez une recherche par thème, langue, format ou modalité d'accès." }}
                         </p>
                     </div>
                     
@@ -19,7 +18,7 @@
                                     v-model="search"
                                     type="text"
                                     class="form-control border-start-0 ps-0"
-                                    placeholder="Rechercher par titre ou sujet lié au travail"
+                                    :placeholder="$t('search_placeholder_courses')"
                                     @input="filterCourses"
                                 />
                             </div>
@@ -27,20 +26,20 @@
                             <div class="row g-2">
                                 <div class="col-6">
                                     <select v-model="selectedDomain" @change="filterCourses" class="form-select form-select-sm">
-                                        <option value="">Tous les thèmes</option>
-                                        <option value="Leadership">Leadership syndical</option>
-                                        <option value="Syndicalisation">Syndicalisation</option>
-                                        <option value="Économie">Économie & Recherche</option>
-                                        <option value="Climat">Climat & Transition juste</option>
-                                        <option value="Numérisation">Numérisation</option>
+                                        <option value="">{{ $t('all_themes') }}</option>
+                                        <option value="Leadership">{{ $t('theme_leadership') }}</option>
+                                        <option value="Syndicalisation">{{ $t('theme_unionization') }}</option>
+                                        <option value="Économie">{{ $t('theme_economy') }}</option>
+                                        <option value="Climat">{{ $t('theme_climate') }}</option>
+                                        <option value="Numérisation">{{ $t('theme_digitalization') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-6">
                                     <select v-model="selectedAccess" @change="filterCourses" class="form-select form-select-sm">
-                                        <option value="">Toutes modalités d'accès</option>
-                                        <option value="Libre">Accès libre</option>
-                                        <option value="candidature">Sur candidature</option>
-                                        <option value="désignation">Sur désignation</option>
+                                        <option value="">{{ $t('all_access_types') }}</option>
+                                        <option value="Libre">{{ $t('access_open') }}</option>
+                                        <option value="candidature">{{ $t('access_application') }}</option>
+                                        <option value="désignation">{{ $t('access_designation') }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -74,12 +73,12 @@
                                 <p class="card-text text-muted small mb-3 flex-grow-1 lh-base">{{ item.desc }}</p>
                                 
                                 <div class="bg-light p-3 rounded-3 mb-3 small">
-                                    <div class="text-muted"><i class="bi bi-laptop me-2 text-main"></i><strong>Format :</strong> {{ item.format }}</div>
-                                    <div class="text-muted mt-1"><i class="bi bi-calendar-event me-2 text-main"></i><strong>Calendrier :</strong> {{ item.schedule }}</div>
+                                    <div class="text-muted"><i class="bi bi-laptop me-2 text-main"></i><strong>{{ $t('format_label') }}</strong> {{ item.format }}</div>
+                                    <div class="text-muted mt-1"><i class="bi bi-calendar-event me-2 text-main"></i><strong>{{ $t('schedule_label') }}</strong> {{ item.schedule }}</div>
                                 </div>
 
                                 <NuxtLink :to="localePath('/blog-detail/' + item.slug)" class="btn btn-main rounded-pill w-100 fw-semibold">
-                                    Lire l'annonce <i class="bi bi-arrow-right ms-2"></i>
+                                    {{ $t('read_announcement') }} <i class="bi bi-arrow-right ms-2"></i>
                                 </NuxtLink>
                             </div>
                         </div>
@@ -90,12 +89,12 @@
                     <div class="square--60 circle bg-light-main text-main mx-auto mb-3 fs-3">
                         <i class="bi bi-search"></i>
                     </div>
-                    <h5 class="fw-bold mb-2">Aucun programme ne correspond à votre recherche</h5>
+                    <h5 class="fw-bold mb-2">{{ $t('no_courses_match') }}</h5>
                     <p class="text-muted max-w-500 mx-auto small mb-4">
-                        Supprimez un filtre ou abonnez-vous aux actualités pour recevoir les annonces de nouvelles possibilités de formation.
+                        {{ $t('no_courses_sub') }}
                     </p>
                     <button @click="resetFilters" class="btn btn-outline-main rounded-pill px-4 btn-sm fw-bold">
-                        Réinitialiser la recherche
+                        {{ $t('reset_search') }}
                     </button>
                 </div>
             </div>
@@ -104,14 +103,14 @@
         <!-- Banner d'accès aux formations -->
         <section class="py-4 bg-alrei-green text-white">
             <div class="container text-center">
-                <h4 class="text-white fw-bold mb-2 fs-5">Besoin d'aide sur les modalités d'accès ?</h4>
-                <p class="small text-white opacity-90 mb-3">Consultez notre guide sur les conditions d'accès aux formations ou contactez l'assistance ALREI.</p>
+                <h4 class="text-white fw-bold mb-2 fs-5">{{ $t('access_help_title') }}</h4>
+                <p class="small text-white opacity-90 mb-3">{{ $t('access_help_desc') }}</p>
                 <div class="d-flex justify-content-center gap-3">
                     <NuxtLink :to="localePath('/pricing')" class="btn btn-warning rounded-pill px-4 text-dark fw-bold btn-sm">
-                        Consulter les conditions d'accès
+                        {{ $t('check_access_conditions') }}
                     </NuxtLink>
                     <NuxtLink :to="localePath('/faq')" class="btn btn-outline-light rounded-pill px-4 btn-sm fw-bold">
-                        Foire aux questions (FAQ)
+                        {{ $t('faq_button') }}
                     </NuxtLink>
                 </div>
             </div>

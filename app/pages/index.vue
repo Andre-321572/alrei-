@@ -6,9 +6,12 @@
                 <div class="row align-items-center g-4">
                     <div class="col-xl-7 col-lg-7 col-md-12 order-2 order-lg-1">
                         <div class="hero-caption">
-                            <span class="badge bg-light-main text-main px-3 py-2 rounded-pill fw-bold mb-3 d-inline-block">
-                                {{ $t('alrei_center') || 'Centre ALREI de formation des travailleurs' }}
-                            </span>
+                            <div class="hero-badge-wrap mb-3">
+                                <span class="badge bg-light-main text-main px-4 py-3 rounded-pill fw-extrabold d-inline-flex align-items-center gap-2 shadow-sm border border-main-subtle fs-4" style="font-size: 1.25rem !important; letter-spacing: 0.5px;">
+                                    <i class="bi bi-mortarboard-fill text-main fs-4"></i>
+                                    {{ $t('alrei_center') || 'Centre ALREI de formation des travailleurs' }}
+                                </span>
+                            </div>
                             <h1 class="display-5 fw-extrabold text-dark mb-3 lh-sm">
                                 {{ $t('hero_title') || "L'éducation ouvrière pour des syndicats plus forts" }}
                             </h1>
@@ -67,8 +70,8 @@
                                 <i :class="domain.icon || 'bi bi-award-fill'" class="fs-5"></i>
                             </div>
                             <div class="domain-content overflow-hidden">
-                                <h6 class="fw-bold text-dark mb-1 fs-6 text-truncate" :title="domain.title">{{ domain.title }}</h6>
-                                <p class="small text-muted mb-0 lh-sm domain-desc">{{ domain.desc }}</p>
+                                <h6 class="fw-bold text-dark mb-1 fs-6 text-truncate" :title="$t(domain.titleKey) || domain.title">{{ $t(domain.titleKey) || domain.title }}</h6>
+                                <p class="small text-muted mb-0 lh-sm domain-desc">{{ $t(domain.descKey) || domain.desc }}</p>
                             </div>
                         </div>
                     </div>

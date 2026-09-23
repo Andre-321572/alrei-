@@ -1,17 +1,14 @@
 <template>
   <div>
     <!-- Hero Banner avec Image Fond -->
-    <section class="py-5 text-white position-relative overflow-hidden bg-cover" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
+    <section class="py-5 text-white position-relative overflow-hidden bg-cover" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.65) 0%, rgba(15, 35, 20, 0.2) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
       <div class="container py-4 position-relative z-1">
         <div class="row align-items-center g-4">
           <div class="col-lg-7">
-            <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold mb-3 shadow-sm" style="font-size: 0.85rem;">
-              {{ $t('blog_badge') }}
-            </span>
-            <h1 class="display-5 fw-bold mb-3 text-white lh-sm">
+            <h1 class="display-5 fw-extrabold mb-3 text-white lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6);">
               {{ $t('blog_hero_title') }}
             </h1>
-            <p class="lead text-white-50 mb-0 fs-6 lh-base opacity-75">
+            <p class="lead text-white mb-0 fs-5 fw-medium lh-base" style="opacity: 0.95; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">
               {{ $t('blog_hero_subtitle') }}
             </p>
           </div>

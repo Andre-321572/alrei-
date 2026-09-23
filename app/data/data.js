@@ -77,15 +77,15 @@ export const categoryOne = [
 ]
 
 export const featureCategoryData = [
-    { title: "Leadership syndical", desc: "Dirigez des syndicats démocratiques, responsables et guidés par leurs membres.", icon: "bi bi-award-fill" },
-    { title: "Syndicalisation et représentation", desc: "Recrutez, organisez et représentez les travailleurs de l'économie formelle et informelle.", icon: "bi bi-people-fill" },
-    { title: "Négociation collective", desc: "Préparez vos arguments à partir de données, négociez des accords et suivez leur mise en œuvre.", icon: "bi bi-handshake-fill" },
-    { title: "Recherche sur le travail et économie", desc: "Utilisez les données sur le travail et l'analyse économique pour renforcer les positions syndicales.", icon: "bi bi-graph-up-arrow" },
-    { title: "Protection sociale", desc: "Faites progresser une protection sociale inclusive pour les travailleurs dans toutes les formes d'emploi.", icon: "bi bi-shield-check" },
-    { title: "Sécurité et santé au travail", desc: "Identifiez les risques professionnels et renforcez la prévention ainsi que la participation des travailleurs.", icon: "bi bi-heart-pulse-fill" },
-    { title: "Égalité et inclusion", desc: "Favorisez le leadership des femmes, la participation des jeunes et les droits des travailleurs marginalisés.", icon: "bi bi-gender-ambiguous" },
-    { title: "Climat et transition juste", desc: "Contribuez à des réponses aux changements climatiques et industriels centrées sur les travailleurs.", icon: "bi bi-tree-fill" },
-    { title: "Numérisation et avenir du travail", desc: "Agissez face au travail de plateforme, à l'intelligence artificielle et aux transformations numériques du travail.", icon: "bi bi-laptop" }
+    { titleKey: "domain_1_title", descKey: "domain_1_desc", title: "Leadership syndical", desc: "Dirigez des syndicats démocratiques, responsables et guidés par leurs membres.", icon: "bi bi-award-fill" },
+    { titleKey: "domain_2_title", descKey: "domain_2_desc", title: "Syndicalisation et représentation", desc: "Recrutez, organisez et représentez les travailleurs de l'économie formelle et informelle.", icon: "bi bi-people-fill" },
+    { titleKey: "domain_3_title", descKey: "domain_3_desc", title: "Négociation collective", desc: "Préparez vos arguments à partir de données, négociez des accords et suivez leur mise en œuvre.", icon: "bi bi-handshake-fill" },
+    { titleKey: "domain_4_title", descKey: "domain_4_desc", title: "Recherche sur le travail et économie", desc: "Utilisez les données sur le travail et l'analyse économique pour renforcer les positions syndicales.", icon: "bi bi-graph-up-arrow" },
+    { titleKey: "domain_5_title", descKey: "domain_5_desc", title: "Protection sociale", desc: "Faites progresser une protection sociale inclusive pour les travailleurs dans toutes les formes d'emploi.", icon: "bi bi-shield-check" },
+    { titleKey: "domain_6_title", descKey: "domain_6_desc", title: "Sécurité et santé au travail", desc: "Identifiez les risques professionnels et renforcez la prévention ainsi que la participation des travailleurs.", icon: "bi bi-heart-pulse-fill" },
+    { titleKey: "domain_7_title", descKey: "domain_7_desc", title: "Égalité et inclusion", desc: "Favorisez le leadership des femmes, la participation des jeunes et les droits des travailleurs marginalisés.", icon: "bi bi-gender-ambiguous" },
+    { titleKey: "domain_8_title", descKey: "domain_8_desc", title: "Climat et transition juste", desc: "Contribuez à des réponses aux changements climatiques et industriels centrées sur les travailleurs.", icon: "bi bi-tree-fill" },
+    { titleKey: "domain_9_title", descKey: "domain_9_desc", title: "Numérisation et avenir du travail", desc: "Agissez face au travail de plateforme, à l'intelligence artificielle et aux transformations numériques du travail.", icon: "bi bi-laptop" }
 ]
 
 export const coursesData = [

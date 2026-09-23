@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="bg-cover py-5 border-bottom text-white" style="background-image: url('/img/student-banner.png'); background-position: center; background-size: cover;">
+        <div class="bg-cover py-5 border-bottom text-white" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.65) 0%, rgba(15, 35, 20, 0.25) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
             <div class="container py-3">
                 <div class="row align-items-center">
                     <div class="col-lg-10 mx-auto text-center">
@@ -38,7 +38,7 @@
                                     <p class="small text-muted mb-3">Les détails relatifs aux candidatures, aux désignations et au calendrier définitif seront publiés sur le Centre ALREI de formation des travailleurs.</p>
                                     <div class="d-flex flex-wrap gap-2">
                                         <NuxtLink :to="localePath('/courses')" class="btn btn-main rounded-pill px-4 btn-sm fw-bold">Voir les formations</NuxtLink>
-                                        <NuxtLink :to="localePath('/register?tab=register')" class="btn btn-outline-main rounded-pill px-4 btn-sm fw-bold">Créer un compte ALREI</NuxtLink>
+                                        <NuxtLink :to="localePath('/courses')" class="btn btn-outline-main rounded-pill px-4 btn-sm fw-bold">{{ $t('apply_for_course') || 'Postuler à cette formation' }}</NuxtLink>
                                         <a href="https://wa.me/22890943434" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4 btn-sm fw-bold">
                                             <i class="bi bi-whatsapp me-1"></i>Assistance WhatsApp
                                         </a>
