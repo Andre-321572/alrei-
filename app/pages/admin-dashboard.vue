@@ -45,7 +45,7 @@
                                 <button v-if="activeTab==='categories'" class="btn btn-primary btn-sm" @click="openCategoryModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Catégorie</button>
                                 <button v-else-if="activeTab==='instructors'" class="btn btn-primary btn-sm" @click="openUserModal('instructor')"><i class="bi bi-plus-lg me-1"></i> Ajouter Instructeur</button>
                                 <button v-else-if="activeTab==='students'" class="btn btn-primary btn-sm" @click="openUserModal('student')"><i class="bi bi-plus-lg me-1"></i> Ajouter Étudiant</button>
-                                <button v-else-if="activeTab==='courses'" class="btn btn-primary btn-sm" @click="openCourseModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Cours</button>
+                                <NuxtLink v-else-if="activeTab==='courses'" class="btn btn-primary btn-sm" :to="localePath('/instructor-create-course')"><i class="bi bi-plus-lg me-1"></i> Ajouter Cours</NuxtLink>
                                 <button v-else-if="activeTab==='groups'" class="btn btn-primary btn-sm" @click="openGroupModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Groupe</button>
                                 <button v-else-if="activeTab==='blogs'" class="btn btn-primary btn-sm" @click="openBlogModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Blog</button>
                                 <button v-else-if="activeTab==='scholarships'" class="btn btn-primary btn-sm" @click="openScholarshipModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Bourse</button>
@@ -174,75 +174,102 @@
                             </div>
 
                             <!-- Courses Tab -->
-                            <div v-if="activeTab === 'courses'" class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ $t('title') }}</th>
-                                            <th>Instituteur Principal</th>
-                                            <th>Modules</th>
-                                            <th>{{ $t('price') }}</th>
-                                            <th>{{ $t('status') }}</th>
-                                            <th>{{ $t('action') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="course in courses" :key="course.id">
-                                            <td>
-                                                <div class="fw-bold">{{ course.title }}</div>
-                                                <small class="text-muted" v-if="course.category">{{ course.category?.name }}</small>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light-secondary text-dark border">
-                                                    <i class="bi bi-person-badge me-1"></i>{{ course.instructor?.user?.name || 'N/A' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-light-primary text-primary px-2.5 py-1.5 rounded-pill border">
-                                                    <i class="bi bi-collection me-1"></i>{{ course.sections?.length || 0 }} module(s)
-                                                </span>
-                                            </td>
-                                            <td>{{ course.price }} €</td>
-                                            <td>
-                                                <span :class="['badge', course.status === 'published' ? 'bg-success' : 'bg-secondary']">
-                                                    {{ course.status }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    <button 
-                                                        @click="openCourseModal(course)" 
-                                                        class="btn btn-sm btn-outline-primary"
-                                                        title="Modifier le cours et assigner les modules"
-                                                    >
-                                                        <i class="bi bi-pencil"></i>
-                                                    </button>
-                                                    <NuxtLink 
-                                                        :to="localePath('/instructor-manage-curriculum-' + course.id)"
-                                                        class="btn btn-sm btn-outline-info"
-                                                        title="Gérer les leçons du curriculum"
-                                                    >
-                                                        <i class="bi bi-folder2-open"></i>
-                                                    </NuxtLink>
-                                                    <button 
-                                                        @click="toggleCourseStatus(course.id)" 
-                                                        :class="['btn btn-sm', course.status === 'published' ? 'btn-warning' : 'btn-info']"
-                                                        :title="course.status === 'published' ? 'Unpublish' : 'Publish'"
-                                                    >
-                                                        <i :class="['bi', course.status === 'published' ? 'bi-eye-slash' : 'bi-eye']"></i>
-                                                    </button>
-                                                    <button 
-                                                        @click="deleteCourse(course.id)" 
-                                                        class="btn btn-sm btn-danger"
-                                                        title="Delete"
-                                                    >
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div v-if="activeTab === 'courses'">
+                                <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                                    <div>
+                                        <h4 class="fw-bold mb-1"><i class="bi bi-book-half text-primary me-2"></i>Toutes les Formations</h4>
+                                        <p class="text-muted small m-0">Gérez l'ensemble des cours de la plateforme, assignez des instructeurs et suivez leurs publications.</p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <NuxtLink :to="localePath('/instructor-create-course')" class="btn btn-primary btn-sm rounded-pill px-3 shadow-xs fw-semibold">
+                                            <i class="bi bi-plus-circle me-1"></i> Créer une Formation
+                                        </NuxtLink>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>{{ $t('title') }}</th>
+                                                <th>Instituteur Principal</th>
+                                                <th>Modules</th>
+                                                <th>{{ $t('price') }}</th>
+                                                <th>{{ $t('status') }}</th>
+                                                <th>{{ $t('action') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="course in courses" :key="course.id">
+                                                <td>
+                                                    <div class="fw-bold">{{ course.title }}</div>
+                                                    <small class="text-muted" v-if="course.category">{{ course.category?.name }}</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light-secondary text-dark border">
+                                                        <i class="bi bi-person-badge me-1"></i>{{ course.instructor?.user?.name || course.instructor?.name || 'Non assigné' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light-primary text-primary px-2.5 py-1.5 rounded-pill border">
+                                                        <i class="bi bi-collection me-1"></i>{{ course.sections?.length || 0 }} module(s)
+                                                    </span>
+                                                </td>
+                                                <td>{{ course.price }} €</td>
+                                                <td>
+                                                    <span :class="['badge', course.status === 'published' ? 'bg-success' : 'bg-secondary']">
+                                                        {{ course.status === 'published' ? 'Publié' : 'Brouillon' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <NuxtLink 
+                                                            v-if="course.id"
+                                                            :to="localePath('/instructor-create-course?id=' + course.id)" 
+                                                            class="btn btn-sm btn-outline-primary"
+                                                            title="Modifier le cours complet & assigner les instituteurs"
+                                                        >
+                                                            <i class="bi bi-pencil"></i>
+                                                        </NuxtLink>
+                                                        <NuxtLink 
+                                                            v-if="course.id"
+                                                            :to="localePath('/instructor-manage-curriculum-' + course.id)"
+                                                            class="btn btn-sm btn-outline-info"
+                                                            title="Gérer les leçons du curriculum"
+                                                        >
+                                                            <i class="bi bi-folder2-open"></i>
+                                                        </NuxtLink>
+                                                        <button 
+                                                            @click="toggleCourseStatus(course.id)" 
+                                                            :class="['btn btn-sm', course.status === 'published' ? 'btn-warning' : 'btn-info']"
+                                                            :title="course.status === 'published' ? 'Dépublier' : 'Publier'"
+                                                        >
+                                                            <i :class="['bi', course.status === 'published' ? 'bi-eye-slash' : 'bi-eye']"></i>
+                                                        </button>
+                                                        <button 
+                                                            @click="deleteCourse(course.id)" 
+                                                            class="btn btn-sm btn-danger"
+                                                            title="Supprimer"
+                                                        >
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="!courses || courses.length === 0">
+                                                <td colspan="6" class="text-center py-5 text-muted">
+                                                    <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
+                                                    Aucune formation disponible pour le moment.
+                                                    <div class="mt-3">
+                                                        <NuxtLink class="btn btn-primary btn-sm rounded-pill px-4" :to="localePath('/instructor-create-course')">
+                                                            <i class="bi bi-plus-lg me-1"></i> Créer la première formation
+                                                        </NuxtLink>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <!-- Groups Tab -->
                             <div v-if="activeTab === 'groups'">
@@ -503,44 +530,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Categories Tab -->
-                                <div v-if="activeTab === 'categories'">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h5 class="m-0">Catégories</h5>
-                                        <button class="btn btn-primary btn-sm" @click="openCategoryModal()">
-                                            <i class="bi bi-plus-lg me-1"></i> Ajouter Categorie
-                                        </button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table class="table table-hover align-middle">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>Nom</th>
-                                                    <th>Slug</th>
-                                                    <th>Icone</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="cat in categories" :key="cat.id">
-                                                    <td>{{ cat.name }}</td>
-                                                    <td>{{ cat.slug }}</td>
-                                                    <td><i :class="cat.icon"></i> {{ cat.icon }}</td>
-                                                    <td>
-                                                        <div class="d-flex gap-2">
-                                                            <button @click="openCategoryModal(cat)" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
-                                                            <button @click="deleteCategory(cat.id)" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr v-if="categories.length === 0">
-                                                    <td colspan="4" class="text-center text-muted py-3">Aucune catégorie trouvée.</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
                                 <!-- Section: Étudiants boursiers (ancien système - inscription) -->
                                 <div class="mt-4">
                                     <h6 class="border-bottom pb-2 mb-3"><i class="bi bi-file-earmark-text me-2 text-warning"></i>Documents soumis à l'inscription</h6>
@@ -608,6 +597,44 @@
                                     </div>
                                 </div>
 
+                            </div>
+
+                            <!-- Categories Tab -->
+                            <div v-if="activeTab === 'categories'">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="m-0">Catégories</h5>
+                                    <button class="btn btn-primary btn-sm" @click="openCategoryModal()">
+                                        <i class="bi bi-plus-lg me-1"></i> Ajouter Categorie
+                                    </button>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Nom</th>
+                                                <th>Slug</th>
+                                                <th>Icone</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="cat in categories" :key="cat.id">
+                                                <td>{{ cat.name }}</td>
+                                                <td>{{ cat.slug }}</td>
+                                                <td><i :class="cat.icon"></i> {{ cat.icon }}</td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <button @click="openCategoryModal(cat)" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
+                                                        <button @click="deleteCategory(cat.id)" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="categories.length === 0">
+                                                <td colspan="4" class="text-center text-muted py-3">Aucune catégorie trouvée.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             <!-- Résumé par Pays Tab (TULDA 2026) -->
@@ -1390,6 +1417,7 @@ definePageMeta({
 });
 
 const api = useApi()
+const localePath = useLocalePath()
 const stats = ref<any>(null)
 const instructors = ref<any[]>([])
 const students = ref<any[]>([])
@@ -1399,11 +1427,26 @@ const blogs = ref<any[]>([])
 const certificates = ref<any[]>([])
 const scholarships = ref<any[]>([])
 const scholarshipApplications = ref<any[]>([])
-const scholarshipStudents = ref<any[]>([])
 const loading = ref(true)
 const submitting = ref(false)
 const validatingDoc = ref<number | null>(null)
-const activeTab = ref('instructors')
+const route = useRoute()
+const router = useRouter()
+
+const activeTab = ref((route.query.tab as string) || 'instructors')
+
+watch(activeTab, (newTab) => {
+    if (route.query.tab !== newTab) {
+        router.replace({ query: { ...route.query, tab: newTab } })
+    }
+})
+
+watch(() => route.query.tab, (newTabQuery) => {
+    if (newTabQuery && String(newTabQuery) !== activeTab.value) {
+        activeTab.value = String(newTabQuery)
+    }
+})
+
 const selectedInstructor = ref<any>(null)
 
 const categories = ref([])
@@ -2273,31 +2316,31 @@ const openCourseModal = (course: any = null) => {
             title: course.title || '',
             description: course.description || '',
             price: course.price || 0,
-            instructor_id: course.instructor_id || '',
-            category_id: course.category_id || '',
+            instructor_id: course.instructor_id || course.instructor?.id || '',
+            category_id: course.category_id || course.category?.id || '',
             status: course.status || 'draft',
             modules: (course.sections || []).map((s: any) => ({
                 id: s.id || null,
                 title: s.title || '',
-                instructor_id: s.instructor_id || s.instructor?.id || course.instructor_id || ''
+                instructor_id: s.instructor_id || s.instructor?.id || course.instructor_id || course.instructor?.id || ''
             }))
         }
         if (courseForm.value.modules.length === 0) {
             courseForm.value.modules.push({
                 id: null,
                 title: 'Module 1 : Introduction générale',
-                instructor_id: course.instructor_id || ''
+                instructor_id: course.instructor_id || course.instructor?.id || ''
             })
         }
     } else {
-        const defaultInstId = instructors.value[0]?.id || ''
+        const defaultInstId = instructors.value[0]?.id || instructors.value[0]?.user?.id || ''
         courseForm.value = {
             id: null,
             title: '',
             description: '',
             price: 0,
             instructor_id: defaultInstId,
-            category_id: '',
+            category_id: categories.value[0]?.id || '',
             status: 'published',
             modules: [
                 {
@@ -2310,10 +2353,11 @@ const openCourseModal = (course: any = null) => {
     }
     if (process.client) {
         const { $bootstrap } = useNuxtApp()
-        if (!courseModalInstance) {
-            courseModalInstance = new ($bootstrap as any).Modal(document.getElementById('courseModal'))
+        const modalElement = document.getElementById('courseModal')
+        if (modalElement) {
+            courseModalInstance = ($bootstrap as any).Modal.getInstance(modalElement) || new ($bootstrap as any).Modal(modalElement)
+            courseModalInstance.show()
         }
-        courseModalInstance.show()
     }
 }
 
@@ -2360,7 +2404,14 @@ const submitCourse = async () => {
             }
         }
 
-        courseModalInstance?.hide()
+        if (process.client) {
+            const { $bootstrap } = useNuxtApp()
+            const modalElement = document.getElementById('courseModal')
+            if (modalElement) {
+                const modal = ($bootstrap as any).Modal.getInstance(modalElement) || courseModalInstance
+                modal?.hide()
+            }
+        }
         await fetchAll()
     } catch (err: any) {
         console.error('Save course failed:', err)

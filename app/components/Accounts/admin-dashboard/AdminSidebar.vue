@@ -31,49 +31,49 @@
                     <div class="d-navigation">
                         <ul id="side-menu">
                             <li>
-                                <a :class="{ active: activeTab === 'instructors' }" @click.prevent="emit('update:activeTab', 'instructors')" href="#">
+                                <a :class="{ active: activeTab === 'instructors' }" @click.prevent="handleTabClick('instructors')" href="javascript:void(0)">
                                     <i class="bi bi-person-badge"></i>{{ $t('instructors') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'country_summary' }" @click.prevent="emit('update:activeTab', 'country_summary')" href="#">
+                                <a :class="{ active: activeTab === 'country_summary' }" @click.prevent="handleTabClick('country_summary')" href="javascript:void(0)">
                                     <i class="bi bi-globe-americas text-primary"></i> {{ $t('country_summary') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'students' }" @click.prevent="emit('update:activeTab', 'students')" href="#">
+                                <a :class="{ active: activeTab === 'students' }" @click.prevent="handleTabClick('students')" href="javascript:void(0)">
                                     <i class="bi bi-people"></i>{{ $t('students') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'courses' }" @click.prevent="emit('update:activeTab', 'courses')" href="#">
+                                <a :class="{ active: activeTab === 'courses' }" @click.prevent="handleTabClick('courses')" href="javascript:void(0)">
                                     <i class="bi bi-book"></i>{{ $t('courses') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'groups' }" @click.prevent="emit('update:activeTab', 'groups')" href="#">
+                                <a :class="{ active: activeTab === 'groups' }" @click.prevent="handleTabClick('groups')" href="javascript:void(0)">
                                     <i class="bi bi-diagram-3"></i>{{ $t('groups') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'blogs' }" @click.prevent="emit('update:activeTab', 'blogs')" href="#">
+                                <a :class="{ active: activeTab === 'blogs' }" @click.prevent="handleTabClick('blogs')" href="javascript:void(0)">
                                     <i class="bi bi-newspaper"></i>{{ $t('blogs') }}
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'certificates' }" @click.prevent="emit('update:activeTab', 'certificates')" href="#">
+                                <a :class="{ active: activeTab === 'certificates' }" @click.prevent="handleTabClick('certificates')" href="javascript:void(0)">
                                     <i class="bi bi-patch-check"></i>{{ $t('certificates') }}
                                     <span v-if="pendingCertificates > 0" class="badge bg-danger rounded-pill ms-auto">{{ pendingCertificates }}</span>
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'scholarships' }" @click.prevent="emit('update:activeTab', 'scholarships')" href="#">
+                                <a :class="{ active: activeTab === 'scholarships' }" @click.prevent="handleTabClick('scholarships')" href="javascript:void(0)">
                                     <i class="bi bi-award"></i>{{ $t('scholarships') }}
                                     <span v-if="pendingScholarships > 0" class="badge bg-danger rounded-pill ms-auto">{{ pendingScholarships }}</span>
                                 </a>
                             </li>
                             <li>
-                                <a :class="{ active: activeTab === 'categories' }" @click.prevent="emit('update:activeTab', 'categories')" href="#">
+                                <a :class="{ active: activeTab === 'categories' }" @click.prevent="handleTabClick('categories')" href="javascript:void(0)">
                                     <i class="bi bi-tags"></i>{{ $t('categories') }}
                                 </a>
                             </li>
@@ -98,14 +98,22 @@
 
 <script setup>
 const localePath = useLocalePath();
+const route = useRoute();
+const router = useRouter();
 
 const props = defineProps({
-    activeTab: { type: String, required: true },
+    activeTab: { type: String, default: 'courses' },
     pendingCertificates: { type: Number, default: 0 },
     pendingScholarships: { type: Number, default: 0 },
 });
 
 const emit = defineEmits(['update:activeTab']);
-
 const { user } = useAuth();
+
+const handleTabClick = (tabName) => {
+    emit('update:activeTab', tabName);
+    if (!route.path.includes('/admin-dashboard')) {
+        router.push(localePath('/admin-dashboard?tab=' + tabName));
+    }
+};
 </script>

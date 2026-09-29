@@ -10,7 +10,8 @@
         <div class="container">
             <div class="row gx-xl-5">
                 <div class="col-lg-3">
-                    <Sidebar v-if="isAdmin || isInstructor" />
+                    <AdminSidebar v-if="isAdmin" activeTab="courses" />
+                    <Sidebar v-else-if="isInstructor" />
                     <StudentAdminSidebar v-else />
                 </div>
 
@@ -21,7 +22,11 @@
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><NuxtLink to="/">Accueil</NuxtLink></li>
-                                    <li class="breadcrumb-item"><NuxtLink to="/instructor-dashboard">Tableau de bord</NuxtLink></li>
+                                    <li class="breadcrumb-item">
+                                        <NuxtLink :to="isAdmin ? localePath('/admin-dashboard?tab=courses') : localePath('/instructor-dashboard')">
+                                            {{ isAdmin ? 'Administration (Formations)' : 'Tableau de bord' }}
+                                        </NuxtLink>
+                                    </li>
                                     <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? 'Modifier le cours' : 'Créer un cours' }}</li>
                                 </ol>
                             </nav>
@@ -64,6 +69,26 @@
                                     <div class="mb-4">
                                         <h5 class="text-darks mb-0 lh-base fw-bold">1. Informations générales</h5>
                                         <p class="text-muted small">Remplissez les informations de base relatives à votre cours.</p>
+                                    </div>
+
+                                    <!-- Assignation de l'instituteur par l'administrateur -->
+                                    <div class="mb-4" v-if="isAdmin">
+                                        <div class="card border border-primary bg-light-primary p-3 rounded-3 shadow-xs">
+                                            <label class="form-label fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                                                <i class="bi bi-person-badge-fill text-primary fs-5"></i>
+                                                Instituteur Principal du Cours (Assignation Administrateur)
+                                            </label>
+                                            <select v-model="course.instructor_id" class="form-select form-control">
+                                                <option value="">-- Sélectionner l'instituteur principal --</option>
+                                                <option v-for="inst in availableInstructors" :key="inst.id" :value="inst.id">
+                                                    {{ inst.user?.name || inst.name || ('Formateur #' + inst.id) }} ({{ inst.title || 'Instituteur' }}) {{ (inst.user?.email || inst.email) ? ' - ' + (inst.user?.email || inst.email) : '' }}
+                                                </option>
+                                            </select>
+                                            <small class="text-muted d-block mt-2">
+                                                <i class="bi bi-envelope-fill text-primary me-1"></i>
+                                                Dès la sauvegarde, un e-mail automatique d'assignation sera transmis à l'instituteur sélectionné.
+                                            </small>
+                                        </div>
                                     </div>
 
                                     <div class="form-group mb-3">
@@ -362,7 +387,7 @@
 
                                             <div class="card-body p-3">
                                                 <div class="row g-2 mb-3">
-                                                    <div class="col-md-7">
+                                                    <div :class="isAdmin ? 'col-md-7' : 'col-md-12'">
                                                         <label class="form-label small text-muted mb-1">Objectifs / Thèmes du module (optionnel)</label>
                                                         <textarea
                                                             class="form-control form-control-sm"
@@ -371,7 +396,7 @@
                                                             placeholder="Ce que les participants analyseront dans ce module..."
                                                         ></textarea>
                                                     </div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-5" v-if="isAdmin">
                                                         <label class="form-label small text-muted mb-1 fw-semibold">
                                                             <i class="bi bi-person-badge text-primary me-1"></i>Instituteur assigné (optionnel)
                                                         </label>
@@ -593,10 +618,12 @@
 </template>
 
 <script setup lang="ts">
+import AdminSidebar from '@/components/Accounts/admin-dashboard/AdminSidebar.vue';
 import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue';
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue';
 
 const { isAdmin, isInstructor } = useAuth()
+const localePath = useLocalePath()
 const route = useRoute()
 const config = useRuntimeConfig()
 const api = useApi()
@@ -712,7 +739,8 @@ const course = reactive({
     price: 0,
     thumbnail: null as File | null,
     prerequisites: '',
-    status: 'draft'
+    status: 'draft',
+    instructor_id: '' as string | number
 })
 
 onMounted(async () => {
@@ -745,6 +773,7 @@ onMounted(async () => {
                 course.requires_approval = !!data.requires_approval
                 course.price = data.price || 0
                 course.status = data.status || 'draft'
+                course.instructor_id = data.instructor_id || data.instructor?.id || ''
                 
                 if (data.thumbnail) {
                     preview.value = data.thumbnail.startsWith('http') || data.thumbnail.startsWith('/')
@@ -812,6 +841,9 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
         formData.append('requires_approval', course.requires_approval ? '1' : '0')
         formData.append('price', String(course.is_free ? 0 : (course.price || 0)))
         formData.append('status', targetStatus)
+        if (course.instructor_id) {
+            formData.append('instructor_id', String(course.instructor_id))
+        }
         if (course.thumbnail) {
             formData.append('thumbnail', course.thumbnail)
         }
@@ -895,11 +927,36 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
             }
         }
 
+        // Notification e-mail aux instituteurs assignés (si par l'administrateur)
+        const assignedInstructorIds = new Set<string | number>()
+        if (course.instructor_id) assignedInstructorIds.add(course.instructor_id)
+        modules.value.forEach(m => {
+            if (m.instructor_id) assignedInstructorIds.add(m.instructor_id)
+        })
+
+        if (assignedInstructorIds.size > 0 && isAdmin.value) {
+            for (const instId of assignedInstructorIds) {
+                try {
+                    await api('/admin/notify-instructor-assignment', {
+                        method: 'POST',
+                        body: {
+                            instructor_id: instId,
+                            course_id: savedCourseId,
+                            course_title: course.title
+                        }
+                    }).catch(err => console.info('Notification email info:', err))
+                } catch (notifyErr) {
+                    console.warn('Notification email error:', notifyErr)
+                }
+            }
+        }
+
         const msg = targetStatus === 'draft'
-            ? '✅ Cours enregistré comme brouillon avec succès ! Vous pouvez continuer à le modifier à tout moment.'
-            : '🎉 Félicitations ! Votre cours a été publié avec succès.'
+            ? '✅ Cours enregistré comme brouillon avec succès ! E-mail d\'assignation transmis à l\'instituteur.'
+            : '🎉 Félicitations ! Votre cours a été publié avec succès et l\'instituteur a été notifié.'
         alert(msg)
-        navigateTo('/instructor-courses')
+        const targetRoute = isAdmin.value ? '/admin-dashboard?tab=courses' : '/instructor-courses';
+        navigateTo(localePath(targetRoute));
     } catch (error: any) {
         console.error('Failed to save course:', error)
         alert(error?.data?.message || 'Erreur lors de l\'enregistrement du cours. Veuillez vérifier tous les champs.')
