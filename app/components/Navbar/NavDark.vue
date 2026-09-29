@@ -32,10 +32,10 @@
                         <LocaleSwitcher />
                         
                         <li v-if="!isAuthenticated" class="become-tutor">
-                            <NuxtLink :to="localePath('/register?tab=register')"><i class="bi bi-person-plus me-1"></i>{{ $t('sign_up') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/register?tab=register')"><i class="bi bi-person-plus me-1"></i>{{ $t('register') }}</NuxtLink>
                         </li>
                         <li v-if="!isAuthenticated" class="join-btn">
-                            <NuxtLink :to="localePath('/register?tab=login')"><i class="bi bi-box-arrow-in-right me-1"></i>{{ $t('sign_in') }}</NuxtLink>
+                            <NuxtLink :to="localePath('/register?tab=login')"><i class="bi bi-box-arrow-in-right me-1"></i>{{ $t('login') }}</NuxtLink>
                         </li>
                         <li v-if="isAuthenticated" class="join-btn">
                             <a href="#" @click.prevent="logout" class="bg-danger border-danger"><i class="bi bi-box-arrow-right me-1"></i>{{ $t('logout') }}</a>

@@ -67,12 +67,12 @@
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-main full-width fw-medium py-3" :disabled="loginLoading">
                                         <span v-if="loginLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                        {{ $t('sign_in') }}
+                                        {{ $t('login') }}
                                     </button>
                                 </div>
                                 
                                 <div class="loginbox-footer text-center mt-3">
-                                    {{ $t('dont_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#signup" data-bs-dismiss="modal" class="text-main fw-medium ms-1">{{ $t('sign_up') }}</a>
+                                    {{ $t('dont_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#signup" data-bs-dismiss="modal" class="text-main fw-medium ms-1">{{ $t('register') }}</a>
                                 </div>
                                 
                             </form>
@@ -177,7 +177,7 @@
                                 </div>
                                 
                                 <div class="form-group mb-3">
-                                    <div class="text-center text-muted small">{{ $t('already_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold text-main">{{ $t('sign_in') }}</a></div>
+                                    <div class="text-center text-muted small">{{ $t('already_have_account') }} <a href="#" data-bs-toggle="modal" data-bs-target="#login" data-bs-dismiss="modal" class="fw-semibold text-main">{{ $t('login') }}</a></div>
                                 </div>
                                 
                             </form>

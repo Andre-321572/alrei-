@@ -24,15 +24,20 @@
                         
                         <div class="login-caps mb-4">
                             <div class="text-center">
-                                <h2 class="fw-bold fs-4 text-dark mb-1">Centre ALREI de formation des travailleurs</h2>
+                                <h2 class="fw-bold fs-4 text-dark mb-1">{{ $t('welcome_alrei_center') }}</h2>
                                 <p class="small text-muted mb-0">Plateforme e-learning de l'Institut africain de recherche et d'éducation ouvrière (CSI-Afrique)</p>
                             </div>
                         </div>
                         
+                        <div v-if="route.query.redirect" class="alert alert-info py-2 px-3 mb-3 small d-flex align-items-center gap-2 rounded-3 border-info">
+                            <i class="bi bi-info-circle-fill text-info fs-5 flex-shrink-0"></i>
+                            <span>Veuillez vous connecter ou créer votre compte pour rejoindre cette formation.</span>
+                        </div>
+
                         <div class="d-block mb-4">
                             <ul class="nav nav-tabs simple d-flex align-items-center justify-content-center border-0" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link px-md-5" :class="{ active: activeTab === 'login' }" id="signin-tab" type="button" role="tab" @click="activeTab = 'login'">{{ $t('sign_in') }}</button>
+                                    <button class="nav-link px-md-5" :class="{ active: activeTab === 'login' }" id="signin-tab" type="button" role="tab" @click="activeTab = 'login'">{{ $t('login') }}</button>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link px-md-5" :class="{ active: activeTab === 'register' }" id="register-tab" type="button" role="tab" @click="activeTab = 'register'">{{ $t('register') }}</button>
@@ -73,7 +78,7 @@
                                         <div class="form-group mb-3">
                                             <button type="submit" class="btn btn-main w-100" :disabled="loginLoading">
                                                 <span v-if="loginLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                                {{ $t('sign_in') }}
+                                                {{ $t('login') }}
                                             </button>
                                         </div>
                                         
@@ -84,7 +89,57 @@
                             <!-- Register tab -->
                             <div class="tab-pane fade p-0" :class="{ 'show active': activeTab === 'register' }" id="register-tab-pane" role="tabpanel">
                                 <div class="login-form">
-                                    <form @submit.prevent="handleRegister">
+                                    
+                                    <!-- Étape de Confirmation / Vérification par Code OTP -->
+                                    <div v-if="awaitingVerification" class="p-3 bg-light rounded-3 border">
+                                        <div class="text-center mb-3">
+                                            <div class="square--50 circle bg-primary bg-opacity-10 text-primary mx-auto mb-2 fs-4">
+                                                <i class="bi bi-envelope-check-fill"></i>
+                                            </div>
+                                            <h5 class="fw-bold mb-1">Confirmation d'inscription</h5>
+                                            <p class="small text-muted mb-0">
+                                                Un code de vérification à 6 chiffres a été envoyé à : <br>
+                                                <strong class="text-dark">{{ pendingEmail }}</strong>
+                                            </p>
+                                        </div>
+
+                                        <div v-if="verifySuccessMsg" class="alert alert-success py-2 mb-3 small text-center">
+                                            <i class="bi bi-check-circle me-1"></i>{{ verifySuccessMsg }}
+                                        </div>
+                                        <div v-if="verifyError" class="alert alert-danger py-2 mb-3 small text-center">
+                                            <i class="bi bi-exclamation-circle me-1"></i>{{ verifyError }}
+                                        </div>
+
+                                        <form @submit.prevent="handleVerifyCode">
+                                            <div class="form-group mb-3">
+                                                <label class="form-label small fw-semibold">Code de confirmation (6 chiffres) *</label>
+                                                <input 
+                                                    v-model="verificationCode" 
+                                                    type="text" 
+                                                    class="form-control text-center fw-bold letter-spacing-2 fs-5" 
+                                                    placeholder="123456" 
+                                                    maxlength="6" 
+                                                    required
+                                                >
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <button type="submit" class="btn btn-main w-100 py-2 fs-6 fw-bold" :disabled="verifyLoading">
+                                                    <span v-if="verifyLoading" class="spinner-border spinner-border-sm me-2"></span>
+                                                    Valider & Confirmer mon compte
+                                                </button>
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button type="button" @click="handleResendCode" class="btn btn-link text-decoration-none small text-main p-0">
+                                                    <i class="bi bi-arrow-clockwise me-1"></i>Renvoyer un nouveau code
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Formulaire d'inscription -->
+                                    <form v-else @submit.prevent="handleRegister">
                                         
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
@@ -160,13 +215,23 @@
                                             </div>
                                         </div>
 
-                                        <div class="border rounded p-2 mb-3 bg-light">
+                                        <div class="border rounded p-3 mb-3 bg-light">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <i class="bi bi-info-circle text-primary me-2 fs-6"></i>
+                                                <span class="small text-muted fw-normal" style="font-size: 0.8rem;">{{ $t('optional_files_note') }}</span>
+                                            </div>
                                             <div class="form-group mb-2">
-                                                <label class="form-label small fw-semibold mb-1">{{ $t('nomination_letter') }}</label>
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    {{ $t('nomination_letter') }}
+                                                    <span class="badge bg-secondary bg-opacity-20 text-secondary fw-normal ms-1">Optionnel</span>
+                                                </label>
                                                 <input type="file" @change="handleNominationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                             <div class="form-group mb-0">
-                                                <label class="form-label small fw-semibold mb-1">{{ $t('motivation_letter') }}</label>
+                                                <label class="form-label small fw-semibold mb-1">
+                                                    {{ $t('motivation_letter') }}
+                                                    <span class="badge bg-secondary bg-opacity-20 text-secondary fw-normal ms-1">Optionnel</span>
+                                                </label>
                                                 <input type="file" @change="handleMotivationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                         </div>
@@ -220,11 +285,18 @@
 import log from "@/assets/img/log.png";
 import logoIcon from "@/assets/img/Logo alrei.png"
 
-const { login, register } = useAuth();
+const { login, register, verifyEmail, resendVerificationCode } = useAuth();
 const router = useRouter();
 const route = useRoute();
 
 const activeTab = ref('register');
+
+const awaitingVerification = ref(false);
+const pendingEmail = ref('');
+const verificationCode = ref('');
+const verifyLoading = ref(false);
+const verifyError = ref('');
+const verifySuccessMsg = ref('');
 
 const updateTabFromRoute = () => {
     if (route.query.tab === 'login' || route.query.tab === 'signin' || route.path.endsWith('/login')) {
@@ -358,11 +430,46 @@ const handleRegister = async () => {
             formData.append('motivation_letter', motivationLetter.value);
         }
 
-        await register(formData);
+        const response = await register(formData);
+
+        // Si la réponse n'a pas directement connecté l'utilisateur (token),
+        // on déclenche l'étape de confirmation par code OTP obligatoire.
+        if (response && !response.token) {
+            pendingEmail.value = regEmail.value;
+            awaitingVerification.value = true;
+            verifySuccessMsg.value = 'Un code de confirmation a été envoyé à votre email. Veuillez le saisir ci-dessous.';
+        }
     } catch (err) {
         regError.value = err.data?.message || 'Erreur lors de l\'inscription';
     } finally {
         regLoading.value = false;
+    }
+};
+
+const handleVerifyCode = async () => {
+    verifyError.value = '';
+    verifySuccessMsg.value = '';
+    verifyLoading.value = true;
+    try {
+        await verifyEmail({
+            email: pendingEmail.value,
+            code: verificationCode.value
+        });
+    } catch (err) {
+        verifyError.value = err.data?.message || 'Code de confirmation invalide ou expiré.';
+    } finally {
+        verifyLoading.value = false;
+    }
+};
+
+const handleResendCode = async () => {
+    verifyError.value = '';
+    verifySuccessMsg.value = '';
+    try {
+        await resendVerificationCode({ email: pendingEmail.value });
+        verifySuccessMsg.value = 'Un nouveau code de confirmation vous a été envoyé.';
+    } catch (err) {
+        verifyError.value = err.data?.message || 'Erreur lors de l\'envoi du nouveau code.';
     }
 };
 

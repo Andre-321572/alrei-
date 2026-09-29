@@ -15,6 +15,9 @@
               
               <CoursesOverview :course="course" />
               
+              <!-- ITCILO Inspired Join Course CTA Block -->
+              <CourseJoinCta :course="course" />
+              
               <Circullum :sections="course.sections" />
               
               <DetailRating :course="course" v-if="course" />
@@ -24,6 +27,9 @@
               <CourseRating :course="course" />
               
               <ReviewForm :course="course" />
+
+              <!-- Bottom CTA Block for quick enrollment -->
+              <CourseJoinCta :course="course" />
               
             </div>
             
@@ -85,12 +91,14 @@
 <script setup>
 import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
+import CourseJoinCta from '@/components/Courses/courses-detail/CourseJoinCta.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
 import DetailRating from '@/components/Courses/courses-detail/DetailRating.vue';
 import CourseDetail from '@/components/Courses/courses-detail/CourseDetail.vue';
 import CourseRating from '@/components/Courses/courses-detail/CourseRating.vue';
 import ReviewForm from '@/components/Courses/courses-detail/ReviewForm.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
+import { coursesData } from '@/data/data.js';
 
 const route = useRoute()
 const api = useApi()
@@ -99,15 +107,68 @@ const course = ref(null)
 const loading = ref(true)
 
 onMounted(async () => {
+  const paramId = route.params.id
   try {
-    const response = await api(`/courses/${route.params.id}`)
-    course.value = response.data
+    const response = await api(`/courses/${paramId}`)
+    if (response && (response.data || response.id)) {
+      course.value = response.data || response
+      const localMatch = coursesData.find(c => String(c.id) === String(paramId) || c.slug === paramId)
+      if (localMatch && !course.value.thumbnail && !course.value.image) {
+        course.value.image = localMatch.image
+      }
+    } else {
+      throw new Error('No course data returned')
+    }
   } catch (error) {
-    console.error('Course not found:', error)
+    // Fallback to local coursesData by id or slug
+    const found = coursesData.find(c => String(c.id) === String(paramId) || c.slug === paramId)
+    if (found) {
+      course.value = {
+        ...found,
+        thumbnail: found.image,
+        sections: found.sections || [
+          {
+            id: 1,
+            title: "Module 1 : Cadre théorique et enjeux pour les travailleurs",
+            instructor_name: "Dr. Amadou Diallo (Instituteur)",
+            lessons: [
+              { id: 1, title: "Introduction générale et objectifs du programme", duration: "20 min", type: "video" },
+              { id: 2, title: "Transformations du monde du travail en Afrique", duration: "40 min", type: "document" }
+            ]
+          },
+          {
+            id: 2,
+            title: "Module 2 : Stratégies d'action et syndicalisation",
+            instructor_name: "Fatoumata Traoré (Institutrice)",
+            lessons: [
+              { id: 3, title: "Méthodes d'organisation et de mobilisation des membres", duration: "45 min", type: "video" },
+              { id: 4, title: "Négociation collective et défense des droits", duration: "60 min", type: "text" }
+            ]
+          }
+        ]
+      }
+    } else {
+      // General default course fallback
+      course.value = {
+        id: paramId || 1,
+        title: "Programme de Formation des Travailleurs ALREI",
+        price: 0,
+        is_free: true,
+        image: '/img/co-1.jpg',
+        thumbnail: '/img/co-1.jpg',
+        description: "Développez vos compétences pratiques et connaissances théoriques avec les formations de l'Institut africain de recherche et d'éducation ouvrière (ALREI).",
+        sections: [
+          {
+            id: 1,
+            title: "Module 1 : Introduction générale",
+            instructor_name: "Équipe Pédagogique ALREI",
+            lessons: [{ id: 1, title: "Aperçu du cours", duration: "15 min", type: "video" }]
+          }
+        ]
+      }
+    }
   } finally {
     loading.value = false;
   }
 })
-
-
 </script>

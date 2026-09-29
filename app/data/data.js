@@ -100,7 +100,7 @@ export const coursesData = [
         accessType: "Sur candidature / Sur désignation",
         badge: "TULDA 2026",
         btnText: "Lire l'annonce",
-        link: "/blog/tulda-2026"
+        link: "/course-detail/1"
     },
     {
         id: 2,
@@ -113,7 +113,7 @@ export const coursesData = [
         accessType: "Accès libre & Cohortes",
         badge: "Économie Informelle",
         btnText: "Lire l'annonce",
-        link: "/blog/economie-informelle-2026"
+        link: "/course-detail/2"
     },
     {
         id: 3,
@@ -126,7 +126,7 @@ export const coursesData = [
         accessType: "Sur candidature",
         badge: "Transition Juste",
         btnText: "Lire l'annonce",
-        link: "/blog/transition-juste-2026"
+        link: "/course-detail/3"
     }
 ]
 

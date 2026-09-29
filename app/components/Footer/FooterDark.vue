@@ -83,7 +83,7 @@
                 <div class="row align-items-center g-3">
                     <div class="col-md-12 text-center">
                         <p class="mb-0 footer-text">
-                            {{ $t('footer_rights') || '© 2026 ALREI, ITUC-Africa. Tous droits réservés.' }}
+                            {{ $t('footer_rights') }} &bull; Développé par <a href="https://www.neostart.tech/" target="_blank" rel="noopener noreferrer" class="text-decoration-underline text-warning fw-semibold">NEO START TECHNOLOGY</a>
                         </p>
                     </div>
                 </div>

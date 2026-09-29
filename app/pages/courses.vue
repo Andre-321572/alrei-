@@ -4,9 +4,9 @@
             <div class="container py-4 position-relative z-1">
                 <div class="row align-items-center g-4">
                     <div class="col-lg-7">
-                        <h1 class="display-5 fw-extrabold text-white mb-3 lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6);">{{ $t('courses_hero_title') || 'Découvrir les formations' }}</h1>
+                        <h1 class="display-5 fw-extrabold text-white mb-3 lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6);">{{ $t('courses_hero_title') }}</h1>
                         <p class="lead text-white mb-0 fs-5 fw-medium lh-base" style="opacity: 0.95; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">
-                            {{ $t('courses_hero_subtitle') || "Trouvez des modules à suivre à votre rythme, des formations animées, des webinaires et des programmes hybrides conçus pour les travailleurs et les acteurs syndicaux. Effectuez une recherche par thème, langue, format ou modalité d'accès." }}
+                            {{ $t('courses_hero_subtitle') }}
                         </p>
                     </div>
                     
@@ -67,7 +67,7 @@
                                 </div>
                                 
                                 <h5 class="card-title fs-6 fw-bold mb-3">
-                                    <NuxtLink :to="localePath('/blog-detail/' + item.slug)" class="text-dark text-decoration-none">{{ item.title }}</NuxtLink>
+                                    <NuxtLink :to="localePath('/course-detail/' + item.id)" class="text-dark text-decoration-none">{{ item.title }}</NuxtLink>
                                 </h5>
                                 
                                 <p class="card-text text-muted small mb-3 flex-grow-1 lh-base">{{ item.desc }}</p>
@@ -77,7 +77,7 @@
                                     <div class="text-muted mt-1"><i class="bi bi-calendar-event me-2 text-main"></i><strong>{{ $t('schedule_label') }}</strong> {{ item.schedule }}</div>
                                 </div>
 
-                                <NuxtLink :to="localePath('/blog-detail/' + item.slug)" class="btn btn-main rounded-pill w-100 fw-semibold">
+                                <NuxtLink :to="localePath('/course-detail/' + item.id)" class="btn btn-main rounded-pill w-100 fw-semibold">
                                     {{ $t('read_announcement') }} <i class="bi bi-arrow-right ms-2"></i>
                                 </NuxtLink>
                             </div>

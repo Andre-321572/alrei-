@@ -116,7 +116,7 @@
 
                     <div v-if="!isAuthenticated" class="alert alert-warning text-center">
                         <p class="mb-3">{{ $t('login_required_to_apply') }}</p>
-                        <NuxtLink :to="localePath('/register?tab=login')" class="btn btn-main btn-md">{{ $t('sign_in') }}</NuxtLink>
+                        <NuxtLink :to="localePath('/register?tab=login')" class="btn btn-main btn-md">{{ $t('login') }}</NuxtLink>
                     </div>
 
                     <div v-else-if="applicationStatus === 'pending'" class="alert alert-info text-center py-5">

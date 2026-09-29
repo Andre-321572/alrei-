@@ -179,7 +179,8 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>{{ $t('title') }}</th>
-                                            <th>{{ $t('instructor') }}</th>
+                                            <th>Instituteur Principal</th>
+                                            <th>Modules</th>
                                             <th>{{ $t('price') }}</th>
                                             <th>{{ $t('status') }}</th>
                                             <th>{{ $t('action') }}</th>
@@ -187,8 +188,20 @@
                                     </thead>
                                     <tbody>
                                         <tr v-for="course in courses" :key="course.id">
-                                            <td>{{ course.title }}</td>
-                                            <td>{{ course.instructor?.user?.name }}</td>
+                                            <td>
+                                                <div class="fw-bold">{{ course.title }}</div>
+                                                <small class="text-muted" v-if="course.category">{{ course.category?.name }}</small>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light-secondary text-dark border">
+                                                    <i class="bi bi-person-badge me-1"></i>{{ course.instructor?.user?.name || 'N/A' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-light-primary text-primary px-2.5 py-1.5 rounded-pill border">
+                                                    <i class="bi bi-collection me-1"></i>{{ course.sections?.length || 0 }} module(s)
+                                                </span>
+                                            </td>
                                             <td>{{ course.price }} €</td>
                                             <td>
                                                 <span :class="['badge', course.status === 'published' ? 'bg-success' : 'bg-secondary']">
@@ -197,6 +210,20 @@
                                             </td>
                                             <td>
                                                 <div class="d-flex gap-2">
+                                                    <button 
+                                                        @click="openCourseModal(course)" 
+                                                        class="btn btn-sm btn-outline-primary"
+                                                        title="Modifier le cours et assigner les modules"
+                                                    >
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <NuxtLink 
+                                                        :to="localePath('/instructor-manage-curriculum-' + course.id)"
+                                                        class="btn btn-sm btn-outline-info"
+                                                        title="Gérer les leçons du curriculum"
+                                                    >
+                                                        <i class="bi bi-folder2-open"></i>
+                                                    </NuxtLink>
                                                     <button 
                                                         @click="toggleCourseStatus(course.id)" 
                                                         :class="['btn btn-sm', course.status === 'published' ? 'btn-warning' : 'btn-info']"
@@ -1243,56 +1270,102 @@
 
     <!-- Course Modal -->
     <div class="modal fade" id="courseModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">{{ courseForm.id ? 'Modifier' : 'Ajouter' }} un Cours</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nom du cours</label>
-                        <input type="text" class="form-control" v-model="courseForm.title" required>
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Nom / Titre du cours <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" v-model="courseForm.title" placeholder="Ex: TULDA 2026 : Commerce Numérique et Travail Décent" required>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Description du cours</label>
+                            <textarea class="form-control" v-model="courseForm.description" rows="3" placeholder="Présentation générale du programme..."></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Prix (€)</label>
+                            <input type="number" class="form-control" v-model="courseForm.price" min="0" required>
+                            <small class="text-muted">Mettre 0 pour gratuit</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Instituteur Principal</label>
+                            <select class="form-select" v-model="courseForm.instructor_id" required>
+                                <option value="">-- Sélectionner --</option>
+                                <option v-for="inst in instructors" :key="inst.id" :value="inst.id">
+                                    {{ inst.user?.name || 'N/A' }} ({{ inst.title || 'Instituteur' }})
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Catégorie</label>
+                            <select class="form-select" v-model="courseForm.category_id">
+                                <option value="">-- Optionnel --</option>
+                                <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                                    {{ cat.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Statut</label>
+                            <select class="form-select" v-model="courseForm.status">
+                                <option value="published">Publié (Accessible aux étudiants)</option>
+                                <option value="draft">Brouillon (Non visible)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" v-model="courseForm.description" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Prix (€)</label>
-                        <input type="number" class="form-control" v-model="courseForm.price" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Sélectionner l'Instructeur</label>
-                        <select class="form-select" v-model="courseForm.instructor_id" required>
-                            <option value="">-- Sélectionner --</option>
-                            <option v-for="inst in instructors" :key="inst.id" :value="inst.id">
-                                {{ inst.user?.name || 'N/A' }} ({{ inst.title }})
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Sélectionner la Catégorie</label>
-                        <select class="form-select" v-model="courseForm.category_id">
-                            <option value="">-- Sélectionner (Optionnel) --</option>
-                            <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                                {{ cat.name }}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Statut</label>
-                        <select class="form-select" v-model="courseForm.status">
-                            <option value="published">Publié</option>
-                            <option value="draft">Brouillon</option>
-                        </select>
+
+                    <!-- Section Modules du cours & Assignation Instituteurs -->
+                    <div class="border-top pt-4 mt-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">
+                                    <i class="bi bi-collection-play me-2 text-primary"></i>Modules du cours & Instituteurs assignés
+                                </h6>
+                                <small class="text-muted">Chaque cours est composé de modules. Vous pouvez assigner chaque module à un instituteur dédié.</small>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" @click="addModuleToForm">
+                                <i class="bi bi-plus-lg me-1"></i> Ajouter un module
+                            </button>
+                        </div>
+
+                        <div v-if="courseForm.modules.length === 0" class="alert alert-light border text-center py-3 text-muted small rounded-3">
+                            <i class="bi bi-info-circle me-1"></i> Aucun module configuré. Cliquez sur <strong>"Ajouter un module"</strong> pour structurer le cours.
+                        </div>
+
+                        <div v-for="(mod, mIndex) in courseForm.modules" :key="mIndex" class="card border rounded-3 p-3 mb-2 bg-light shadow-xs">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary rounded-pill px-3 py-1">Module {{ mIndex + 1 }}</span>
+                                <button type="button" class="btn btn-sm btn-outline-danger border-0 p-1" @click="removeModuleFromForm(mIndex)" title="Supprimer ce module">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-md-7">
+                                    <label class="form-label small fw-semibold mb-1">Nom / Titre du module <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-sm" v-model="mod.title" placeholder="Ex: Module 1 : Cadre juridique et syndical" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label small fw-semibold mb-1">Instituteur assigné à ce module</label>
+                                    <select class="form-select form-select-sm" v-model="mod.instructor_id">
+                                        <option value="">-- Par défaut (Instituteur principal) --</option>
+                                        <option v-for="inst in instructors" :key="inst.id" :value="inst.id">
+                                            {{ inst.user?.name || 'N/A' }} ({{ inst.title || 'Instituteur' }})
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                     <button type="button" class="btn btn-primary" @click="submitCourse" :disabled="submitting">
                         <span v-if="submitting" class="spinner-border spinner-border-sm me-2"></span>
-                        Enregistrer
+                        {{ courseForm.id ? 'Mettre à jour le cours' : 'Créer le cours et ses modules' }}
                     </button>
                 </div>
             </div>
@@ -1429,7 +1502,20 @@ const groupForm = ref({ name: '', description: '', user_ids: [] })
 const assignForm = ref({ course_id: '', target_type: 'user', target_id: '' })
 const blogForm = ref({ id: null, title: '', category: '', description: '', content: '', author_name: '', read_time: '', status: 'published', image: null as any })
 const scholarshipForm = ref({ id: null as number | null, name: '', description: '', value: 0, course_id: '' })
-const courseForm = ref({ id: null as number | null, title: '', description: '', price: 0, instructor_id: '', category_id: '', status: 'draft' })
+const courseForm = ref({
+    id: null as number | null,
+    title: '',
+    description: '',
+    price: 0,
+    instructor_id: '' as string | number,
+    category_id: '' as string | number,
+    status: 'draft',
+    modules: [] as Array<{
+        id?: number | null
+        title: string
+        instructor_id: string | number
+    }>
+})
 const selectedMotivation = ref('')
 
 let userModalInstance: any = null
@@ -2157,6 +2243,18 @@ const deleteCategory = async (id: number) => {
 }
 
 // Course Actions
+const addModuleToForm = () => {
+    courseForm.value.modules.push({
+        id: null,
+        title: '',
+        instructor_id: courseForm.value.instructor_id || ''
+    })
+}
+
+const removeModuleFromForm = (index: number) => {
+    courseForm.value.modules.splice(index, 1)
+}
+
 const openCourseModal = (course: any = null) => {
     if (course) {
         courseForm.value = {
@@ -2166,17 +2264,37 @@ const openCourseModal = (course: any = null) => {
             price: course.price || 0,
             instructor_id: course.instructor_id || '',
             category_id: course.category_id || '',
-            status: course.status || 'draft'
+            status: course.status || 'draft',
+            modules: (course.sections || []).map((s: any) => ({
+                id: s.id || null,
+                title: s.title || '',
+                instructor_id: s.instructor_id || s.instructor?.id || course.instructor_id || ''
+            }))
+        }
+        if (courseForm.value.modules.length === 0) {
+            courseForm.value.modules.push({
+                id: null,
+                title: 'Module 1 : Introduction générale',
+                instructor_id: course.instructor_id || ''
+            })
         }
     } else {
+        const defaultInstId = instructors.value[0]?.id || ''
         courseForm.value = {
             id: null,
             title: '',
             description: '',
             price: 0,
-            instructor_id: '',
+            instructor_id: defaultInstId,
             category_id: '',
-            status: 'draft'
+            status: 'published',
+            modules: [
+                {
+                    id: null,
+                    title: 'Module 1 : Introduction et objectifs',
+                    instructor_id: defaultInstId
+                }
+            ]
         }
     }
     if (process.client) {
@@ -2189,16 +2307,53 @@ const openCourseModal = (course: any = null) => {
 }
 
 const submitCourse = async () => {
+    if (!courseForm.value.title.trim()) {
+        alert('Veuillez renseigner le nom du cours.')
+        return
+    }
     submitting.value = true
     try {
         const method = courseForm.value.id ? 'PUT' : 'POST'
         const url = courseForm.value.id ? `/admin/courses/${courseForm.value.id}` : '/admin/courses'
-        await api(url, { method, body: courseForm.value })
+        
+        // 1. Sauvegarde du cours (incluant la liste des modules dans le payload)
+        const response: any = await api(url, { method, body: courseForm.value })
+        const courseId = courseForm.value.id || response?.data?.id || response?.id
+
+        // 2. Synchronisation / création individuelle des modules avec assignation de l'instituteur
+        if (courseId && courseForm.value.modules && courseForm.value.modules.length > 0) {
+            for (const mod of courseForm.value.modules) {
+                if (mod.title && mod.title.trim()) {
+                    try {
+                        if (mod.id) {
+                            await api(`/instructor/sections/${mod.id}`, {
+                                method: 'PUT',
+                                body: {
+                                    title: mod.title,
+                                    instructor_id: mod.instructor_id || courseForm.value.instructor_id
+                                }
+                            })
+                        } else {
+                            await api(`/instructor/courses/${courseId}/sections`, {
+                                method: 'POST',
+                                body: {
+                                    title: mod.title,
+                                    instructor_id: mod.instructor_id || courseForm.value.instructor_id
+                                }
+                            })
+                        }
+                    } catch (secErr) {
+                        console.warn('Module sync error:', secErr)
+                    }
+                }
+            }
+        }
+
         courseModalInstance?.hide()
         await fetchAll()
-    } catch (err) {
+    } catch (err: any) {
         console.error('Save course failed:', err)
-        alert('Erreur lors de l\'enregistrement du cours')
+        alert(err?.data?.message || 'Erreur lors de l\'enregistrement du cours')
     } finally {
         submitting.value = false
     }

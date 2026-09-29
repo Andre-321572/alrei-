@@ -9,22 +9,22 @@
                             <div class="hero-badge-wrap mb-3">
                                 <span class="badge bg-light-main text-main px-4 py-3 rounded-pill fw-extrabold d-inline-flex align-items-center gap-2 shadow-sm border border-main-subtle fs-4" style="font-size: 1.25rem !important; letter-spacing: 0.5px;">
                                     <i class="bi bi-mortarboard-fill text-main fs-4"></i>
-                                    {{ $t('alrei_center') || 'Centre ALREI de formation des travailleurs' }}
+                                    {{ $t('alrei_center') }}
                                 </span>
                             </div>
                             <h1 class="display-5 fw-extrabold text-dark mb-3 lh-sm">
-                                {{ $t('hero_title') || "L'éducation ouvrière pour des syndicats plus forts" }}
+                                {{ $t('hero_title') }}
                             </h1>
                             <p class="lead text-muted mb-4 lh-base">
-                                {{ $t('hero_subtitle') || "Développez les connaissances et les compétences pratiques nécessaires pour organiser les travailleurs, représenter les membres, négocier efficacement et influencer les politiques du travail et les politiques économiques." }}
+                                {{ $t('hero_subtitle') }}
                             </p>
                             
                             <div class="d-flex flex-wrap gap-3 mb-4">
                                 <NuxtLink :to="localePath('/courses')" class="btn btn-main btn-lg rounded-pill px-4 fw-bold shadow-sm">
-                                    {{ $t('discover_courses') || 'Découvrir les formations' }} <i class="bi bi-arrow-right ms-2"></i>
+                                    {{ $t('discover_courses') }} <i class="bi bi-arrow-right ms-2"></i>
                                 </NuxtLink>
                                 <NuxtLink :to="localePath('/register?tab=register')" class="btn btn-outline-secondary btn-lg rounded-pill px-4 fw-bold">
-                                    {{ $t('sign_up') || 'Créer un compte' }}
+                                    {{ $t('register') }}
                                 </NuxtLink>
                             </div>
 

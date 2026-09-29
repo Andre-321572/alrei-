@@ -3,7 +3,7 @@
 
         <div class="courses-video position-relative">
             <div class="thumb">
-                <img class="pro_img img-fluid w-100" :src="course.thumbnail || '/img/course-placeholder.jpg'" alt="">
+                <img class="pro_img img-fluid w-100" :src="courseImage" :alt="course?.title || ''">
                 <div v-if="course.video_preview" class="overlay_icon">
                     <div data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="bb-video-box">
                         <a href="#" class="play-popup-video">
@@ -17,17 +17,39 @@
         <div class="author-body p-4">
             <div class="ed_view_price mb-3">
                 <div class="d-flex align-items-center gap-2 mb-1">
-                    <h2 class="lh-base fw-bold text-dark m-0">{{ course.discount_price || course.price }} $</h2>
-                    <span v-if="course.discount_price" class="badge bg-light-danger text-danger rounded-pill px-3 py-2 ms-auto">{{ Math.round((1 - course.discount_price / course.price) * 100) }}% off</span>
+                    <h2 v-if="isFree" class="lh-base fw-bold text-success m-0">
+                        <i class="bi bi-gift-fill me-2"></i>Gratuit
+                    </h2>
+                    <template v-else>
+                        <h2 class="lh-base fw-bold text-dark m-0">{{ course.discount_price || course.price }} $</h2>
+                        <span v-if="course.discount_price" class="badge bg-light-danger text-danger rounded-pill px-3 py-2 ms-auto">
+                            {{ Math.round((1 - course.discount_price / course.price) * 100) }}% off
+                        </span>
+                    </template>
                 </div>
-                <del v-if="course.discount_price" class="text-muted fs-5">{{ course.price }} $</del>
+                <del v-if="!isFree && course.discount_price" class="text-muted fs-5">{{ course.price }} $</del>
             </div>
 
             <div class="ed_view_link d-flex align-items-center justify-content-center flex-column gap-3 mt-4 p-0">
-                <button @click="handleBuyNow" class="btn btn-main w-100 rounded-pill py-3 fw-bold shadow-sm" style="font-size: 1.1rem;">{{ $t('buy_now') }}</button>
+                <button 
+                    @click="handleFollowCourse" 
+                    class="btn btn-main w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" 
+                    style="font-size: 1.1rem;"
+                    :disabled="enrolling"
+                >
+                    <span v-if="enrolling" class="spinner-border spinner-border-sm"></span>
+                    <template v-else>
+                        <i :class="isEnrolled ? 'bi bi-play-circle-fill' : (isFree ? 'bi bi-person-check-fill' : 'bi bi-mortarboard-fill')"></i>
+                        <span>
+                            {{ isEnrolled ? ($t('enrolled_continue') || 'Accéder au cours') : (isFree ? ($t('join_course') || 'Rejoindre le cours') : ($t('follow_course') || 'Suivre le cours')) }}
+                        </span>
+                    </template>
+                </button>
+
                 <button v-if="course.access_key" @click="handleEnrollWithKey" class="btn btn-light border w-100 rounded-pill py-2 fw-medium text-dark">
                     <i class="bi bi-key me-2 text-warning"></i>{{ $t('enroll_with_key') }}
                 </button>
+
                 <button @click="handleAddToWishlist" class="btn btn-link text-decoration-none text-muted w-100 py-2">
                     <i class="bi bi-heart me-2"></i>{{ $t('add_to_wishlist') }}
                 </button>
@@ -95,6 +117,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Auth Choice Modal -->
+    <div class="modal fade" id="authChoiceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header border-0 bg-light p-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="square--50 circle bg-main bg-opacity-10 text-main d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person-fill-lock fs-3 text-main"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold text-dark m-0">{{ $t('login_required_title') || 'Rejoindre la formation' }}</h5>
+                            <p class="small text-muted mb-0">{{ course.title }}</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <p class="fs-6 text-muted mb-4">
+                        {{ $t('login_required_desc') }}
+                    </p>
+                    <div class="d-grid gap-3">
+                        <button @click="goToLogin" class="btn btn-main btn-lg rounded-pill fw-bold shadow-sm">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>{{ $t('have_account_login') }}
+                        </button>
+                        <button @click="goToRegister" class="btn btn-outline-main btn-lg rounded-pill fw-bold">
+                            <i class="bi bi-person-plus-fill me-2"></i>{{ $t('no_account_register') }}
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light justify-content-center py-3">
+                    <small class="text-muted"><i class="bi bi-shield-check me-1"></i>Plateforme e-learning ALREI</small>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
@@ -106,11 +164,11 @@ const props = defineProps({
             id: 0,
             thumbnail: '/img/course-placeholder.jpg',
             video_preview: null,
-            price: 149.00,
-            discount_price: 119.00,
+            price: 0,
+            discount_price: null,
             access_key: null,
             level: 'Beginner',
-            language: 'English',
+            language: 'French',
             created_at: new Date().toISOString()
         })
     }
@@ -118,14 +176,34 @@ const props = defineProps({
 
 const { isAuthenticated } = useAuth()
 const router = useRouter()
+const route = useRoute()
 const api = useApi()
 
+const courseImage = computed(() => {
+    const raw = props.course?.thumbnail || props.course?.image
+    if (!raw) return '/img/course-placeholder.jpg'
+    if (typeof raw === 'string' && (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:') || raw.startsWith('blob:'))) {
+        return raw
+    }
+    const config = useRuntimeConfig()
+    return `${config.public.apiBase.replace('/api', '')}/storage/${raw}`
+})
+
+const isFree = computed(() => {
+    if (!props.course) return true
+    const p = props.course.price
+    return !p || p == 0 || p === '0' || p === 'Free' || p === 'Gratuit' || props.course.is_free === true
+})
+
+const isEnrolled = ref(false)
+const enrolling = ref(false)
 const scholarships = ref([])
 const motivationLetter = ref('')
 const supportingDocumentFile = ref(null)
 const selectedScholarship = ref(null)
 const applying = ref(false)
 let applyModalInstance = null
+let authChoiceModalInstance = null
 
 const handleFileChange = (event) => {
     const file = event.target.files[0]
@@ -134,26 +212,90 @@ const handleFileChange = (event) => {
     }
 }
 
+const checkEnrollmentStatus = async () => {
+    if (isAuthenticated.value && props.course?.id) {
+        try {
+            const res = await api(`/courses/${props.course.id}/enrollment-status`)
+            if (res && (res.enrolled || res.is_enrolled)) {
+                isEnrolled.value = true
+            }
+        } catch (e) {
+            // silent catch
+        }
+    }
+}
+
 onMounted(async () => {
-    try {
-        const response = await api(`/courses/${props.course.id}/scholarships`)
-        scholarships.value = response
-    } catch (err) {
-        console.error('Failed to load scholarships', err)
+    await checkEnrollmentStatus()
+    if (props.course?.id) {
+        try {
+            const response = await api(`/courses/${props.course.id}/scholarships`)
+            scholarships.value = response
+        } catch (err) {
+            console.error('Failed to load scholarships', err)
+        }
     }
 })
 
-const handleBuyNow = () => {
+const handleFollowCourse = async () => {
     if (!isAuthenticated.value) {
-        router.push('/')
+        // User not logged in -> open choice modal
+        if (import.meta.client) {
+            const { $bootstrap } = useNuxtApp()
+            if (!authChoiceModalInstance) {
+                const el = document.getElementById('authChoiceModal')
+                if (el) authChoiceModalInstance = new ($bootstrap).Modal(el)
+            }
+            authChoiceModalInstance?.show()
+        } else {
+            router.push({ path: '/register', query: { tab: 'login', redirect: route.fullPath } })
+        }
         return
     }
-    router.push(`/course-detail/${props.course.id}`)
+
+    // User is logged in
+    if (isEnrolled.value) {
+        router.push(`/student-course-resume?course_id=${props.course.id}`)
+        return
+    }
+
+    if (isFree.value) {
+        enrolling.value = true
+        try {
+            await api(`/courses/${props.course.id}/enroll`, { method: 'POST' })
+            isEnrolled.value = true
+            alert('Félicitations ! Vous êtes inscrit(e) à ce cours.')
+            router.push('/student-dashboard')
+        } catch (error) {
+            console.error('Enrollment error:', error)
+            if (error.status === 409 || error.data?.message?.includes('enrolled')) {
+                isEnrolled.value = true
+                router.push('/student-dashboard')
+            } else {
+                alert(error.data?.message || 'Erreur lors de l\'inscription au cours.')
+            }
+        } finally {
+            enrolling.value = false
+        }
+    } else {
+        // Paid course -> checkout or apply
+        router.push(`/checkout?course_id=${props.course.id}`)
+    }
+}
+
+const goToLogin = () => {
+    authChoiceModalInstance?.hide()
+    router.push({ path: '/register', query: { tab: 'login', redirect: route.fullPath } })
+}
+
+const goToRegister = () => {
+    authChoiceModalInstance?.hide()
+    router.push({ path: '/register', query: { tab: 'register', redirect: route.fullPath } })
 }
 
 const handleAddToWishlist = async () => {
     if (!isAuthenticated.value) {
-        router.push('/')
+        goToLogin()
         return
     }
     try {
@@ -161,36 +303,36 @@ const handleAddToWishlist = async () => {
             method: 'POST',
             body: { course_id: props.course.id }
         })
-        alert('Course added to wishlist!')
+        alert('Cours ajouté à vos favoris !')
     } catch (error) {
         console.error('Failed to add to wishlist:', error)
-        alert('Failed to add to wishlist. Maybe it is already there?')
+        alert('Impossible d\'ajouter aux favoris.')
     }
 }
 
 const handleEnrollWithKey = async () => {
     if (!isAuthenticated.value) {
-        router.push('/')
+        goToLogin()
         return
     }
-    const key = prompt('Please enter the course access key:')
+    const key = prompt('Veuillez entrer la clé d\'accès du cours :')
     if (!key) return
     try {
         await api(`/courses/${props.course.id}/enroll-with-key`, {
             method: 'POST',
             body: { access_key: key }
         })
-        alert('Successfully enrolled!')
+        alert('Inscription réussie !')
         router.push('/student-dashboard')
     } catch (error) {
         console.error('Enrollment failed:', error)
-        alert('Invalid access key or enrollment failed.')
+        alert('Clé d\'accès invalide.')
     }
 }
 
 const openMotivationModal = (sch) => {
     if (!isAuthenticated.value) {
-        router.push('/')
+        goToLogin()
         return
     }
     selectedScholarship.value = sch
@@ -200,7 +342,7 @@ const openMotivationModal = (sch) => {
         if (!applyModalInstance) {
             applyModalInstance = new ($bootstrap).Modal(document.getElementById('applyScholarshipModal'))
         }
-        applyModalInstance.show()
+        applyModalInstance?.show()
     }
 }
 

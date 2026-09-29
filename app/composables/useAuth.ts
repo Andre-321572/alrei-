@@ -11,6 +11,10 @@ export const useAuth = () => {
    * Les instructeurs en attente d'approbation sont redirigés vers /instructor/pending.
    */
   const redirectAfterLogin = (userData: any) => {
+    const route = useRoute();
+    if (route.query.redirect) {
+      return navigateTo(String(route.query.redirect));
+    }
     const role = userData?.role;
     if (role === 'admin') {
       return navigateTo('/admin-dashboard');
@@ -49,11 +53,43 @@ export const useAuth = () => {
         body: data,
       });
 
-      token.value = response.token;
-      const userData = response.user?.data ?? response.user;
-      user.value = userData;
+      if (response.token) {
+        token.value = response.token;
+        const userData = response.user?.data ?? response.user;
+        user.value = userData;
+        await redirectAfterLogin(userData);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
 
-      await redirectAfterLogin(userData);
+  const verifyEmail = async (payload: { email: string; code: string }) => {
+    try {
+      const response: any = await api('/verify-email', {
+        method: 'POST',
+        body: payload,
+      });
+
+      if (response.token) {
+        token.value = response.token;
+        const userData = response.user?.data ?? response.user;
+        user.value = userData;
+        await redirectAfterLogin(userData);
+      }
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const resendVerificationCode = async (payload: { email: string }) => {
+    try {
+      const response: any = await api('/resend-verification-code', {
+        method: 'POST',
+        body: payload,
+      });
       return response;
     } catch (error) {
       throw error;
@@ -96,6 +132,8 @@ export const useAuth = () => {
     api,
     login,
     register,
+    verifyEmail,
+    resendVerificationCode,
     logout,
     fetchUser,
     redirectAfterLogin,

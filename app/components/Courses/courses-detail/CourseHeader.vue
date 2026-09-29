@@ -84,8 +84,18 @@
 
 const { course } = defineProps({ course: Object })
 
+const courseBg = computed(() => {
+    const raw = course?.thumbnail || course?.image
+    if (!raw) return '/img/student-banner.png'
+    if (typeof raw === 'string' && (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:') || raw.startsWith('blob:'))) {
+        return raw
+    }
+    const config = useRuntimeConfig()
+    return `${config.public.apiBase.replace('/api', '')}/storage/${raw}`
+})
+
 const backgroundStyle = computed(() => ({
-    backgroundImage: `url(${course?.thumbnail || course?.image || '/img/student-banner.png'})`,
+    backgroundImage: `url(${courseBg.value})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',

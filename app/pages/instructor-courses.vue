@@ -100,8 +100,9 @@
                                                         <span v-else class="badge bg-light-red text-red">{{ item.status }}</span>
                                                     </td>
                                                     <td>
-                                                        <NuxtLink :to="`/instructor-manage-curriculum-${item.id}`" class="btn btn-sm btn-gray me-1 mb-0"><i class="bi bi-pencil-square"></i></NuxtLink>
-                                                        <button @click="deleteCourse(item.id)" class="btn btn-sm btn-light-red mb-0"><i class="bi bi-trash3"></i></button>
+                                                        <NuxtLink :to="`/instructor-create-course?id=${item.id}`" class="btn btn-sm btn-primary me-1 mb-0" title="Modifier le cours"><i class="bi bi-pencil"></i></NuxtLink>
+                                                        <NuxtLink :to="`/instructor-manage-curriculum-${item.id}`" class="btn btn-sm btn-gray me-1 mb-0" title="Gérer le programme"><i class="bi bi-collection-play"></i></NuxtLink>
+                                                        <button @click="deleteCourse(item.id)" class="btn btn-sm btn-light-red mb-0" title="Supprimer"><i class="bi bi-trash3"></i></button>
                                                     </td>
                                                 </tr>
                                                         
