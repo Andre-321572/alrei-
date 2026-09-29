@@ -1327,13 +1327,18 @@
                                 </h6>
                                 <small class="text-muted">Chaque cours est composé de modules. Vous pouvez assigner chaque module à un instituteur dédié.</small>
                             </div>
-                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill" @click="addModuleToForm">
+                            <button type="button" class="btn btn-outline-primary btn-sm rounded-pill fw-bold px-3" @click.prevent="addModuleToForm">
                                 <i class="bi bi-plus-lg me-1"></i> Ajouter un module
                             </button>
                         </div>
 
-                        <div v-if="courseForm.modules.length === 0" class="alert alert-light border text-center py-3 text-muted small rounded-3">
-                            <i class="bi bi-info-circle me-1"></i> Aucun module configuré. Cliquez sur <strong>"Ajouter un module"</strong> pour structurer le cours.
+                        <div v-if="!courseForm.modules || courseForm.modules.length === 0" class="alert alert-light border text-center py-4 rounded-3">
+                            <div class="mb-2 text-muted small">
+                                <i class="bi bi-info-circle me-1 text-primary fs-6"></i> Aucun module configuré pour ce cours.
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm rounded-pill px-4 fw-bold shadow-xs" @click.prevent="addModuleToForm">
+                                <i class="bi bi-plus-lg me-1"></i> Ajouter le premier module
+                            </button>
                         </div>
 
                         <div v-for="(mod, mIndex) in courseForm.modules" :key="mIndex" class="card border rounded-3 p-3 mb-2 bg-light shadow-xs">
@@ -2244,15 +2249,21 @@ const deleteCategory = async (id: number) => {
 
 // Course Actions
 const addModuleToForm = () => {
+    if (!courseForm.value.modules) {
+        courseForm.value.modules = []
+    }
+    const count = courseForm.value.modules.length + 1
     courseForm.value.modules.push({
         id: null,
-        title: '',
+        title: `Module ${count} : Nouvel axe d'apprentissage`,
         instructor_id: courseForm.value.instructor_id || ''
     })
 }
 
 const removeModuleFromForm = (index: number) => {
-    courseForm.value.modules.splice(index, 1)
+    if (courseForm.value.modules) {
+        courseForm.value.modules.splice(index, 1)
+    }
 }
 
 const openCourseModal = (course: any = null) => {
