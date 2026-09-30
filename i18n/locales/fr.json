@@ -430,7 +430,7 @@
   "trip_3_title": "Certificats reconnus",
   "trip_3_desc": "Validez vos compétences avec des certificats",
   "alrei_center": "Bienvenue au Centre ALREI de formation des travailleurs",
-  "welcome_alrei_center": "Welcome to ALREI Workers Training Centre",
+  "welcome_alrei_center": "Bienvenue au Centre ALREI de formation des travailleurs",
   "optional_files_note": "Les lettres de nomination et de motivation sont optionnelles à la création du compte. Elles ne sont exigées par l'administration que pour les cours spécifiques le nécessitant.",
   "follow_course": "Suivre le cours",
   "join_course": "Rejoindre le cours",
@@ -561,7 +561,7 @@
   "official_sites": "Sites officiels :",
   "whatsapp_assistance": "Assistance WhatsApp",
   "whatsapp_assistance_desc": "Envoyez-nous un message au +228 90 94 34 34 au sujet de l'inscription, de l'accès aux programmes ou de l'assistance technique. Indiquez votre nom, le titre du programme et une brève description.",
-  "resource_person_badge": "Intervenants & Facilitateurs",
+  "resource_person_badge": "Partagez vos connaissances",
   "contribute_resource_title": "Contribuer comme personne-ressource",
   "contribute_resource_desc": "ALREI invite les éducateurs syndicaux, les organisateurs, les chercheurs et les spécialistes expérimentés à contribuer à des formations pertinentes, accessibles et pratiques. Les personnes-ressources aident les participants à relier les connaissances et les données probantes à leurs responsabilités syndicales concrètes.",
   "who_can_contribute": "Qui peut contribuer ?",
@@ -709,7 +709,6 @@
   "reason_3_desc": "Apprenez avec des syndicalistes de différents pays, secteurs et traditions d'organisation.",
   "reason_4_title": "Une participation multilingue",
   "reason_4_desc": "Formations proposées en français, anglais, portugais et kiswahili selon les cohortes.",
-  "resource_person_badge": "Partagez vos connaissances",
   "resource_person_title": "Contribuez à l'éducation ouvrière en Afrique",
   "resource_person_text": "ALREI collabore avec des éducateurs syndicaux, organisateurs, chercheurs et spécialistes expérimentés pour animer des formations pertinentes. Partagez votre expertise et accompagnez les syndicalistes à travers le continent.",
   "resource_point_1": "Enseigner à partir des réalités africaines",
@@ -725,5 +724,6 @@
   "form_message_placeholder": "Bref message ou sujet proposé",
   "form_submit_sending": "Envoi en cours...",
   "form_submit_btn": "Envoyer ma manifestation d'intérêt",
-  "form_success_msg": "Merci de votre intérêt. ALREI examinera vos informations et vous contactera rapidement."
+  "form_success_msg": "Merci de votre intérêt. ALREI examinera vos informations et vous contactera rapidement.",
+  "login": "Se connecter"
 }
