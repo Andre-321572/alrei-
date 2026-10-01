@@ -34,13 +34,13 @@
                                 </div>
 
                                 <div class="p-4 bg-light rounded-4 mt-5 border">
-                                    <h5 class="fw-bold mb-3 text-main"><i class="bi bi-info-circle me-2"></i>Informations complémentaires</h5>
-                                    <p class="small text-muted mb-3">Les détails relatifs aux candidatures, aux désignations et au calendrier définitif seront publiés sur le Centre ALREI de formation des travailleurs.</p>
+                                    <h5 class="fw-bold mb-3 text-main"><i class="bi bi-info-circle me-2"></i>{{ $t('additional_info') }}</h5>
+                                    <p class="small text-muted mb-3">{{ $t('blog_info_desc') }}</p>
                                     <div class="d-flex flex-wrap gap-2">
-                                        <NuxtLink :to="localePath('/courses')" class="btn btn-main rounded-pill px-4 btn-sm fw-bold">Voir les formations</NuxtLink>
-                                        <NuxtLink :to="localePath('/courses')" class="btn btn-outline-main rounded-pill px-4 btn-sm fw-bold">{{ $t('apply_for_course') || 'Postuler à cette formation' }}</NuxtLink>
+                                        <NuxtLink :to="localePath('/courses')" class="btn btn-main rounded-pill px-4 btn-sm fw-bold">{{ $t('view_courses') }}</NuxtLink>
+                                        <NuxtLink :to="localePath('/courses')" class="btn btn-outline-main rounded-pill px-4 btn-sm fw-bold">{{ $t('apply_for_course') }}</NuxtLink>
                                         <a href="https://wa.me/22890943434" target="_blank" rel="noopener" class="btn btn-outline-success rounded-pill px-4 btn-sm fw-bold">
-                                            <i class="bi bi-whatsapp me-1"></i>Assistance WhatsApp
+                                            <i class="bi bi-whatsapp me-1"></i>{{ $t('whatsapp_assistance') }}
                                         </a>
                                     </div>
                                 </div>

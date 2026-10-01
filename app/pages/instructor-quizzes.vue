@@ -19,9 +19,9 @@
               <div class="col-lg-12 pb-4">
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><NuxtLink to="/">Accueil</NuxtLink></li>
-                    <li class="breadcrumb-item"><NuxtLink to="/instructor-dashboard">Tableau de Bord Instructeur</NuxtLink></li>
-                    <li class="breadcrumb-item active" aria-current="page">Quiz & Évaluations</li>
+                    <li class="breadcrumb-item"><NuxtLink :to="localePath('/')">{{ $t('home') }}</NuxtLink></li>
+                    <li class="breadcrumb-item"><NuxtLink :to="localePath('/instructor-dashboard')">{{ $t('instructor_dashboard') }}</NuxtLink></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ $t('quizzes') }}</li>
                   </ol>
                 </nav>
               </div>

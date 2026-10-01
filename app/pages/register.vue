@@ -96,9 +96,9 @@
                                             <div class="square--50 circle bg-primary bg-opacity-10 text-primary mx-auto mb-2 fs-4">
                                                 <i class="bi bi-envelope-check-fill"></i>
                                             </div>
-                                            <h5 class="fw-bold mb-1">Confirmation d'inscription</h5>
+                                            <h5 class="fw-bold mb-1">{{ $t('registration_confirmation') }}</h5>
                                             <p class="small text-muted mb-0">
-                                                Un code de vérification à 6 chiffres a été envoyé à : <br>
+                                                {{ $t('verification_code_sent') }} <br>
                                                 <strong class="text-dark">{{ pendingEmail }}</strong>
                                             </p>
                                         </div>
@@ -112,7 +112,7 @@
 
                                         <form @submit.prevent="handleVerifyCode">
                                             <div class="form-group mb-3">
-                                                <label class="form-label small fw-semibold">Code de confirmation (6 chiffres) *</label>
+                                                <label class="form-label small fw-semibold">{{ $t('confirmation_code') }} *</label>
                                                 <input 
                                                     v-model="verificationCode" 
                                                     type="text" 
@@ -126,13 +126,13 @@
                                             <div class="form-group mb-3">
                                                 <button type="submit" class="btn btn-main w-100 py-2 fs-6 fw-bold" :disabled="verifyLoading">
                                                     <span v-if="verifyLoading" class="spinner-border spinner-border-sm me-2"></span>
-                                                    Valider & Confirmer mon compte
+                                                    {{ $t('validate_and_confirm') }}
                                                 </button>
                                             </div>
 
                                             <div class="text-center">
                                                 <button type="button" @click="handleResendCode" class="btn btn-link text-decoration-none small text-main p-0">
-                                                    <i class="bi bi-arrow-clockwise me-1"></i>Renvoyer un nouveau code
+                                                    <i class="bi bi-arrow-clockwise me-1"></i>{{ $t('resend_code') }}
                                                 </button>
                                             </div>
                                         </form>

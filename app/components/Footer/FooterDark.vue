@@ -11,10 +11,10 @@
                                 <img src="/logo-ituc.png" class="img-footer" style="max-height: 55px; width: auto;" alt="Logo CSI-Afrique" />
                             </div>
                             <p class="footer-text mb-3">
-                                Le Centre ALREI de formation des travailleurs est la plateforme en ligne d'ALREI consacrée à l'éducation ouvrière et aux connaissances sur le travail.
+                                {{ $t('footer_text') }}
                             </p>
                             <div class="footer-add">
-                                <address class="footer-text mb-3 lh-sm"><i class="bi bi-geo-alt text-warning me-2"></i>Route Internationale d'Atakpamé, Centre FOPADESC, Agoè-Nyivé, BP 4401, Lomé, Togo</address>
+                                <address class="footer-text mb-3 lh-sm"><i class="bi bi-geo-alt text-warning me-2"></i>{{ $t('address_full') }}</address>
                                 <div class="d-flex align-items-center call-now gap-2 mb-2">
                                     <div class="square--30 circle bg-secondary text-light"><i class="bi bi-telephone"></i></div>
                                     <a href="tel:+22890943434" class="footer-link text-decoration-none">+228 90 94 34 34</a>
@@ -29,10 +29,10 @@
 
                     <div class="col-lg-2 col-md-6">
                         <div class="footer-widget">
-                            <h5 class="widget-title">Navigation</h5>
+                            <h5 class="widget-title">{{ $t('navigations') }}</h5>
                             <ul class="footer-menu">
                                 <li v-for="(item, index) in footerLink1" :key="index">
-                                    <NuxtLink :to="localePath(item.link)" class="footer-link">{{ item.name }}</NuxtLink>
+                                    <NuxtLink :to="localePath(item.link)" class="footer-link">{{ item.nameKey ? $t(item.nameKey) : item.name }}</NuxtLink>
                                 </li>
                             </ul>
                         </div>
@@ -40,10 +40,10 @@
                             
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-widget">
-                            <h5 class="widget-title">Domaines de formation</h5>
+                            <h5 class="widget-title">{{ $t('new_categories') }}</h5>
                             <ul class="footer-menu">
                                 <li v-for="(item, index) in footerCat" :key="index">
-                                    <NuxtLink :to="localePath(item.link)" class="footer-link">{{ item.name }}</NuxtLink>
+                                    <NuxtLink :to="localePath(item.link)" class="footer-link">{{ item.nameKey ? $t(item.nameKey) : item.name }}</NuxtLink>
                                 </li>
                             </ul>
                         </div>
@@ -51,15 +51,15 @@
                     
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-widget">
-                            <h5 class="widget-title">Aide & Assistance</h5>
+                            <h5 class="widget-title">{{ $t('help_support') }}</h5>
                             <ul class="footer-menu mb-4">
                                 <li v-for="(item, index) in footerHelp" :key="index">
-                                    <a v-if="item.external" :href="item.link" target="_blank" rel="noopener" class="footer-link">{{ item.name }}</a>
-                                    <NuxtLink v-else :to="localePath(item.link)" class="footer-link">{{ item.name }}</NuxtLink>
+                                    <a v-if="item.external" :href="item.link" target="_blank" rel="noopener" class="footer-link">{{ item.nameKey ? $t(item.nameKey) : item.name }}</a>
+                                    <NuxtLink v-else :to="localePath(item.link)" class="footer-link">{{ item.nameKey ? $t(item.nameKey) : item.name }}</NuxtLink>
                                 </li>
                             </ul>
                             
-                            <h5 class="widget-title mb-2">Suivez ALREI</h5>
+                            <h5 class="widget-title mb-2">{{ $t('follow_alrei') }}</h5>
                             <div class="d-flex gap-2">
                                 <a href="https://x.com/ALREI_Africa" target="_blank" rel="noopener" aria-label="Suivre ALREI sur X" class="btn btn-sm btn-outline-light rounded-circle footer-social-btn">
                                     <i class="bi bi-twitter-x"></i>

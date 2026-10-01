@@ -57,11 +57,12 @@ const localePath = useLocalePath();
 const logo = '/Logo alrei.png';
 const isSticky = ref(false);
 
+const { t } = useI18n();
 const { user, logout, fetchUser, isAuthenticated } = useAuth();
 const { getAvatarUrl } = useAvatar();
 
 const userAvatar = computed(() => getAvatarUrl(user.value?.avatar, user.value?.name));
-const userName   = computed(() => user.value?.name  || 'Invité');
+const userName   = computed(() => user.value?.name  || t('guest'));
 const userRole   = computed(() => user.value?.role  || '');
 
 const handleScroll = () => {

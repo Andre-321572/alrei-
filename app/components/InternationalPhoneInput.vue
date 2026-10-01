@@ -42,13 +42,13 @@
                     v-model="searchQuery"
                     type="text"
                     class="form-control form-control-sm"
-                    placeholder="🔍 Rechercher un pays ou indicatif (+228, Togo, France...)"
+                    :placeholder="`🔍 ${$t('search_country_placeholder')}`"
                     @click.stop
                 />
             </div>
 
             <div v-if="filteredCountries.length === 0" class="text-center text-muted small py-3">
-                Aucun pays trouvé
+                {{ $t('no_country_found') }}
             </div>
 
             <button

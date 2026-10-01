@@ -1,21 +1,21 @@
 <template>
   <div class="assignment-manager">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0 fw-bold text-primary">Gestion des Devoirs & Travaux</h5>
+      <h5 class="mb-0 fw-bold text-primary">{{ $t('manage_assignments') }}</h5>
       <button @click="openAssignmentModal()" class="btn btn-warning text-white fw-bold">
-        <i class="bi bi-plus-lg me-1"></i> Créer Un Nouveau Devoir
+        <i class="bi bi-plus-lg me-1"></i> {{ $t('create_new_assignment') }}
       </button>
     </div>
 
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border text-warning" role="status"></div>
-      <p class="mt-2 text-muted small">Chargement des devoirs...</p>
+      <p class="mt-2 text-muted small">{{ $t('loading_assignments') }}</p>
     </div>
 
     <div v-else-if="loadError" class="alert alert-danger d-flex align-items-center gap-3 mt-3">
       <i class="bi bi-exclamation-triangle-fill fs-4"></i>
       <div>
-        <strong>Erreur de chargement</strong>
+        <strong>{{ $t('error') }}</strong>
         <p class="mb-1 small">{{ loadError }}</p>
       </div>
     </div>
@@ -30,31 +30,31 @@
                 <div class="dropdown">
                   <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a @click.prevent="openAssignmentModal(assignment)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Modifier</a></li>
-                    <li><a @click.prevent="viewSubmissions(assignment)" class="dropdown-item" href="#"><i class="bi bi-people me-2"></i>Consulter les dépositions</a></li>
+                    <li><a @click.prevent="openAssignmentModal(assignment)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>{{ $t('edit') }}</a></li>
+                    <li><a @click.prevent="viewSubmissions(assignment)" class="dropdown-item" href="#"><i class="bi bi-people me-2"></i>{{ $t('submissions') }}</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a @click.prevent="deleteAssignment(assignment.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Supprimer</a></li>
+                    <li><a @click.prevent="deleteAssignment(assignment.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>{{ $t('delete') }}</a></li>
                   </ul>
                 </div>
               </div>
               
               <p class="small text-muted mb-2">
-                <i class="bi bi-calendar-event me-1"></i>Échéance : {{ formatDate(assignment.due_date) }}
+                <i class="bi bi-calendar-event me-1"></i>{{ $t('due_date') }} : {{ formatDate(assignment.due_date) }}
               </p>
 
               <div class="d-flex flex-wrap gap-1 mb-3">
                 <span class="badge bg-success-subtle text-success border border-success-subtle">
-                  <i class="bi bi-check-circle me-1"></i>Min. valider : {{ assignment.min_points || assignment.passing_score || Math.round((assignment.max_points || 20) * 0.5) }} pts
+                  <i class="bi bi-check-circle me-1"></i>{{ $t('min_pass_pts') }} : {{ assignment.min_points || assignment.passing_score || Math.round((assignment.max_points || 20) * 0.5) }} pts
                 </span>
                 <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
-                  <i class="bi bi-award me-1"></i>Note max : {{ assignment.max_points || 20 }} pts
+                  <i class="bi bi-award me-1"></i>{{ $t('max_pts') }} : {{ assignment.max_points || 20 }} pts
                 </span>
-                <span v-if="assignment.is_final" class="badge bg-danger"><i class="bi bi-star-fill me-1"></i> Évaluation Finale</span>
+                <span v-if="assignment.is_final" class="badge bg-danger"><i class="bi bi-star-fill me-1"></i> {{ $t('final_evaluation') }}</span>
               </div>
             </div>
 
             <button @click="viewSubmissions(assignment)" class="btn btn-outline-primary btn-sm w-100 fw-bold mt-2">
-              <i class="bi bi-eye me-1"></i> Soumissions & Notation
+              <i class="bi bi-eye me-1"></i> {{ $t('submissions_and_grading') }}
             </button>
           </div>
         </div>
@@ -62,7 +62,7 @@
 
       <div v-if="assignments.length === 0" class="col-12 text-center py-5">
         <i class="bi bi-file-earmark-text display-4 text-muted"></i>
-        <p class="mt-3 text-muted">Aucun devoir créé pour ce cours pour le moment.</p>
+        <p class="mt-3 text-muted">{{ $t('no_assignments_found') }}</p>
       </div>
     </div>
 
@@ -71,50 +71,44 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-lg">
           <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-primary">{{ editingAssignment ? 'Modifier le Devoir' : 'Créer Un Nouveau Devoir' }}</h5>
+            <h5 class="modal-title fw-bold text-primary">{{ editingAssignment ? $t('edit_assignment') : $t('create_new_assignment') }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label fw-semibold">Titre du devoir</label>
-              <input v-model="assignmentForm.title" type="text" class="form-control rounded-lg" placeholder="Ex: Travail pratique - Étude de cas">
+              <label class="form-label fw-semibold">{{ $t('assignment_title') }}</label>
+              <input v-model="assignmentForm.title" type="text" class="form-control rounded-lg" placeholder="Ex: Travail pratique">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Description / Consignes</label>
-              <textarea v-model="assignmentForm.description" class="form-control rounded-lg" rows="3" placeholder="Instructions détaillées pour les étudiants..."></textarea>
+              <label class="form-label fw-semibold">{{ $t('assignment_instructions') }}</label>
+              <textarea v-model="assignmentForm.description" class="form-control rounded-lg" rows="3" placeholder="Instructions..."></textarea>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Score min. pour valider (pts)</label>
+                <label class="form-label fw-semibold">{{ $t('min_pass_pts') }} (pts)</label>
                 <input v-model="assignmentForm.min_points" type="number" class="form-control rounded-lg" placeholder="Ex: 10">
-                <small class="text-muted d-block mt-1">Note minimum de réussite</small>
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Point maximum (Note max)</label>
+                <label class="form-label fw-semibold">{{ $t('max_pts') }}</label>
                 <input v-model="assignmentForm.max_points" type="number" class="form-control rounded-lg" placeholder="Ex: 20">
-                <small class="text-muted d-block mt-1">Total de points maximum</small>
               </div>
               <div class="col-md-12 mb-3">
-                <label class="form-label fw-semibold">Date d'échéance</label>
+                <label class="form-label fw-semibold">{{ $t('due_date') }}</label>
                 <input v-model="assignmentForm.due_date" type="datetime-local" class="form-control rounded-lg">
               </div>
             </div>
             <div class="mb-3 form-check form-switch mt-2">
               <input v-model="assignmentForm.is_final" class="form-check-input" type="checkbox" id="isFinalAssignment">
               <label class="form-check-label fw-bold text-danger" for="isFinalAssignment">
-                <i class="bi bi-star-fill me-1"></i> Ce devoir est l'évaluation finale pour l'obtention du certificat
+                <i class="bi bi-star-fill me-1"></i> {{ $t('final_evaluation') }}
               </label>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Fichier de ressource (Optionnel)</label>
-              <input @change="handleFileChange" type="file" class="form-control rounded-lg">
             </div>
           </div>
           <div class="modal-footer border-0 pt-0">
-            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
             <button @click="saveAssignment" class="btn btn-warning text-white px-4 fw-bold" :disabled="saving">
               <span v-if="saving" class="spinner-border spinner-border-sm me-1"></span>
-              Enregistrer le devoir
+              {{ $t('save') }}
             </button>
           </div>
         </div>
@@ -126,7 +120,7 @@
       <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-lg">
           <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-primary">Soumissions : {{ selectedAssignment?.title }}</h5>
+            <h5 class="modal-title fw-bold text-primary">{{ $t('submissions') }} : {{ selectedAssignment?.title }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
@@ -134,12 +128,12 @@
               <table class="table table-hover align-middle">
                 <thead class="table-light">
                   <tr>
-                    <th>Étudiant</th>
-                    <th>Date de dépôt</th>
-                    <th>Fichier rendu</th>
-                    <th>Note atribuée</th>
-                    <th>Commentaires / Feedback</th>
-                    <th>Action</th>
+                    <th>{{ $t('student') }}</th>
+                    <th>{{ $t('submitted') }}</th>
+                    <th>{{ $t('submitted_file') }}</th>
+                    <th>{{ $t('assigned_grade') }}</th>
+                    <th>{{ $t('feedback_comments') }}</th>
+                    <th>{{ $t('action') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -151,9 +145,9 @@
                     <td>{{ formatDate(sub.submitted_at) }}</td>
                     <td>
                       <a v-if="sub.file_path" :href="storageUrl(sub.file_path)" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill">
-                        <i class="bi bi-download me-1"></i> Télécharger
+                        <i class="bi bi-download me-1"></i> {{ $t('download') }}
                       </a>
-                      <span v-else class="text-muted small">Aucun fichier</span>
+                      <span v-else class="text-muted small">{{ $t('no_file') }}</span>
                     </td>
                     <td>
                       <div class="input-group input-group-sm" style="width: 100px;">
@@ -162,16 +156,16 @@
                       </div>
                     </td>
                     <td>
-                      <input v-model="sub.feedback" type="text" class="form-control form-control-sm" placeholder="Ex: Excellent travail...">
+                      <input v-model="sub.feedback" type="text" class="form-control form-control-sm" placeholder="Ex: Excellent...">
                     </td>
                     <td>
                       <button @click="gradeSubmission(sub)" class="btn btn-success btn-sm fw-bold rounded-pill px-3">
-                        <i class="bi bi-check-lg me-1"></i> Valider
+                        <i class="bi bi-check-lg me-1"></i> {{ $t('approve') }}
                       </button>
                     </td>
                   </tr>
                   <tr v-if="submissions.length === 0">
-                    <td colspan="6" class="text-center py-4 text-muted">Aucune déposition soumise pour ce devoir.</td>
+                    <td colspan="6" class="text-center py-4 text-muted">{{ $t('no_assignments_found') }}</td>
                   </tr>
                 </tbody>
               </table>

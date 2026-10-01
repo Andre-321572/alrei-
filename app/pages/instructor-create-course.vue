@@ -21,13 +21,13 @@
                         <div class="col-lg-12">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><NuxtLink to="/">Accueil</NuxtLink></li>
+                                    <li class="breadcrumb-item"><NuxtLink :to="localePath('/')">{{ $t('home') }}</NuxtLink></li>
                                     <li class="breadcrumb-item">
                                         <NuxtLink :to="isAdmin ? localePath('/admin-dashboard?tab=courses') : localePath('/instructor-dashboard')">
-                                            {{ isAdmin ? 'Administration (Formations)' : 'Tableau de bord' }}
+                                            {{ isAdmin ? $t('platform_administration') : $t('dashboard') }}
                                         </NuxtLink>
                                     </li>
-                                    <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? 'Modifier le cours' : 'Créer un cours' }}</li>
+                                    <li class="breadcrumb-item active" aria-current="page">{{ isEditMode ? $t('edit') : $t('create_course') }}</li>
                                 </ol>
                             </nav>
                         </div>

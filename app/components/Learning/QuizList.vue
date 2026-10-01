@@ -10,32 +10,32 @@
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-start mb-3">
               <span :class="['badge rounded-pill px-3 py-2', isClosed(quiz) ? 'bg-light text-muted' : 'bg-success-soft text-success']">
-                {{ isClosed(quiz) ? 'Fermé' : 'Ouvert' }}
+                {{ isClosed(quiz) ? $t('closed') : $t('open') }}
               </span>
               <div v-if="isAdmin" class="dropdown">
                 <button class="btn btn-link text-muted p-0" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                  <li><a @click.prevent="$emit('edit', quiz)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Modifier</a></li>
-                  <li><a @click.prevent="$emit('delete', quiz.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Supprimer</a></li>
+                  <li><a @click.prevent="$emit('edit', quiz)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>{{ $t('edit') }}</a></li>
+                  <li><a @click.prevent="$emit('delete', quiz.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>{{ $t('delete') }}</a></li>
                 </ul>
               </div>
             </div>
 
             <h5 class="fw-bold text-dark mb-2">{{ quiz.title }}</h5>
-            <p class="text-muted small mb-4 line-clamp-2">{{ quiz.description || 'Aucune description fournie.' }}</p>
+            <p class="text-muted small mb-4 line-clamp-2">{{ quiz.description || '...' }}</p>
 
             <div class="d-flex flex-wrap gap-3 mb-4">
               <div class="d-flex align-items-center text-muted small">
                 <i class="bi bi-card-list me-1 text-primary"></i>
-                {{ quiz.questions_count }} questions
+                {{ quiz.questions_count }} {{ $t('lessons') }}
               </div>
               <div class="d-flex align-items-center text-muted small">
                 <i class="bi bi-clock me-1 text-primary"></i>
-                {{ quiz.duration_minutes ? quiz.duration_minutes + ' min' : 'Sans limite' }}
+                {{ quiz.duration_minutes ? quiz.duration_minutes + ' min' : '' }}
               </div>
               <div class="d-flex align-items-center text-muted small">
                 <i class="bi bi-trophy me-1 text-primary"></i>
-                {{ quiz.passing_score }}% requis
+                {{ quiz.passing_score }}%
               </div>
             </div>
 
@@ -45,7 +45,7 @@
                 class="btn btn-warning text-white fw-bold w-100 rounded-lg py-2"
                 :disabled="isClosed(quiz)"
               >
-                Passer le quiz
+                {{ $t('take_quiz') }}
               </button>
             </div>
           </div>
@@ -55,7 +55,7 @@
 
     <div v-else class="text-center py-5 bg-light rounded-lg">
       <i class="bi bi-clipboard-x display-4 text-muted"></i>
-      <p class="mt-3 text-muted fw-semibold">Aucun questionnaire disponible pour le moment.</p>
+      <p class="mt-3 text-muted fw-semibold">{{ $t('no_quiz_available') }}</p>
     </div>
   </div>
 </template>

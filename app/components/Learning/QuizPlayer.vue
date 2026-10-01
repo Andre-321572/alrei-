@@ -11,8 +11,8 @@
       
       <div class="progress-container">
         <div class="d-flex justify-content-between small text-muted mb-1">
-          <span>Question {{ currentIndex + 1 }} sur {{ totalQuestions }}</span>
-          <span>{{ Math.round(progress) }}% complété</span>
+          <span>{{ $t('question_progress', { current: currentIndex + 1, total: totalQuestions }) }}</span>
+          <span>{{ $t('completed_percent', { percent: Math.round(progress) }) }}</span>
         </div>
         <div class="progress rounded-pill" style="height: 8px;">
           <div class="progress-bar bg-warning transition-progress" :style="{ width: progress + '%' }"></div>
@@ -47,7 +47,7 @@
               v-model="userAnswers[currentQuestion.id].answer_text" 
               type="text" 
               class="form-control form-control-lg rounded-lg border-2" 
-              placeholder="Saisissez votre réponse ici..."
+              placeholder="..."
               @input="markAsChanged"
             >
           </template>
@@ -58,7 +58,7 @@
               v-model="userAnswers[currentQuestion.id].answer_text" 
               class="form-control rounded-lg border-2" 
               rows="6" 
-              placeholder="Rédigez votre réponse détaillée..."
+              placeholder="..."
               @input="markAsChanged"
             ></textarea>
           </template>
@@ -73,7 +73,7 @@
         class="btn btn-outline-secondary px-4 rounded-lg" 
         :disabled="currentIndex === 0"
       >
-        <i class="bi bi-chevron-left me-1"></i> Précédent
+        <i class="bi bi-chevron-left me-1"></i> {{ $t('previous') }}
       </button>
 
       <div class="d-flex gap-2">
@@ -82,7 +82,7 @@
           @click="nextQuestion" 
           class="btn btn-primary px-4 rounded-lg fw-bold"
         >
-          Suivant <i class="bi bi-chevron-right ms-1"></i>
+          {{ $t('next') }} <i class="bi bi-chevron-right ms-1"></i>
         </button>
         <button 
           v-else 
@@ -91,7 +91,7 @@
           :disabled="isSubmitting"
         >
           <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
-          Terminer et Soumettre
+          {{ $t('finish_and_submit') }}
         </button>
       </div>
     </div>

@@ -1,61 +1,60 @@
 <template>
   <div class="question-form p-4 bg-white rounded-lg shadow-sm border">
-    <h5 class="fw-bold text-primary mb-4">{{ editingQuestion ? 'Modifier la Question' : 'Ajouter une Nouvelle Question' }}</h5>
+    <h5 class="fw-bold text-primary mb-4">{{ editingQuestion ? $t('edit_question') : $t('add_new_question') }}</h5>
     
     <div class="row mb-3">
       <div class="col-md-8">
-        <label class="form-label fw-semibold">Énoncé de la question</label>
-        <textarea v-model="form.question_text" class="form-control rounded-lg" rows="3" placeholder="Saisissez votre question ici..."></textarea>
+        <label class="form-label fw-semibold">{{ $t('question_text') }}</label>
+        <textarea v-model="form.question_text" class="form-control rounded-lg" rows="3" placeholder="..."></textarea>
       </div>
       <div class="col-md-4">
-        <label class="form-label fw-semibold">Type de question</label>
+        <label class="form-label fw-semibold">{{ $t('question_type') }}</label>
         <select v-model="form.type" class="form-select rounded-lg">
-          <option value="qcm">QCM (Choix multiple)</option>
+          <option value="qcm">QCM</option>
           <option value="true_false">Vrai / Faux</option>
           <option value="short_answer">Réponse courte</option>
-          <option value="essay">Réponse libre (Essay)</option>
+          <option value="essay">Essay</option>
         </select>
         
-        <label class="form-label fw-semibold mt-3">Points</label>
+        <label class="form-label fw-semibold mt-3">{{ $t('points') }}</label>
         <input v-model="form.points" type="number" class="form-control rounded-lg" min="1">
       </div>
     </div>
 
     <!-- Réponses pour QCM et Vrai/Faux -->
     <div v-if="form.type === 'qcm' || form.type === 'true_false'" class="mb-4">
-      <label class="form-label fw-semibold">Réponses possibles</label>
+      <label class="form-label fw-semibold">{{ $t('possible_answers') }}</label>
       <div v-for="(answer, index) in form.answers" :key="index" class="input-group mb-2 shadow-sm rounded-lg overflow-hidden">
         <div class="input-group-text bg-white border-end-0">
           <input class="form-check-input mt-0" type="radio" :name="'correct_' + index" :checked="answer.is_correct" @change="setCorrect(index)">
         </div>
-        <input v-model="answer.answer_text" type="text" class="form-control border-start-0 border-end-0" :placeholder="'Réponse ' + (index + 1)">
+        <input v-model="answer.answer_text" type="text" class="form-control border-start-0 border-end-0" :placeholder="`Option ${index + 1}`">
         <button @click="removeAnswer(index)" class="btn btn-outline-danger" v-if="form.answers.length > 2 && form.type !== 'true_false'">
           <i class="bi bi-trash"></i>
         </button>
       </div>
       <button v-if="form.type === 'qcm'" @click="addAnswer" class="btn btn-link btn-sm text-warning fw-bold p-0">
-        <i class="bi bi-plus-circle me-1"></i> Ajouter une option
+        <i class="bi bi-plus-circle me-1"></i> {{ $t('add_option') }}
       </button>
     </div>
 
     <!-- Réponses pour Réponse Courte (Mots clés corrects) -->
     <div v-if="form.type === 'short_answer'" class="mb-4">
-      <label class="form-label fw-semibold">Mots-clés acceptés (séparés par des virgules)</label>
-      <input v-model="shortAnswerText" @input="updateShortAnswers" type="text" class="form-control rounded-lg" placeholder="Ex: Paris, capitale, france">
-      <p class="small text-muted mt-1">L'étudiant doit saisir l'un de ces mots (insensible à la casse).</p>
+      <label class="form-label fw-semibold">{{ $t('accepted_keywords') }}</label>
+      <input v-model="shortAnswerText" @input="updateShortAnswers" type="text" class="form-control rounded-lg" placeholder="Ex: Paris, France">
     </div>
 
     <!-- Feedback / Explication -->
     <div class="mb-4">
-      <label class="form-label fw-semibold">Explication / Feedback (optionnel)</label>
-      <textarea v-model="form.explanation" class="form-control rounded-lg" rows="2" placeholder="Expliquez pourquoi la réponse est correcte..."></textarea>
+      <label class="form-label fw-semibold">{{ $t('explanation_feedback') }}</label>
+      <textarea v-model="form.explanation" class="form-control rounded-lg" rows="2" placeholder="..."></textarea>
     </div>
 
     <div class="d-flex gap-2">
-      <button @click="$emit('cancel')" class="btn btn-light px-4 rounded-lg">Annuler</button>
+      <button @click="$emit('cancel')" class="btn btn-light px-4 rounded-lg">{{ $t('cancel') }}</button>
       <button @click="submit" class="btn btn-warning text-white px-4 rounded-lg fw-bold" :disabled="loading">
         <span v-if="loading" class="spinner-border spinner-border-sm me-1"></span>
-        {{ editingQuestion ? 'Mettre à jour' : 'Ajouter la question' }}
+        {{ editingQuestion ? $t('update_question') : $t('add_question') }}
       </button>
     </div>
   </div>

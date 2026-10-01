@@ -170,26 +170,26 @@ export const blogData = [
 ]
 
 export const footerLink1 = [
-    { name: "À propos d'ALREI", link: "/about-us" },
-    { name: "FAQ", link: "/faq" },
-    { name: "Accès aux formations", link: "/pricing" },
-    { name: "Contact", link: "/contact" },
-    { name: "Blog", link: "/blog" }
+    { nameKey: "footer_about_alrei", name: "À propos d'ALREI", link: "/about-us" },
+    { nameKey: "footer_faq", name: "FAQ", link: "/faq" },
+    { nameKey: "footer_access_courses", name: "Accès aux formations", link: "/pricing" },
+    { nameKey: "footer_contact", name: "Contact", link: "/contact" },
+    { nameKey: "footer_blog", name: "Blog", link: "/blog" }
 ]
 
 export const footerCat = [
-    { name: "Leadership syndical", link: "/courses" },
-    { name: "Syndicalisation et négociation collective", link: "/courses" },
-    { name: "Recherche sur le travail et politique économique", link: "/courses" },
-    { name: "Changement climatique et transition juste", link: "/courses" },
-    { name: "Numérisation et avenir du travail", link: "/courses" }
+    { nameKey: "footer_trade_union_leadership", name: "Leadership syndical", link: "/courses" },
+    { nameKey: "footer_union_negotiation", name: "Syndicalisation et négociation collective", link: "/courses" },
+    { nameKey: "footer_labor_research", name: "Recherche sur le travail et politique économique", link: "/courses" },
+    { nameKey: "footer_climate_transition", name: "Changement climatique et transition juste", link: "/courses" },
+    { nameKey: "footer_digitalization_future", name: "Numérisation et avenir du travail", link: "/courses" }
 ]
 
 export const footerHelp = [
-    { name: "Comment utiliser le centre", link: "/faq" },
-    { name: "Assistance WhatsApp", link: "https://wa.me/22890943434", external: true },
-    { name: "Envoyer un e-mail à ALREI", link: "mailto:alrei@ituc-africa.org", external: true },
-    { name: "Notice de confidentialité", link: "/privacy" }
+    { nameKey: "footer_how_to_use", name: "Comment utiliser le centre", link: "/faq" },
+    { nameKey: "footer_whatsapp_support", name: "Assistance WhatsApp", link: "https://wa.me/22890943434", external: true },
+    { nameKey: "footer_email_alrei", name: "Envoyer un e-mail à ALREI", link: "mailto:alrei@ituc-africa.org", external: true },
+    { nameKey: "footer_privacy", name: "Notice de confidentialité", link: "/privacy" }
 ]
 
 export const reviewData = []

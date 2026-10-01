@@ -8,7 +8,7 @@
           v-model="searchQuery"
           type="text"
           class="form-control ps-5 pe-4 py-2 rounded-3 border bg-light-subtle shadow-none"
-          placeholder="Rechercher un étudiant par nom ou email..."
+          :placeholder="$t('search_student_placeholder')"
         />
         <button
           v-if="searchQuery"
@@ -25,7 +25,7 @@
         <div class="d-flex align-items-center gap-2">
           <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2.5 py-1">
             <i class="bi bi-person-check-fill me-1"></i>
-            {{ selectedCount }} / {{ students.length }} sélectionné(s)
+            {{ $t('selected_count', { count: selectedCount, total: students.length }) }}
           </span>
         </div>
 
@@ -35,7 +35,7 @@
             class="btn btn-sm btn-outline-secondary py-1 px-2.5 rounded-pill extra-small-text"
             @click="selectAll"
           >
-            <i class="bi bi-check-all me-1"></i>Tout sélectionner
+            <i class="bi bi-check-all me-1"></i>{{ $t('select_all') }}
           </button>
           <button
             v-if="selectedCount > 0"
@@ -43,7 +43,7 @@
             class="btn btn-sm btn-outline-danger py-1 px-2.5 rounded-pill extra-small-text"
             @click="deselectAll"
           >
-            <i class="bi bi-x-lg me-1"></i>Désélectionner
+            <i class="bi bi-x-lg me-1"></i>{{ $t('deselect') }}
           </button>
         </div>
       </div>
@@ -51,7 +51,7 @@
 
     <!-- Selected chips area -->
     <div v-if="selectedStudents.length > 0" class="selected-chips-area p-2.5 bg-light rounded-3 border mb-3">
-      <div class="text-muted extra-small mb-1.5 fw-semibold text-uppercase tracking-wider">Étudiants sélectionnés :</div>
+      <div class="text-muted extra-small mb-1.5 fw-semibold text-uppercase tracking-wider">{{ $t('selected_students') }}</div>
       <div class="d-flex flex-wrap gap-1.5 align-items-center" style="max-height: 100px; overflow-y: auto;">
         <div
           v-for="student in selectedStudents"
@@ -68,7 +68,7 @@
           <button
             type="button"
             class="btn-close-chip border-0 bg-transparent text-muted ms-1"
-            title="Retirer"
+            :title="$t('remove')"
             @click.stop="toggleStudent(student.id)"
           >
             <i class="bi bi-x"></i>
@@ -81,8 +81,8 @@
     <div class="students-list-wrapper border rounded-3 overflow-auto bg-white shadow-xs" style="max-height: 250px;">
       <div v-if="filteredStudents.length === 0" class="text-center py-4 text-muted">
         <i class="bi bi-search fs-3 d-block mb-1 opacity-50"></i>
-        <span class="small" v-if="searchQuery">Aucun étudiant ne correspond à "{{ searchQuery }}"</span>
-        <span class="small" v-else>Aucun étudiant disponible</span>
+        <span class="small" v-if="searchQuery">{{ $t('no_student_found', { query: searchQuery }) }}</span>
+        <span class="small" v-else>{{ $t('no_student_available') }}</span>
       </div>
 
       <div
@@ -100,7 +100,7 @@
 
           <!-- Info -->
           <div class="overflow-hidden">
-            <div class="fw-bold text-dark text-truncate small mb-0.5">{{ student.name || 'Sans nom' }}</div>
+            <div class="fw-bold text-dark text-truncate small mb-0.5">{{ student.name || $t('unnamed') }}</div>
             <div class="text-muted extra-small text-truncate">
               <i class="bi bi-envelope me-1 opacity-75"></i>{{ student.email }}
               <span v-if="student.country" class="ms-2 badge bg-light text-secondary border">

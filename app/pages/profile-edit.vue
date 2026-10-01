@@ -81,7 +81,7 @@
                                             
                                             <template v-if="isInstructor">
                                                 <hr class="my-4">
-                                                <h4 class="mb-0">Détails Instructeur</h4>
+                                                <h4 class="mb-0">{{ $t('instructor') }}</h4>
                                                 <p class="text-muted mb-4">Informations visibles sur votre profil public.</p>
                                                 
                                                 <div class="col-12">
@@ -107,7 +107,7 @@
 
                                         <!-- Formulaire Modifier le mot de passe -->
                                         <div class="form-section">
-                                            <h4 class="mb-1 text-dark fw-bold">Modifier le mot de passe</h4>
+                                            <h4 class="mb-1 text-dark fw-bold">{{ $t('password') }}</h4>
                                             <p class="text-muted mb-4 small">Mettez à jour votre mot de passe pour garantir la sécurité de votre compte.</p>
                                             
                                             <form class="row g-3" @submit.prevent="updatePassword">

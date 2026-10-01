@@ -2,7 +2,7 @@
   <div class="course-forum">
     <div v-if="selectedTopic" class="topic-detail">
       <button @click="selectedTopic = null" class="btn btn-link p-0 mb-3">
-        <i class="bi bi-arrow-left me-2"></i>Retour aux sujets
+        <i class="bi bi-arrow-left me-2"></i>{{ $t('back_to_topics') }}
       </button>
       
       <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
@@ -12,14 +12,14 @@
           </div>
           <div>
             <h5 class="fw-bold mb-0">{{ selectedTopic.title }}</h5>
-            <small class="text-muted">Par {{ selectedTopic.user?.name }} • {{ formatDate(selectedTopic.created_at) }}</small>
+            <small class="text-muted">{{ selectedTopic.user?.name }} • {{ formatDate(selectedTopic.created_at) }}</small>
           </div>
         </div>
         <p class="mb-0">{{ selectedTopic.content }}</p>
       </div>
 
       <div class="responses ms-md-5">
-        <h6 class="fw-bold mb-3">Réponses ({{ selectedTopic.posts?.length || 0 }})</h6>
+        <h6 class="fw-bold mb-3">{{ $t('replies') }} ({{ selectedTopic.posts?.length || 0 }})</h6>
         <div v-for="post in selectedTopic.posts" :key="post.id" class="card border-0 shadow-sm rounded-4 p-3 mb-3 bg-light">
           <div class="d-flex align-items-center gap-2 mb-2">
             <div class="square--30 circle bg-secondary text-white small">
@@ -36,7 +36,7 @@
           <textarea v-model="newPostContent" class="form-control border-0 bg-light" rows="3" :placeholder="replyPlaceholder"></textarea>
           <div class="text-end mt-2">
             <button @click="submitPost" :disabled="!newPostContent || submitting" class="btn btn-primary btn-sm px-4 rounded-pill">
-              <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>Répondre
+              <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>{{ $t('reply') }}
             </button>
           </div>
         </div>
@@ -46,13 +46,13 @@
     <div v-else class="topic-list">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex align-items-center gap-2">
-          <h5 class="fw-bold mb-0">Forum d'entraide</h5>
+          <h5 class="fw-bold mb-0">{{ $t('help_forum') }}</h5>
           <span class="badge forum-lang-badge rounded-pill">
             <i class="bi bi-translate me-1"></i>{{ forumLanguageLabel }}
           </span>
         </div>
         <button @click="showCreateModal = true" class="btn btn-dark btn-sm px-4 rounded-pill">
-          <i class="bi bi-plus-lg me-1"></i>Nouveau sujet
+          <i class="bi bi-plus-lg me-1"></i>{{ $t('new_topic') }}
         </button>
       </div>
 
@@ -60,8 +60,8 @@
       <div v-if="accessDenied" class="alert alert-warning rounded-4 d-flex align-items-center gap-3 border-0 shadow-sm">
         <i class="bi bi-lock-fill fs-4 text-warning"></i>
         <div>
-          <p class="fw-bold mb-0">Forum restreint à votre langue d'inscription</p>
-          <small class="text-muted">Votre compte est configuré pour le forum <strong>{{ forumLanguageLabel }}</strong>. Vous ne pouvez accéder qu'à ce forum.</small>
+          <p class="fw-bold mb-0">{{ $t('restricted_forum') }}</p>
+          <small class="text-muted">{{ $t('restricted_forum_desc', { lang: forumLanguageLabel }) }}</small>
         </div>
       </div>
 
@@ -89,7 +89,7 @@
         </div>
         
         <div v-if="topics.length === 0" class="text-center py-5">
-          <p class="text-muted">Aucun sujet pour le moment. Soyez le premier à poser une question !</p>
+          <p class="text-muted">Aucun sujet pour le moment.</p>
         </div>
       </div>
     </div>
@@ -99,23 +99,23 @@
       <div class="modal-dialog modal-dialog-centered custom-modal">
         <div class="modal-content border-0 shadow-xl rounded-4 overflow-hidden bg-white">
           <div class="modal-header border-0 bg-light p-4">
-            <h5 class="fw-bold mb-0 text-dark">Nouveau sujet de discussion</h5>
+            <h5 class="fw-bold mb-0 text-dark">{{ $t('new_topic') }}</h5>
             <button @click="showCreateModal = false" class="btn-close"></button>
           </div>
           <div class="modal-body p-4">
             <div class="mb-4">
-              <label class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-2">Titre</label>
-              <input v-model="newTopic.title" type="text" class="form-control custom-input" placeholder="De quoi souhaitez-vous discuter ?">
+              <label class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-2">{{ $t('title') }}</label>
+              <input v-model="newTopic.title" type="text" class="form-control custom-input" placeholder="...">
             </div>
             <div class="mb-4">
-              <label class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-2">Message</label>
-              <textarea v-model="newTopic.content" class="form-control custom-input" rows="5" placeholder="Détaillez votre question ou remarque..."></textarea>
+              <label class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-2">{{ $t('message') }}</label>
+              <textarea v-model="newTopic.content" class="form-control custom-input" rows="5" placeholder="..."></textarea>
             </div>
           </div>
           <div class="modal-footer border-0 p-4 pt-0">
-            <button @click="showCreateModal = false" class="btn btn-link text-muted text-decoration-none fw-semibold me-2">Annuler</button>
+            <button @click="showCreateModal = false" class="btn btn-link text-muted text-decoration-none fw-semibold me-2">{{ $t('cancel') }}</button>
             <button @click="submitTopic" :disabled="!newTopic.title || !newTopic.content || submitting" class="btn btn-main rounded-pill px-4 shadow-sm">
-              <span v-if="submitting" class="spinner-border spinner-border-sm me-2"></span>Publier le sujet
+              <span v-if="submitting" class="spinner-border spinner-border-sm me-2"></span>{{ $t('publish_topic') }}
             </button>
           </div>
         </div>

@@ -1,21 +1,21 @@
 <template>
   <div class="quiz-manager">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="mb-0 text-primary fw-bold">Gestion des Questionnaires</h5>
+      <h5 class="mb-0 text-primary fw-bold">{{ $t('manage_quizzes') }}</h5>
       <button @click="openQuizModal()" class="btn btn-warning text-white fw-bold">
-        <i class="bi bi-plus-lg me-1"></i> Créer Un Nouveau Questionnaire
+        <i class="bi bi-plus-lg me-1"></i> {{ $t('create_new_quiz') }}
       </button>
     </div>
 
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border text-warning" role="status"></div>
-      <p class="mt-2 text-muted small">Chargement des questionnaires...</p>
+      <p class="mt-2 text-muted small">{{ $t('loading_quizzes') }}</p>
     </div>
 
     <div v-else-if="loadError" class="alert alert-danger d-flex align-items-center gap-3 mt-3">
       <i class="bi bi-exclamation-triangle-fill fs-4"></i>
       <div>
-        <strong>Erreur de chargement</strong>
+        <strong>{{ $t('error') }}</strong>
         <p class="mb-1 small">{{ loadError }}</p>
       </div>
     </div>
@@ -28,36 +28,36 @@
               <div>
                 <h6 class="fw-bold mb-1 text-dark">{{ quiz.title }}</h6>
                 <div class="small text-muted mb-2">
-                  <span><i class="bi bi-question-circle me-1"></i>{{ quiz.questions_count || 0 }} Questions</span>
+                  <span><i class="bi bi-question-circle me-1"></i>{{ quiz.questions_count || 0 }} {{ $t('lessons') }}</span>
                   <span v-if="quiz.duration_minutes"> • {{ quiz.duration_minutes }} min</span>
                 </div>
                 <div class="d-flex flex-wrap gap-1 mb-2">
                   <span class="badge bg-success-subtle text-success border border-success-subtle">
-                    <i class="bi bi-check-circle me-1"></i>Min. valider: {{ quiz.passing_score }}%
+                    <i class="bi bi-check-circle me-1"></i>{{ $t('min_pass_percent') }}: {{ quiz.passing_score }}%
                   </span>
                   <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
-                    <i class="bi bi-award me-1"></i>Max: {{ quiz.max_score || quiz.total_points || 100 }} pts
+                    <i class="bi bi-award me-1"></i>{{ $t('max_pts') }}: {{ quiz.max_score || quiz.total_points || 100 }} pts
                   </span>
-                  <span v-if="quiz.is_final" class="badge bg-danger"><i class="bi bi-star-fill me-1"></i> Finale</span>
+                  <span v-if="quiz.is_final" class="badge bg-danger"><i class="bi bi-star-fill me-1"></i> {{ $t('final_evaluation') }}</span>
                 </div>
               </div>
               <div class="dropdown">
                 <button class="btn btn-light btn-sm rounded-circle" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                  <li><a @click.prevent="openQuizModal(quiz)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>Modifier</a></li>
-                  <li><a @click.prevent="goToQuestions(quiz.id)" class="dropdown-item" href="#"><i class="bi bi-list-check me-2"></i>Gérer les Questions</a></li>
-                  <li><a @click.prevent="viewResults(quiz)" class="dropdown-item" href="#"><i class="bi bi-graph-up me-2"></i>Voir les Résultats</a></li>
+                  <li><a @click.prevent="openQuizModal(quiz)" class="dropdown-item" href="#"><i class="bi bi-pencil me-2"></i>{{ $t('edit') }}</a></li>
+                  <li><a @click.prevent="goToQuestions(quiz.id)" class="dropdown-item" href="#"><i class="bi bi-list-check me-2"></i>{{ $t('manage_questions') }}</a></li>
+                  <li><a @click.prevent="viewResults(quiz)" class="dropdown-item" href="#"><i class="bi bi-graph-up me-2"></i>{{ $t('view_results') }}</a></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><a @click.prevent="handleDelete(quiz.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>Supprimer</a></li>
+                  <li><a @click.prevent="handleDelete(quiz.id)" class="dropdown-item text-danger" href="#"><i class="bi bi-trash me-2"></i>{{ $t('delete') }}</a></li>
                 </ul>
               </div>
             </div>
             <div class="d-flex gap-2 mt-3">
               <button @click="goToQuestions(quiz.id)" class="btn btn-outline-warning btn-sm flex-grow-1 fw-bold">
-                <i class="bi bi-list-check me-1"></i> Questions
+                <i class="bi bi-list-check me-1"></i> {{ $t('manage_questions') }}
               </button>
               <button @click="viewResults(quiz)" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold">
-                <i class="bi bi-graph-up me-1"></i> Résultats
+                <i class="bi bi-graph-up me-1"></i> {{ $t('result') }}
               </button>
             </div>
           </div>
@@ -66,7 +66,7 @@
 
       <div v-if="quizList.length === 0" class="col-12 text-center py-5">
         <i class="bi bi-question-circle display-4 text-muted"></i>
-        <p class="mt-3 text-muted">Aucun questionnaire créé pour ce cours.</p>
+        <p class="mt-3 text-muted">{{ $t('no_quiz_available') }}</p>
       </div>
     </div>
 
@@ -75,7 +75,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-lg">
           <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-primary">Résultats : {{ selectedQuiz?.title }}</h5>
+            <h5 class="modal-title fw-bold text-primary">{{ $t('result') }} : {{ selectedQuiz?.title }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body pt-2">
@@ -84,16 +84,16 @@
             </div>
             <div v-else-if="attempts.length === 0" class="text-center py-4">
               <i class="bi bi-info-circle fs-2 text-muted mb-2 d-block"></i>
-              <p class="text-muted">Aucune tentative enregistrée pour ce quiz.</p>
+              <p class="text-muted">{{ $t('no_quiz_attempts_yet') }}</p>
             </div>
             <div v-else class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead class="table-light">
                   <tr>
-                    <th>Étudiant</th>
-                    <th>Score</th>
-                    <th>Résultat</th>
-                    <th>Date</th>
+                    <th>{{ $t('student') }}</th>
+                    <th>{{ $t('score') }}</th>
+                    <th>{{ $t('result') }}</th>
+                    <th>{{ $t('date') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -108,12 +108,11 @@
                     </td>
                     <td>
                       <span :class="['badge rounded-pill px-3', attempt.passed ? 'bg-light-success text-success' : 'bg-light-danger text-danger']">
-                        {{ attempt.passed ? 'Réussi' : 'Échoué' }}
+                        {{ attempt.passed ? $t('passed') : $t('failed') }}
                       </span>
                     </td>
                     <td class="small text-muted">
-                      {{ new Date(attempt.submitted_at).toLocaleDateString() }}<br>
-                      {{ new Date(attempt.submitted_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) }}
+                      {{ new Date(attempt.submitted_at).toLocaleDateString() }}
                     </td>
                   </tr>
                 </tbody>
@@ -129,50 +128,44 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-lg">
           <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold text-primary">{{ editingQuiz ? 'Modifier le Questionnaire' : 'Créer Un Nouveau Questionnaire' }}</h5>
+            <h5 class="modal-title fw-bold text-primary">{{ editingQuiz ? $t('edit') : $t('create_new_quiz') }}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label class="form-label fw-semibold">Titre du questionnaire</label>
-              <input v-model="quizForm.title" type="text" class="form-control rounded-lg" :class="{'is-invalid': errors.title}" placeholder="Ex: Évaluation de fin de module">
-              <div v-if="errors.title" class="invalid-feedback">{{ errors.title[0] }}</div>
+              <label class="form-label fw-semibold">{{ $t('title') }}</label>
+              <input v-model="quizForm.title" type="text" class="form-control rounded-lg" :class="{'is-invalid': errors.title}" placeholder="Ex: Evaluation">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">Description / Consignes (facultatives)</label>
-              <textarea v-model="quizForm.description" class="form-control rounded-lg" rows="3" placeholder="Description des objectifs du quiz..."></textarea>
+              <label class="form-label fw-semibold">{{ $t('description') }}</label>
+              <textarea v-model="quizForm.description" class="form-control rounded-lg" rows="3" placeholder="Description..."></textarea>
             </div>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Score min. pour valider (%)</label>
-                <input v-model="quizForm.passing_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.passing_score}" min="0" max="100" placeholder="Ex: 70">
-                <small class="text-muted d-block mt-1">Note minimum de passage (ex: 70%)</small>
-                <div v-if="errors.passing_score" class="invalid-feedback">{{ errors.passing_score[0] }}</div>
+                <label class="form-label fw-semibold">{{ $t('min_pass_percent') }} (%)</label>
+                <input v-model="quizForm.passing_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.passing_score}" min="0" max="100" placeholder="70">
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label fw-semibold">Point maximum (Note max)</label>
-                <input v-model="quizForm.max_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.max_score}" min="1" placeholder="Ex: 100">
-                <small class="text-muted d-block mt-1">Total de points maximum (ex: 100 pts)</small>
-                <div v-if="errors.max_score" class="invalid-feedback">{{ errors.max_score[0] }}</div>
+                <label class="form-label fw-semibold">{{ $t('max_pts') }}</label>
+                <input v-model="quizForm.max_score" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.max_score}" min="1" placeholder="100">
               </div>
               <div class="col-md-12 mb-3">
-                <label class="form-label fw-semibold">Limite de temps (en minutes)</label>
-                <input v-model="quizForm.duration_minutes" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.duration_minutes}" placeholder="Ex: 30 (laisser vide si illimité)">
-                <div v-if="errors.duration_minutes" class="invalid-feedback">{{ errors.duration_minutes[0] }}</div>
+                <label class="form-label fw-semibold">{{ $t('duration') }}</label>
+                <input v-model="quizForm.duration_minutes" type="number" class="form-control rounded-lg" :class="{'is-invalid': errors.duration_minutes}" placeholder="30">
               </div>
             </div>
             <div class="mb-3 form-check form-switch mt-2">
               <input v-model="quizForm.is_final" class="form-check-input" type="checkbox" id="isFinalQuiz">
               <label class="form-check-label fw-bold text-danger" for="isFinalQuiz">
-                <i class="bi bi-star-fill me-1"></i> Ce quiz est l'évaluation finale pour l'obtention du certificat
+                <i class="bi bi-star-fill me-1"></i> {{ $t('final_evaluation') }}
               </label>
             </div>
           </div>
           <div class="modal-footer border-0 pt-0">
-            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
             <button @click="handleSave" class="btn btn-warning text-white px-4 fw-bold" :disabled="saving">
               <span v-if="saving" class="spinner-border spinner-border-sm me-1"></span>
-              Enregistrer le quiz
+              {{ $t('save') }}
             </button>
           </div>
         </div>
