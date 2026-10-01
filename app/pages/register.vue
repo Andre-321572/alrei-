@@ -25,13 +25,13 @@
                         <div class="login-caps mb-4">
                             <div class="text-center">
                                 <h2 class="fw-bold fs-4 text-dark mb-1">{{ $t('welcome_alrei_center') }}</h2>
-                                <p class="small text-muted mb-0">Plateforme e-learning de l'Institut africain de recherche et d'éducation ouvrière (CSI-Afrique)</p>
+                                <p class="small text-muted mb-0">{{ $t('elearning_platform_subtitle') }}</p>
                             </div>
                         </div>
                         
                         <div v-if="route.query.redirect" class="alert alert-info py-2 px-3 mb-3 small d-flex align-items-center gap-2 rounded-3 border-info">
                             <i class="bi bi-info-circle-fill text-info fs-5 flex-shrink-0"></i>
-                            <span>Veuillez vous connecter ou créer votre compte pour rejoindre cette formation.</span>
+                            <span>{{ $t('login_redirect_prompt') }}</span>
                         </div>
 
                         <div class="d-block mb-4">

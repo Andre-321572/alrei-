@@ -83,6 +83,7 @@ import { coursesData } from '@/data/data.js';
 
 const route = useRoute()
 const api = useApi()
+const { t } = useI18n()
 
 const course = ref(null)
 const loading = ref(true)
@@ -110,20 +111,20 @@ onMounted(async () => {
         sections: found.sections || [
           {
             id: 1,
-            title: "Module 1 : Cadre théorique et enjeux pour les travailleurs",
-            instructor_name: "Dr. Amadou Diallo (Instituteur)",
+            title: t('default_module_1_title'),
+            instructor_name: "ALREI",
             lessons: [
-              { id: 1, title: "Introduction générale et objectifs du programme", duration: "20 min", type: "video" },
-              { id: 2, title: "Transformations du monde du travail en Afrique", duration: "40 min", type: "document" }
+              { id: 1, title: t('default_lesson_1_title'), duration: "20 min", type: "video" },
+              { id: 2, title: t('default_lesson_2_title'), duration: "40 min", type: "document" }
             ]
           },
           {
             id: 2,
-            title: "Module 2 : Stratégies d'action et syndicalisation",
-            instructor_name: "Fatoumata Traoré (Institutrice)",
+            title: t('default_module_2_title'),
+            instructor_name: "ALREI",
             lessons: [
-              { id: 3, title: "Méthodes d'organisation et de mobilisation des membres", duration: "45 min", type: "video" },
-              { id: 4, title: "Négociation collective et défense des droits", duration: "60 min", type: "text" }
+              { id: 3, title: t('default_lesson_3_title'), duration: "45 min", type: "video" },
+              { id: 4, title: t('default_lesson_4_title'), duration: "60 min", type: "text" }
             ]
           }
         ]
@@ -132,18 +133,18 @@ onMounted(async () => {
       // General default course fallback
       course.value = {
         id: paramId || 1,
-        title: "Programme de Formation des Travailleurs ALREI",
+        title: t('default_course_title'),
         price: 0,
         is_free: true,
         image: '/img/co-1.jpg',
         thumbnail: '/img/co-1.jpg',
-        description: "Développez vos compétences pratiques et connaissances théoriques avec les formations de l'Institut africain de recherche et d'éducation ouvrière (ALREI).",
+        description: t('default_course_desc'),
         sections: [
           {
             id: 1,
-            title: "Module 1 : Introduction générale",
-            instructor_name: "Équipe Pédagogique ALREI",
-            lessons: [{ id: 1, title: "Aperçu du cours", duration: "15 min", type: "video" }]
+            title: t('default_module_1_title'),
+            instructor_name: "ALREI",
+            lessons: [{ id: 1, title: t('default_lesson_1_title'), duration: "15 min", type: "video" }]
           }
         ]
       }

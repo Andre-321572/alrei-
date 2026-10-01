@@ -18,7 +18,7 @@
             <div class="ed_view_price mb-3">
                 <div class="d-flex align-items-center gap-2 mb-1">
                     <h2 v-if="isFree" class="lh-base fw-bold text-success m-0">
-                        <i class="bi bi-gift-fill me-2"></i>Gratuit
+                        <i class="bi bi-gift-fill me-2"></i>{{ $t('free') }}
                     </h2>
                     <template v-else>
                         <h2 class="lh-base fw-bold text-dark m-0">{{ course.discount_price || course.price }} $</h2>
@@ -56,14 +56,14 @@
             </div>
 
             <div v-if="scholarships.length > 0" class="mt-4 pt-4 border-top">
-                <h5 class="mb-3 text-primary fw-bold"><i class="bi bi-mortarboard me-2"></i>Bourses disponibles</h5>
+                <h5 class="mb-3 text-primary fw-bold"><i class="bi bi-mortarboard me-2"></i>{{ $t('scholarships_available') }}</h5>
                 <div v-for="sch in scholarships" :key="sch.id" class="card shadow-sm border-0 bg-light mb-3 rounded-3">
                     <div class="card-body p-3">
                         <h6 class="fw-bold mb-1 text-dark">{{ sch.name }}</h6>
                         <p class="small text-muted mb-3">{{ sch.description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold">- {{ sch.value }} FCFA</span>
-                            <button @click="openMotivationModal(sch)" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">Postuler</button>
+                            <button @click="openMotivationModal(sch)" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">{{ $t('apply') }}</button>
                         </div>
                     </div>
                 </div>
@@ -96,21 +96,21 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">Demander une Bourse</h5>
+                    <h5 class="modal-title fw-bold">{{ $t('apply_scholarship') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form @submit.prevent="submitApplication">
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Lettre de motivation</label>
-                            <textarea class="form-control" v-model="motivationLetter" rows="5" required placeholder="Expliquez pourquoi vous avez besoin de cette bourse..."></textarea>
+                            <label class="form-label fw-bold">{{ $t('motivation_letter') }}</label>
+                            <textarea class="form-control" v-model="motivationLetter" rows="5" required :placeholder="$t('motivation_letter_placeholder')"></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Document justificatif (PDF/Image)</label>
+                            <label class="form-label fw-bold">{{ $t('supporting_document') }}</label>
                             <input type="file" class="form-control" @change="handleFileChange" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                         </div>
                         <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold" :disabled="applying">
-                            {{ applying ? 'Envoi...' : 'Soumettre' }}
+                            {{ applying ? $t('sending') : $t('submit') }}
                         </button>
                     </form>
                 </div>
@@ -128,14 +128,14 @@
                             <i class="bi bi-person-fill-lock fs-3 text-main"></i>
                         </div>
                         <div>
-                            <h5 class="modal-title fw-bold text-dark m-0">{{ $t('login_required_title') || 'Rejoindre la formation' }}</h5>
+                            <h5 class="modal-title fw-bold text-dark m-0">{{ $t('login_required_title') }}</h5>
                             <p class="small text-muted mb-0">{{ course.title }}</p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4 text-center">
-                    <p class="fs-6 text-muted mb-4">
+                    <p class="fs-6 text-muted mb-4" style="white-space: pre-line;">
                         {{ $t('login_required_desc') }}
                     </p>
                     <div class="d-grid gap-3">
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 bg-light justify-content-center py-3">
-                    <small class="text-muted"><i class="bi bi-shield-check me-1"></i>Plateforme e-learning ALREI</small>
+                    <small class="text-muted"><i class="bi bi-shield-check me-1"></i>{{ $t('elearning_platform_subtitle') }}</small>
                 </div>
             </div>
         </div>

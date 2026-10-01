@@ -9,19 +9,19 @@
             <div class="row align-items-center g-4">
                 <div class="col-lg-8">
                     <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 d-inline-flex align-items-center gap-1">
-                        <i class="bi bi-stars"></i> Formation ALREI
+                        <i class="bi bi-stars"></i> {{ $t('alrei_training') }}
                     </span>
                     <h3 class="fw-bolder text-white mb-2 display-7">
-                        Rejoindre la formation
+                        {{ $t('join_training') }}
                     </h3>
                     <p class="text-light opacity-90 mb-3 fs-6 lh-base" style="max-width: 620px;">
                         {{ course?.title }}
                     </p>
 
                     <div class="d-flex flex-wrap gap-4 text-light small opacity-85">
-                        <span class="d-flex align-items-center gap-1"><i class="bi bi-check-circle-fill text-success"></i> Accès en ligne flexible</span>
-                        <span class="d-flex align-items-center gap-1"><i class="bi bi-shield-check text-warning"></i> Certificat ALREI</span>
-                        <span class="d-flex align-items-center gap-1"><i class="bi bi-globe text-info"></i> Réseau syndical africain</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-check-circle-fill text-success"></i> {{ $t('flexible_online_access') }}</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-shield-check text-warning"></i> {{ $t('alrei_certificate') }}</span>
+                        <span class="d-flex align-items-center gap-1"><i class="bi bi-globe text-info"></i> {{ $t('african_union_network') }}</span>
                     </div>
                 </div>
 
@@ -31,11 +31,11 @@
                         class="btn btn-warning btn-lg rounded-pill px-4 py-3 fw-bolder shadow-lg w-100 d-inline-flex align-items-center justify-content-center gap-2 text-dark transform-hover"
                         style="font-size: 1.15rem;"
                     >
-                        <span>{{ isEnrolled ? 'Accéder au cours' : 'Rejoindre le cours' }}</span>
+                        <span>{{ isEnrolled ? $t('access_course') : $t('join_course') }}</span>
                         <i class="bi bi-arrow-right-circle-fill fs-5"></i>
                     </button>
                     <p class="small text-light opacity-75 mt-2 mb-0">
-                        {{ isAuthenticated ? 'Vous êtes connecté' : 'Se connecter ou créer un compte' }}
+                        {{ isAuthenticated ? $t('you_are_logged_in') : $t('login_or_create_account') }}
                     </p>
                 </div>
             </div>
