@@ -41,7 +41,7 @@
 /*------------------------------------
 	Fonts
 ------------------------------------*/
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
 
 /*------------------------------------
 	Color Variables
@@ -62,13 +62,18 @@
 	--redcolor:#e44614;
 	--featuredtag:#e23c1f;
 	--new:#e23c1f;
-	--primaryfont:'Outfit', sans-serif;
+	--primaryfont:'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	--formborder:#dee2e6;
 	--formbg:#edf1fb;
 	--form-color:#3b515a;
 	--inversecolor:#00305c;
 	--footerbg: var(--alrei-green);
 	--footercolor:#536775;
+}
+
+/* Global Typography Harmonization */
+*, body, button, input, select, textarea, .form-control, .form-select, h1, h2, h3, h4, h5, h6, p, span, a, li, label, table, th, td, .btn, .modal, .card, .badge, .nav-link, .dropdown-item {
+    font-family: var(--primaryfont) !important;
 }
 
 /*------------------------------------
@@ -111,7 +116,7 @@ body {
 	background: #ffffff;
 	color:var(--bodycolor);
 	font-size:15px;
-	font-family:var(--primaryfont);
+	font-family:var(--primaryfont) !important;
 	margin: 0;
 	overflow-x: hidden !important;
 	font-weight: 400;
