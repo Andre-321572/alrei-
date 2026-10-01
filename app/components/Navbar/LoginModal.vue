@@ -45,8 +45,10 @@
                                 <div class="form-group mb-3">
                                     <label class="form-label">{{ $t('password') }}</label>
                                     <div class="position-relative">
-                                        <input v-model="loginPassword" type="password" class="form-control" placeholder="*******" required>
-                                        <span class="position-absolute top-50 end-0 translate-middle-y me-3"><i class="bi bi-eye text-muted"></i></span>
+                                        <input v-model="loginPassword" :type="showLoginPassword ? 'text' : 'password'" class="form-control" placeholder="*******" required>
+                                        <span class="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer" @click="showLoginPassword = !showLoginPassword" style="cursor: pointer;">
+                                            <i :class="['bi', showLoginPassword ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                        </span>
                                     </div>
                                 </div>
 
@@ -128,8 +130,8 @@
                                 </div>
 
                                 <div class="row g-2 mb-2">
-                                    <div class="col-6"><input v-model="regOrganisation" type="text" class="form-control form-control-sm" :placeholder="$t('organisation_union') + ' *'" required></div>
-                                    <div class="col-6"><input v-model="regOrganisationEmail" type="email" class="form-control form-control-sm" :placeholder="$t('organisation_email') + ' *'" required></div>
+                                    <div class="col-6"><input v-model="regOrganisation" type="text" class="form-control form-control-sm" :placeholder="$t('organisation_union') + ' (' + ($t('optional') || 'Optionnel') + ')'"></div>
+                                    <div class="col-6"><input v-model="regOrganisationEmail" type="email" class="form-control form-control-sm" :placeholder="$t('organisation_email') + ' (' + ($t('optional') || 'Optionnel') + ')'"></div>
                                 </div>
                                 
                                 <div class="row g-2 mb-2">
@@ -160,10 +162,20 @@
                                 
                                 <div class="row g-2 mb-2">
                                     <div class="col-6">
-                                        <input v-model="regPassword" type="password" class="form-control form-control-sm" :placeholder="$t('password') + ' *'" minlength="8" required>
+                                        <div class="position-relative">
+                                            <input v-model="regPassword" :type="showRegPassword ? 'text' : 'password'" class="form-control form-control-sm" :placeholder="$t('password') + ' *'" minlength="8" required>
+                                            <span class="position-absolute top-50 end-0 translate-middle-y me-2" @click="showRegPassword = !showRegPassword" style="cursor: pointer;">
+                                                <i :class="['bi', showRegPassword ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                     <div class="col-6">
-                                        <input v-model="regPasswordConfirmation" type="password" class="form-control form-control-sm" :placeholder="$t('confirm_password') + ' *'" minlength="8" required>
+                                        <div class="position-relative">
+                                            <input v-model="regPasswordConfirmation" :type="showRegPasswordConfirm ? 'text' : 'password'" class="form-control form-control-sm" :placeholder="$t('confirm_password') + ' *'" minlength="8" required>
+                                            <span class="position-absolute top-50 end-0 translate-middle-y me-2" @click="showRegPasswordConfirm = !showRegPasswordConfirm" style="cursor: pointer;">
+                                                <i :class="['bi', showRegPasswordConfirm ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -201,6 +213,7 @@ const router = useRouter();
 // Login Form
 const loginEmail = ref('');
 const loginPassword = ref('');
+const showLoginPassword = ref(false);
 const loginLoading = ref(false);
 const loginError = ref('');
 
@@ -247,6 +260,8 @@ const regExperienceYears = ref('');
 const preferredLanguage = ref('fr');
 const regPassword = ref('');
 const regPasswordConfirmation = ref('');
+const showRegPassword = ref(false);
+const showRegPasswordConfirm = ref(false);
 
 const regLoading = ref(false);
 const regError = ref('');

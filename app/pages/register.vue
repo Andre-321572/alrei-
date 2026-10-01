@@ -58,8 +58,10 @@
                                         
                                         <div class="form-group mb-4">
                                             <div class="position-relative">
-                                                <input v-model="loginPassword" type="password" class="form-control" placeholder="********" required>
-                                                <span class="position-absolute top-50 end-0 translate-middle-y me-3"><i class="bi bi-eye text-muted"></i></span>
+                                                <input v-model="loginPassword" :type="showLoginPassword ? 'text' : 'password'" class="form-control" placeholder="********" required>
+                                                <span class="position-absolute top-50 end-0 translate-middle-y me-3 cursor-pointer" @click="showLoginPassword = !showLoginPassword" style="cursor: pointer;">
+                                                    <i :class="['bi', showLoginPassword ? 'bi-eye-slash' : 'bi-eye', 'text-muted']"></i>
+                                                </span>
                                             </div>
                                         </div>
 
@@ -171,12 +173,12 @@
 
                                         <div class="row g-2 mb-2">
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_union') }} *</label>
-                                                <input v-model="regOrganisation" type="text" class="form-control" placeholder="Ex: CNT, UDTS, USTN..." required>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_union') }} <span class="text-muted fw-normal ms-1 small">({{ $t('optional') }})</span></label>
+                                                <input v-model="regOrganisation" type="text" class="form-control" placeholder="Ex: CNT, UDTS, USTN...">
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_email') }} *</label>
-                                                <input v-model="regOrganisationEmail" type="email" class="form-control" placeholder="org@syndicat.org" required>
+                                                <label class="form-label text-muted small fw-semibold mb-1">{{ $t('organisation_email') }} <span class="text-muted fw-normal ms-1 small">({{ $t('optional') }})</span></label>
+                                                <input v-model="regOrganisationEmail" type="email" class="form-control" placeholder="org@syndicat.org">
                                             </div>
                                         </div>
 
@@ -313,6 +315,7 @@ watch(() => [route.query.tab, route.path], () => {
 // Login Form
 const loginEmail = ref('');
 const loginPassword = ref('');
+const showLoginPassword = ref(false);
 const loginLoading = ref(false);
 const loginError = ref('');
 
