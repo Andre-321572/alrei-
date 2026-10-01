@@ -123,14 +123,9 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="modal-header border-0 bg-light p-4">
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="square--50 circle bg-main bg-opacity-10 text-main d-flex align-items-center justify-content-center">
-                            <i class="bi bi-person-fill-lock fs-3 text-main"></i>
-                        </div>
-                        <div>
-                            <h5 class="modal-title fw-bold text-dark m-0">{{ $t('login_required_title') }}</h5>
-                            <p class="small text-muted mb-0">{{ course.title }}</p>
-                        </div>
+                    <div>
+                        <h5 class="modal-title fw-bold text-dark m-0">{{ $t('login_required_title') }}</h5>
+                        <p class="small text-muted mb-0">{{ course.title }}</p>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -148,7 +143,7 @@
                     </div>
                 </div>
                 <div class="modal-footer border-0 bg-light justify-content-center py-3">
-                    <small class="text-muted"><i class="bi bi-shield-check me-1"></i>{{ $t('elearning_platform_subtitle') }}</small>
+                    <small class="text-muted">{{ $t('elearning_platform_subtitle') }}</small>
                 </div>
             </div>
         </div>
