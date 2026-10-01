@@ -858,5 +858,6 @@
   "verification_code_sent": "Um código de verificação de 6 dígitos foi enviado para:",
   "confirmation_code": "Código de confirmação",
   "validate_and_confirm": "Validar & Confirmar minha conta",
-  "resend_code": "Reenviar novo código"
+  "resend_code": "Reenviar novo código",
+  "developed_by": "Desenvolvido por"
 }
