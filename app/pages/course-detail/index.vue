@@ -13,14 +13,6 @@
           
           <Circullum />
           
-          <DetailRating />
-          
-          <CourseDetail />
-          
-          <CourseRating />
-          
-          <ReviewForm />
-          
         </div>
         
         <!-- Sidebar -->
@@ -76,10 +68,6 @@
 import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
-import DetailRating from '@/components/Courses/courses-detail/DetailRating.vue';
-import CourseDetail from '@/components/Courses/courses-detail/CourseDetail.vue';
-import CourseRating from '@/components/Courses/courses-detail/CourseRating.vue';
-import ReviewForm from '@/components/Courses/courses-detail/ReviewForm.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
 
 const modalRef = ref(null)

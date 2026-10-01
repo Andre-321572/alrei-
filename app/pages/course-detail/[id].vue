@@ -15,21 +15,7 @@
               
               <CoursesOverview :course="course" />
               
-              <!-- ITCILO Inspired Join Course CTA Block -->
-              <CourseJoinCta :course="course" />
-              
               <Circullum :sections="course.sections" />
-              
-              <DetailRating :course="course" v-if="course" />
-              
-              <CourseDetail :course="course" />
-              
-              <CourseRating :course="course" />
-              
-              <ReviewForm :course="course" />
-
-              <!-- Bottom CTA Block for quick enrollment -->
-              <CourseJoinCta :course="course" />
               
             </div>
             
@@ -91,12 +77,7 @@
 <script setup>
 import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
-import CourseJoinCta from '@/components/Courses/courses-detail/CourseJoinCta.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
-import DetailRating from '@/components/Courses/courses-detail/DetailRating.vue';
-import CourseDetail from '@/components/Courses/courses-detail/CourseDetail.vue';
-import CourseRating from '@/components/Courses/courses-detail/CourseRating.vue';
-import ReviewForm from '@/components/Courses/courses-detail/ReviewForm.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
 import { coursesData } from '@/data/data.js';
 

@@ -216,21 +216,17 @@
                                         </div>
 
                                         <div class="border rounded p-3 mb-3 bg-light">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <i class="bi bi-info-circle text-primary me-2 fs-6"></i>
-                                                <span class="small text-muted fw-normal" style="font-size: 0.8rem;">{{ $t('optional_files_note') }}</span>
-                                            </div>
                                             <div class="form-group mb-2">
                                                 <label class="form-label small fw-semibold mb-1">
                                                     {{ $t('nomination_letter') }}
-                                                    <span class="badge bg-secondary bg-opacity-20 text-secondary fw-normal ms-1">Optionnel</span>
+                                                    <span class="text-muted fw-normal ms-1 small">(Optionnel)</span>
                                                 </label>
                                                 <input type="file" @change="handleNominationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
                                             <div class="form-group mb-0">
                                                 <label class="form-label small fw-semibold mb-1">
                                                     {{ $t('motivation_letter') }}
-                                                    <span class="badge bg-secondary bg-opacity-20 text-secondary fw-normal ms-1">Optionnel</span>
+                                                    <span class="text-muted fw-normal ms-1 small">(Optionnel)</span>
                                                 </label>
                                                 <input type="file" @change="handleMotivationUpload" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
                                             </div>
