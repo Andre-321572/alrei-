@@ -1,51 +1,14 @@
 <template>
     <div>
-        <!-- Hero Header with Search Widget (Image 1) -->
-        <div class="bg-cover py-5 border-bottom text-white" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.75) 0%, rgba(15, 35, 20, 0.4) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
-            <div class="container py-4 position-relative z-1">
-                <div class="row align-items-center g-4">
-                    <div class="col-lg-6">
+        <!-- Hero Header -->
+        <div class="bg-cover py-5 border-bottom text-white" style="background: linear-gradient(to right, rgba(15, 35, 20, 0.85) 0%, rgba(15, 35, 20, 0.6) 100%), url('/img/student-banner.png'); background-position: center; background-size: cover;">
+            <div class="container py-4 position-relative z-1 text-center">
+                <div class="row justify-content-center">
+                    <div class="col-lg-9 col-xl-8">
                         <h1 class="display-5 fw-extrabold text-white mb-3 lh-sm" style="text-shadow: 0 2px 4px rgba(0,0,0,0.6);">{{ $t('courses_hero_title') }}</h1>
                         <p class="lead text-white mb-0 fs-5 fw-medium lh-base" style="opacity: 0.95; text-shadow: 0 2px 4px rgba(0,0,0,0.7);">
                             {{ $t('courses_hero_subtitle') }}
                         </p>
-                    </div>
-                    
-                    <!-- Search Widget Card (Exact Style of Image 1) -->
-                    <div class="col-lg-6">
-                        <div class="bg-white p-3 p-md-4 rounded-4 shadow-lg border">
-                            <div class="input-group mb-3 border rounded-3 overflow-hidden" style="border-color: #cbd5e1 !important;">
-                                <span class="input-group-text bg-white border-0 text-muted ps-3 fs-5"><i class="bi bi-search"></i></span>
-                                <input
-                                    v-model="search"
-                                    type="text"
-                                    class="form-control border-0 ps-2 py-2 fs-6 shadow-none"
-                                    :placeholder="$t('search_placeholder_courses')"
-                                    @input="filterCourses"
-                                />
-                            </div>
-                            
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <select v-model="selectedDomain" @change="filterCourses" class="form-select form-select-md rounded-3 border-slate">
-                                        <option value="">{{ $t('all_themes') }}</option>
-                                        <option value="Leadership">{{ $t('theme_leadership') }}</option>
-                                        <option value="Syndicalisation">{{ $t('theme_unionization') }}</option>
-                                        <option value="Économie">{{ $t('theme_economy') }}</option>
-                                        <option value="Climat">{{ $t('theme_climate') }}</option>
-                                        <option value="Numérisation">{{ $t('theme_digitalization') }}</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <select v-model="selectedAccess" @change="filterCourses" class="form-select form-select-md rounded-3 border-slate">
-                                        <option value="">{{ $t('all_access_types') }}</option>
-                                        <option value="Libre">{{ $t('access_open') }}</option>
-                                        <option value="candidature">{{ $t('access_application') }}</option>
-                                        <option value="désignation">{{ $t('access_designation') }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
