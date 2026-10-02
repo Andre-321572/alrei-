@@ -16,14 +16,17 @@ export const useApi = () => {
   return $fetch.create({
     baseURL: config.public.apiBase,
     onRequest({ options }) {
-      options.headers = {
-        'Accept-Language': currentLocale,
-        Accept: 'application/json',
-        ...options.headers,
-      };
-      if (token.value) {
-        options.headers.Authorization = `Bearer ${token.value}`;
+      const headers = new Headers(options.headers);
+      if (!headers.has('Accept-Language')) {
+        headers.set('Accept-Language', currentLocale);
       }
+      if (!headers.has('Accept')) {
+        headers.set('Accept', 'application/json');
+      }
+      if (token.value) {
+        headers.set('Authorization', `Bearer ${token.value}`);
+      }
+      options.headers = headers;
     },
     onResponseError({ response }) {
       if (response.status === 401) {

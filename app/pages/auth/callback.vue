@@ -14,7 +14,7 @@
 definePageMeta({ layout: false });
 
 const route = useRoute()
-const { setToken, fetchUser } = useAuth()
+const { setToken, fetchUser, redirectAfterLogin } = useAuth()
 
 onMounted(async () => {
   const token = route.query.token as string
@@ -25,17 +25,10 @@ onMounted(async () => {
       setToken(token)
       
       // Récupérer les infos utilisateur
-      await fetchUser()
+      const userData = await fetchUser()
       
       // Rediriger vers le dashboard approprié
-      const auth = useAuth()
-      if (auth.isAdmin.value) {
-        navigateTo('/admin-dashboard')
-      } else if (auth.isInstructor.value) {
-        navigateTo('/instructor-dashboard')
-      } else {
-        navigateTo('/student-dashboard')
-      }
+      await redirectAfterLogin(userData)
     } catch (error) {
       console.error('Erreur lors du traitement du token social:', error)
       navigateTo('/login?error=auth_sync_failed')

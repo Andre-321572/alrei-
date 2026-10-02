@@ -126,10 +126,15 @@ export const useAuth = () => {
     }
   };
 
+  const setToken = (newToken: string | null) => {
+    token.value = newToken;
+  };
+
   return {
     user,
     token,
     api,
+    setToken,
     login,
     register,
     verifyEmail,
