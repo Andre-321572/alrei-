@@ -1,0 +1,1 @@
+import{_ as e}from"./dN-xlA0Z.js";import{c as o,b as t,o as a}from"./CaiwNdoN.js";import"./CfN2Pvcf.js";const s={class:"blog-page"},i={__name:"index",setup(c){return(r,_)=>(a(),o("div",s,[t(e)]))}};export{i as default};

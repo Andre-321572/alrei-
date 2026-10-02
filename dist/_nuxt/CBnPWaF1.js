@@ -1,0 +1,1 @@
+import{f as t,q as a,i as r,c as s,o as c}from"./CaiwNdoN.js";const i={__name:"login",setup(n){const e=t(),o=a();return r(()=>{o.replace(e("/register?tab=login"))}),(l,u)=>(c(),s("div"))}};export{i as default};

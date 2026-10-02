@@ -1,0 +1,1 @@
+import{ad as i,H as o,E as t,ae as d}from"./CaiwNdoN.js";const f=i(async()=>{let r,a;const{isAuthenticated:u,fetchUser:s,user:e}=o();if(!u.value)return t("/");e.value||([r,a]=d(()=>s()),await r,a());const n=e.value?.role;if(n!=="admin")return n==="instructor"?e.value?.instructor?.status==="pending"?t("/instructor/pending"):void 0:t("/student-dashboard")});export{f as default};
