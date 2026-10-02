@@ -1,22 +1,11 @@
 export const useCourseTheme = () => {
     const config = useRuntimeConfig()
 
-    const fallbackImages = [
-        '/img/co-1.jpg',
-        '/img/co-2.jpg',
-        '/img/co-3.jpg',
-        '/img/co-4.jpg',
-        '/img/co-5.jpg',
-        '/img/co-6.jpg',
-        '/img/co-7.jpg',
-        '/img/co-8.jpg'
-    ]
-
     const getThemeImage = (c, idx = 0) => {
         const thumb = typeof c === 'string' ? c : (c?.thumbnail || c?.image)
         
         // If there's a valid uploaded image from backend DB
-        if (thumb && typeof thumb === 'string' && thumb.trim() !== '' && !thumb.includes('courses-1.jpg') && !thumb.includes('course-placeholder.jpg')) {
+        if (thumb && typeof thumb === 'string' && thumb.trim() !== '' && !thumb.includes('courses-1.jpg') && !thumb.includes('course-placeholder.jpg') && !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg')) {
             if (thumb.startsWith('http://') || thumb.startsWith('https://') || thumb.startsWith('data:') || thumb.startsWith('/img/')) {
                 return thumb
             }
@@ -31,26 +20,80 @@ export const useCourseTheme = () => {
 
         // Smart Theme Matching based on title and description keywords
         const title = (typeof c === 'object' && c?.title) ? c.title : ''
-        const desc = (typeof c === 'object' && (c?.subtitle || c?.description || c?.desc)) ? (c.subtitle || c.description || c.desc) : ''
+        const desc = (typeof c === 'object' && (c?.subtitle || c?.description || c?.desc || c?.summary)) ? (c.subtitle || c.description || c.desc || c.summary) : ''
         const text = `${title} ${desc}`.toLowerCase()
 
         if (text.includes('climat') || text.includes('écolog') || text.includes('vert') || text.includes('environnement') || text.includes('durab') || text.includes('transition')) {
             return '/img/theme-climate.jpg'
         }
-        if (text.includes('numérique') || text.includes('technolog') || text.includes('digit') || text.includes('ia') || text.includes('donnée') || text.includes('cyber') || text.includes('innova')) {
+        if (text.includes('numérique') || text.includes('technolog') || text.includes('digit') || text.includes('ia') || text.includes('donnée') || text.includes('cyber') || text.includes('innova') || text.includes('commerce')) {
             return '/img/theme-digital.jpg'
         }
-        if (text.includes('leadership') || text.includes('gouvern') || text.includes('syndic') || text.includes('négoc') || text.includes('droit') || text.includes('travail') || text.includes('dialogue') || text.includes('organis')) {
+        if (text.includes('négociation') || text.includes('droit du travail') || text.includes('convention') || text.includes('accord')) {
+            return '/img/co-7.jpg' // High quality conference room negotiation scene
+        }
+        if (text.includes('informel') || text.includes('protection sociale') || text.includes('santé') || text.includes('sécurité')) {
+            return '/img/co-2.jpg' // Social protection in Africa
+        }
+        if (text.includes('leadership') || text.includes('gouvern') || text.includes('syndic') || text.includes('cadre') || text.includes('dirigeant') || text.includes('tulda')) {
             return '/img/theme-leadership.jpg'
         }
 
-        // Fallback to distinct thematic images co-1 to co-8
+        const thematicPool = [
+            '/img/theme-digital.jpg',
+            '/img/theme-leadership.jpg',
+            '/img/theme-climate.jpg',
+            '/img/co-1.jpg',
+            '/img/co-2.jpg',
+            '/img/co-7.jpg'
+        ]
         const idVal = (typeof c === 'object' && c?.id) ? c.id : idx
-        const fallbackIdx = Math.abs(Number(idVal) || 0) % fallbackImages.length
-        return fallbackImages[fallbackIdx]
+        const fallbackIdx = Math.abs(Number(idVal) || 0) % thematicPool.length
+        return thematicPool[fallbackIdx]
+    }
+
+    const getBlogThemeImage = (b, idx = 0) => {
+        const thumb = typeof b === 'string' ? b : (b?.image || b?.thumbnail)
+        if (thumb && typeof thumb === 'string' && thumb.trim() !== '' && !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg') && !thumb.includes('placeholder')) {
+            if (thumb.startsWith('http://') || thumb.startsWith('https://') || thumb.startsWith('data:') || thumb.startsWith('/img/')) {
+                return thumb
+            }
+            const apiBase = config.public.apiBase || 'http://localhost:8000/api'
+            const backendUrl = apiBase.replace(/\/api\/?$/, '')
+            const cleanPath = thumb.startsWith('/') ? thumb.slice(1) : thumb
+            return cleanPath.startsWith('storage/') ? `${backendUrl}/${cleanPath}` : `${backendUrl}/storage/${cleanPath}`
+        }
+
+        const title = (typeof b === 'object' && b?.title) ? b.title : ''
+        const desc = (typeof b === 'object' && (b?.summary || b?.description || b?.content)) ? (b.summary || b.description || b.content) : ''
+        const text = `${title} ${desc}`.toLowerCase()
+
+        if (text.includes('climat') || text.includes('cop') || text.includes('transition') || text.includes('écolog') || text.includes('environnement')) {
+            return '/img/theme-climate.jpg'
+        }
+        if (text.includes('informel') || text.includes('protection sociale') || text.includes('santé') || text.includes('sécurité')) {
+            return '/img/co-2.jpg'
+        }
+        if (text.includes('numérique') || text.includes('digital') || text.includes('ia') || text.includes('technolog')) {
+            return '/img/theme-digital.jpg'
+        }
+        if (text.includes('tulda') || text.includes('leadership') || text.includes('syndic') || text.includes('candidature') || text.includes('académie')) {
+            return '/img/theme-leadership.jpg'
+        }
+
+        const blogPool = [
+            '/img/theme-leadership.jpg',
+            '/img/co-2.jpg',
+            '/img/theme-climate.jpg',
+            '/img/theme-digital.jpg'
+        ]
+        const idVal = (typeof b === 'object' && b?.id) ? b.id : idx
+        const fallbackIdx = Math.abs(Number(idVal) || 0) % blogPool.length
+        return blogPool[fallbackIdx]
     }
 
     return {
-        getThemeImage
+        getThemeImage,
+        getBlogThemeImage
     }
 }

@@ -1,6 +1,6 @@
 <template>
-    <div v-if="coursesList.length > 0" class="row g-4">
-        <div class="col-lg-4 col-md-6 col-sm-12" v-for="(item, index) in coursesList" :key="index">
+    <div v-if="coursesList.length > 0" class="row g-4 justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-12" v-for="(item, index) in coursesList.slice(0, 3)" :key="index">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="position-relative">
                     <img :src="item.image" class="card-img-top object-fit-cover" style="height: 200px;" :alt="item.title" @error="(e) => { e.target.src = getThemeImage(item, index) }">
@@ -35,63 +35,15 @@
 <script setup>
 const api = useApi()
 const localePath = useLocalePath()
-const config = useRuntimeConfig()
+const { getThemeImage } = useCourseTheme()
 const coursesList = ref([])
-
-const getThemeImage = (c, fallbackIndex = 0) => {
-    const imgPath = c?.thumbnail || c?.image
-    if (imgPath && !imgPath.includes('placeholder') && !imgPath.includes('courses-1.jpg')) {
-        if (imgPath.startsWith('http://') || imgPath.startsWith('https://') || imgPath.startsWith('data:')) return imgPath
-        if (imgPath.startsWith('/img/') || imgPath.startsWith('/assets/')) return imgPath
-        const apiBase = config.public.apiBase || 'http://localhost:8000/api'
-        const backendUrl = apiBase.replace(/\/api\/?$/, '')
-        const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath
-        return cleanPath.startsWith('storage/') ? `${backendUrl}/${cleanPath}` : `${backendUrl}/storage/${cleanPath}`
-    }
-
-    const text = `${c?.title || ''} ${c?.subtitle || ''} ${c?.description || ''}`.toLowerCase()
-
-    if (text.includes('climat') || text.includes('transition') || text.includes('écolog') || text.includes('environnement')) {
-        return '/img/theme-climate.jpg'
-    }
-    if (text.includes('numérique') || text.includes('digital') || text.includes('tulda') || text.includes('tech') || text.includes('commerce')) {
-        return '/img/theme-digital.jpg'
-    }
-    if (text.includes('leadership') || text.includes('gouvernance') || text.includes('cadre') || text.includes('dirigeant')) {
-        return '/img/theme-leadership.jpg'
-    }
-    if (text.includes('syndic') || text.includes('informel') || text.includes('campagne') || text.includes('membre')) {
-        return '/img/co-1.jpg'
-    }
-    if (text.includes('santé') || text.includes('sécurité') || text.includes('protection') || text.includes('sociale')) {
-        return '/img/co-2.jpg'
-    }
-    if (text.includes('négociation') || text.includes('accord') || text.includes('économie') || text.includes('fiscale')) {
-        return '/img/co-4.jpg'
-    }
-    if (text.includes('femme') || text.includes('genre') || text.includes('jeune') || text.includes('égalit')) {
-        return '/img/co-6.jpg'
-    }
-
-    const fallbackPool = [
-        '/img/theme-digital.jpg',
-        '/img/theme-leadership.jpg',
-        '/img/theme-climate.jpg',
-        '/img/co-1.jpg',
-        '/img/co-2.jpg',
-        '/img/co-4.jpg',
-        '/img/co-6.jpg',
-        '/img/co-7.jpg'
-    ]
-    const idx = Math.abs(Number(c?.id || fallbackIndex) || 0) % fallbackPool.length
-    return fallbackPool[idx]
-}
 
 onMounted(async () => {
     try {
         const response = await api('/courses')
         const rawList = Array.isArray(response) ? response : (response?.data || [])
-        coursesList.value = rawList.map((c, idx) => ({
+        // Display ONLY 3 courses in this section as requested by the user
+        coursesList.value = rawList.slice(0, 3).map((c, idx) => ({
             id: c.id,
             slug: c.slug || c.id,
             image: getThemeImage(c, idx),
