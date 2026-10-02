@@ -3,7 +3,13 @@
         <div class="col-lg-4 col-md-6 col-sm-12" v-for="(item, index) in blogs.slice(0, 3)" :key="index">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                 <NuxtLink :to="localePath('/blog-detail/' + item.slug)">
-                    <img :src="item.image" class="card-img-top object-fit-cover" style="height: 190px;" :alt="item.title" @error="(e) => { e.target.src = getBlogThemeImage(item, index) }">
+                    <img 
+                        :src="item.image" 
+                        class="card-img-top object-fit-cover" 
+                        style="height: 190px;" 
+                        :alt="item.title" 
+                        @error="(e) => { e.target.src = getBlogThemeImage(item, index, true) }"
+                    >
                 </NuxtLink>
                 <div class="card-body d-flex flex-column p-4">
                     <div class="mb-2">

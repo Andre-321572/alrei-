@@ -3,7 +3,13 @@
         <div class="col-lg-4 col-md-6 col-sm-12" v-for="(item, index) in coursesList.slice(0, 3)" :key="index">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
                 <div class="position-relative">
-                    <img :src="item.image" class="card-img-top object-fit-cover" style="height: 200px;" :alt="item.title" @error="(e) => { e.target.src = getThemeImage(item, index) }">
+                    <img 
+                        :src="item.image" 
+                        class="card-img-top object-fit-cover" 
+                        style="height: 200px;" 
+                        :alt="item.title" 
+                        @error="(e) => { e.target.src = getThemeImage(item, index, true) }"
+                    >
                     <div class="position-absolute top-0 start-0 m-3">
                         <span class="badge bg-main text-white px-3 py-2 rounded-pill shadow-sm">{{ item.badge }}</span>
                     </div>
@@ -42,7 +48,6 @@ onMounted(async () => {
     try {
         const response = await api('/courses')
         const rawList = Array.isArray(response) ? response : (response?.data || [])
-        // Display ONLY 3 courses in this section as requested by the user
         coursesList.value = rawList.slice(0, 3).map((c, idx) => ({
             id: c.id,
             slug: c.slug || c.id,

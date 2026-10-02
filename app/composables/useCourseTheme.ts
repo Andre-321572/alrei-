@@ -1,11 +1,13 @@
 export const useCourseTheme = () => {
     const config = useRuntimeConfig()
 
-    const getThemeImage = (c, idx = 0) => {
+    const getThemeImage = (c, idx = 0, ignoreUploaded = false) => {
         const thumb = typeof c === 'string' ? c : (c?.thumbnail || c?.image)
         
-        // If there's a valid uploaded image from backend DB
-        if (thumb && typeof thumb === 'string' && thumb.trim() !== '' && !thumb.includes('courses-1.jpg') && !thumb.includes('course-placeholder.jpg') && !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg')) {
+        // Check if there is a valid uploaded image from backend DB and not forcing fallback
+        if (!ignoreUploaded && thumb && typeof thumb === 'string' && thumb.trim() !== '' && 
+            !thumb.includes('courses-1.jpg') && !thumb.includes('course-placeholder.jpg') && 
+            !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg')) {
             if (thumb.startsWith('http://') || thumb.startsWith('https://') || thumb.startsWith('data:') || thumb.startsWith('/img/')) {
                 return thumb
             }
@@ -30,10 +32,10 @@ export const useCourseTheme = () => {
             return '/img/theme-digital.jpg'
         }
         if (text.includes('négociation') || text.includes('droit du travail') || text.includes('convention') || text.includes('accord')) {
-            return '/img/co-7.jpg' // High quality conference room negotiation scene
+            return '/img/co-7.jpg'
         }
         if (text.includes('informel') || text.includes('protection sociale') || text.includes('santé') || text.includes('sécurité')) {
-            return '/img/co-2.jpg' // Social protection in Africa
+            return '/img/co-2.jpg'
         }
         if (text.includes('leadership') || text.includes('gouvern') || text.includes('syndic') || text.includes('cadre') || text.includes('dirigeant') || text.includes('tulda')) {
             return '/img/theme-leadership.jpg'
@@ -52,10 +54,16 @@ export const useCourseTheme = () => {
         return thematicPool[fallbackIdx]
     }
 
-    const getBlogThemeImage = (b, idx = 0) => {
+    const getBlogThemeImage = (b, idx = 0, ignoreUploaded = false) => {
         const thumb = typeof b === 'string' ? b : (b?.image || b?.thumbnail)
-        if (thumb && typeof thumb === 'string' && thumb.trim() !== '' && !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg') && !thumb.includes('placeholder')) {
-            if (thumb.startsWith('http://') || thumb.startsWith('https://') || thumb.startsWith('data:') || thumb.startsWith('/img/')) {
+        
+        // If not forcing fallback and valid uploaded image exists
+        if (!ignoreUploaded && thumb && typeof thumb === 'string' && thumb.trim() !== '' && 
+            !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg') && !thumb.includes('placeholder')) {
+            if (thumb.startsWith('http://') || thumb.startsWith('https://') || thumb.startsWith('data:')) {
+                return thumb
+            }
+            if (thumb.startsWith('/img/') && !thumb.includes('blog-1.jpg') && !thumb.includes('blog-2.jpg')) {
                 return thumb
             }
             const apiBase = config.public.apiBase || 'http://localhost:8000/api'
