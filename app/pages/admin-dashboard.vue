@@ -41,136 +41,411 @@
                     <div class="card border rounded-3" :style="{ minHeight: activeTab === 'country_summary' ? 'auto' : '550px' }">
                         <div class="card-body">
                             <!-- Actions Rapides -->
-                            <div class="d-flex justify-content-end mb-3 gap-2">
+                            <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap align-items-center">
                                 <button v-if="activeTab==='categories'" class="btn btn-primary btn-sm" @click="openCategoryModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Catégorie</button>
-                                <button v-else-if="activeTab==='instructors'" class="btn btn-primary btn-sm" @click="openUserModal('instructor')"><i class="bi bi-plus-lg me-1"></i> Ajouter Instructeur</button>
-                                <button v-else-if="activeTab==='students'" class="btn btn-primary btn-sm" @click="openUserModal('student')"><i class="bi bi-plus-lg me-1"></i> Ajouter Étudiant</button>
+                                <template v-else-if="activeTab==='instructors'">
+                                    <button @click="exportInstructorsCsv" class="btn btn-success btn-sm rounded-pill">
+                                        <i class="bi bi-filetype-csv me-1"></i> {{ $t('export_csv') }}
+                                    </button>
+                                    <button @click="exportInstructorsPdf" class="btn btn-danger btn-sm rounded-pill">
+                                        <i class="bi bi-filetype-pdf me-1"></i> {{ $t('export_pdf') }}
+                                    </button>
+                                    <button class="btn btn-primary btn-sm rounded-pill" @click="openUserModal('instructor')">
+                                        <i class="bi bi-plus-lg me-1"></i> Ajouter Instructeur
+                                    </button>
+                                </template>
+                                <template v-else-if="activeTab==='students'">
+                                    <button @click="exportStudentsCsv" class="btn btn-success btn-sm rounded-pill">
+                                        <i class="bi bi-filetype-csv me-1"></i> {{ $t('export_csv') }}
+                                    </button>
+                                    <button @click="exportStudentsPdf" class="btn btn-danger btn-sm rounded-pill">
+                                        <i class="bi bi-filetype-pdf me-1"></i> {{ $t('export_pdf') }}
+                                    </button>
+                                    <button class="btn btn-warning text-white btn-sm rounded-pill fw-semibold" @click="openUserModal('student')">
+                                        <i class="bi bi-plus-lg me-1"></i> Ajouter Étudiant
+                                    </button>
+                                </template>
                                 <NuxtLink v-else-if="activeTab==='courses'" class="btn btn-primary btn-sm" :to="localePath('/instructor-create-course')"><i class="bi bi-plus-lg me-1"></i> Ajouter Cours</NuxtLink>
                                 <button v-else-if="activeTab==='groups'" class="btn btn-primary btn-sm" @click="openGroupModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Groupe</button>
                                 <button v-else-if="activeTab==='blogs'" class="btn btn-primary btn-sm" @click="openBlogModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Blog</button>
                                 <button v-else-if="activeTab==='scholarships'" class="btn btn-primary btn-sm" @click="openScholarshipModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Bourse</button>
                             </div>
                             <!-- Instructors Tab -->
-                            <div v-if="activeTab === 'instructors'" class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>{{ $t('name') }}</th>
-                                            <th>{{ $t('title') }}</th>
-                                            <th>{{ $t('status') }}</th>
-                                            <th>{{ $t('action') }}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="inst in instructors" :key="inst.id">
-                                            <td>{{ inst.user?.name || 'N/A' }}</td>
-                                            <td>{{ inst.title || 'Instructor' }}</td>
-                                            <td>
-                                                <span :class="['badge', inst.status === 'approved' ? 'bg-success' : 'bg-warning']">
-                                                    {{ inst.status }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    <button 
-                                                        @click="viewDetails(inst)" 
-                                                        class="btn btn-sm btn-outline-primary"
-                                                        title="View Details"
-                                                    >
-                                                        <i class="bi bi-eye"></i>
+                            <div v-if="activeTab === 'instructors'">
+                                <div class="mb-3">
+                                    <h5 class="m-0 fw-bold"><i class="bi bi-person-badge me-2 text-primary"></i>{{ $t('instructors') }}</h5>
+                                    <small class="text-muted">Total: {{ filteredInstructors.length }} instructeur(s) trouvé(s)</small>
+                                </div>
+
+                                <!-- Filters Bar -->
+                                <div class="card border-0 bg-light rounded-3 p-3 mb-4 shadow-xs">
+                                    <div class="row g-3 align-items-end">
+                                        <!-- Search by Name / Email / Title -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-search me-1"></i> Recherche
+                                            </label>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                                                <input 
+                                                    type="text" 
+                                                    v-model="instructorFilterName" 
+                                                    class="form-control border-start-0 ps-0" 
+                                                    placeholder="Nom, titre ou email..."
+                                                >
+                                            </div>
+                                        </div>
+
+                                        <!-- Filter by Country -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-globe me-1"></i> Pays
+                                            </label>
+                                            <select v-model="instructorFilterCountry" class="form-select form-select-sm">
+                                                <option value="">Tous les pays</option>
+                                                <option v-for="country in instructorCountryList" :key="country" :value="country">
+                                                    {{ country }}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Filter by Organisation -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-building me-1"></i> Organisation
+                                            </label>
+                                            <select v-model="instructorFilterOrg" class="form-select form-select-sm">
+                                                <option value="">Toutes les organisations</option>
+                                                <option v-for="org in instructorOrgList" :key="org" :value="org">
+                                                    {{ org }}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Filter by Status -->
+                                        <div class="col-md-2 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-funnel me-1"></i> Statut
+                                            </label>
+                                            <select v-model="instructorFilterStatus" class="form-select form-select-sm">
+                                                <option value="">Tous les statuts</option>
+                                                <option value="approved">Approuvé</option>
+                                                <option value="pending">En attente</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Reset Button -->
+                                        <div class="col-md-1 col-sm-12 text-end">
+                                            <button 
+                                                @click="resetInstructorFilters" 
+                                                class="btn btn-outline-secondary btn-sm w-100" 
+                                                title="Réinitialiser les filtres"
+                                            >
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Table -->
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>{{ $t('name') }}</th>
+                                                <th>{{ $t('title') }}</th>
+                                                <th>Pays / Organisation</th>
+                                                <th>{{ $t('status') }}</th>
+                                                <th>{{ $t('action') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="inst in paginatedInstructors" :key="inst.id">
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="square--35 circle bg-primary-subtle text-primary fw-bold fs-7">
+                                                            {{ (inst.user?.name || inst.name || 'I').substring(0,2).toUpperCase() }}
+                                                        </div>
+                                                        <div>
+                                                            <span class="fw-bold d-block text-dark">{{ inst.user?.name || inst.name || 'N/A' }}</span>
+                                                            <span class="small text-muted">{{ inst.user?.email || inst.email || '' }}</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>{{ inst.title || 'Instructeur' }}</td>
+                                                <td>
+                                                    <span class="fw-semibold d-block">
+                                                        {{ inst.user?.country || inst.user?.country_name || inst.country || 'N/A' }}
+                                                    </span>
+                                                    <small class="text-muted" v-if="inst.user?.organisation || inst.user?.organization || inst.organisation">
+                                                        <i class="bi bi-building me-1"></i>{{ inst.user?.organisation || inst.user?.organization || inst.organisation }}
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <span :class="['badge', inst.status === 'approved' ? 'bg-success' : 'bg-warning']">
+                                                        {{ inst.status }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <button 
+                                                            @click="viewDetails(inst)" 
+                                                            class="btn btn-sm btn-outline-primary"
+                                                            title="View Details"
+                                                        >
+                                                            <i class="bi bi-eye"></i>
+                                                        </button>
+                                                        <button 
+                                                            v-if="inst.status === 'pending'"
+                                                            @click="approve(inst.id)" 
+                                                            class="btn btn-sm btn-success"
+                                                            title="Approve"
+                                                        >
+                                                            <i class="bi bi-check-lg"></i>
+                                                        </button>
+                                                        <button 
+                                                            @click="toggleUserStatus(inst.user?.id)" 
+                                                            :class="['btn btn-sm', inst.user?.is_active ? 'btn-warning' : 'btn-info']"
+                                                            :title="inst.user?.is_active ? 'Deactivate' : 'Activate'"
+                                                        >
+                                                            <i :class="['bi', inst.user?.is_active ? 'bi-person-x' : 'bi-person-check']"></i>
+                                                        </button>
+                                                        <button 
+                                                            @click="deleteUser(inst.user?.id)" 
+                                                            class="btn btn-sm btn-danger"
+                                                            title="Delete"
+                                                        >
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr v-if="paginatedInstructors.length === 0">
+                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                    <i class="bi bi-person-x fs-1 d-block mb-2 text-secondary"></i>
+                                                    Aucun instructeur ne correspond aux critères de recherche.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination Controls -->
+                                <div v-if="filteredInstructors.length > 0" class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3 border-top gap-3">
+                                    <div class="text-muted small">
+                                        Affichage de <strong>{{ instructorPageStart }}</strong> à <strong>{{ instructorPageEnd }}</strong> sur <strong>{{ filteredInstructors.length }}</strong> instructeur(s)
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="small text-muted">Par page :</span>
+                                            <select v-model.number="instructorItemsPerPage" class="form-select form-select-sm" style="width: 75px;">
+                                                <option :value="5">5</option>
+                                                <option :value="10">10</option>
+                                                <option :value="25">25</option>
+                                                <option :value="50">50</option>
+                                            </select>
+                                        </div>
+                                        <nav aria-label="Pagination instructeurs" v-if="totalInstructorPages > 1">
+                                            <ul class="custom-pagination">
+                                                <li class="page-item" :class="{ disabled: instructorCurrentPage === 1 }">
+                                                    <button class="page-link" @click="instructorCurrentPage--" :disabled="instructorCurrentPage === 1">
+                                                        ‹
                                                     </button>
-                                                    <button 
-                                                        v-if="inst.status === 'pending'"
-                                                        @click="approve(inst.id)" 
-                                                        class="btn btn-sm btn-success"
-                                                        title="Approve"
-                                                    >
-                                                        <i class="bi bi-check-lg"></i>
+                                                </li>
+                                                <li 
+                                                    v-for="p in totalInstructorPages" 
+                                                    :key="p" 
+                                                    class="page-item" 
+                                                    :class="{ active: instructorCurrentPage === p }"
+                                                >
+                                                    <button class="page-link" @click="instructorCurrentPage = p">{{ p }}</button>
+                                                </li>
+                                                <li class="page-item" :class="{ disabled: instructorCurrentPage === totalInstructorPages }">
+                                                    <button class="page-link" @click="instructorCurrentPage++" :disabled="instructorCurrentPage === totalInstructorPages">
+                                                        ›
                                                     </button>
-                                                    <button 
-                                                        @click="toggleUserStatus(inst.user?.id)" 
-                                                        :class="['btn btn-sm', inst.user?.is_active ? 'btn-warning' : 'btn-info']"
-                                                        :title="inst.user?.is_active ? 'Deactivate' : 'Activate'"
-                                                    >
-                                                        <i :class="['bi', inst.user?.is_active ? 'bi-person-x' : 'bi-person-check']"></i>
-                                                    </button>
-                                                    <button 
-                                                        @click="deleteUser(inst.user?.id)" 
-                                                        class="btn btn-sm btn-danger"
-                                                        title="Delete"
-                                                    >
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Students Tab -->
                             <div v-if="activeTab === 'students'">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="m-0">{{ $t('students_list') }}</h5>
-                                    <div class="d-flex gap-2">
-                                        <button @click="exportStudentsCsv" class="btn btn-success btn-sm rounded-pill">
-                                            <i class="bi bi-filetype-csv me-1"></i> {{ $t('export_csv') }}
-                                        </button>
-                                        <button @click="exportStudentsPdf" class="btn btn-danger btn-sm rounded-pill">
-                                            <i class="bi bi-filetype-pdf me-1"></i> {{ $t('export_pdf') }}
-                                        </button>
+                                <div class="mb-3">
+                                    <h5 class="m-0 fw-bold"><i class="bi bi-people me-2 text-primary"></i>{{ $t('students_list') }}</h5>
+                                    <small class="text-muted">Total: {{ filteredStudents.length }} étudiant(s) trouvé(s)</small>
+                                </div>
+
+                                <!-- Filters Bar -->
+                                <div class="card border-0 bg-light rounded-3 p-3 mb-4 shadow-xs">
+                                    <div class="row g-3 align-items-end">
+                                        <!-- Search by Name / Email -->
+                                        <div class="col-md-4 col-sm-12">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-search me-1"></i> Recherche par Nom ou Email
+                                            </label>
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
+                                                <input 
+                                                    type="text" 
+                                                    v-model="studentFilterName" 
+                                                    class="form-control form-control-sm border-start-0" 
+                                                    placeholder="Ex: Mohamed, Thomas..."
+                                                >
+                                                <button v-if="studentFilterName" @click="studentFilterName = ''" class="btn btn-outline-secondary btn-sm" type="button">
+                                                    <i class="bi bi-x"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Filter by Country -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-globe me-1"></i> Filtrer par Pays
+                                            </label>
+                                            <select v-model="studentFilterCountry" class="form-select form-select-sm">
+                                                <option value="">Tous les pays</option>
+                                                <option v-for="c in studentCountryList" :key="c" :value="c">{{ c }}</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Filter by Organisation -->
+                                        <div class="col-md-3 col-sm-6">
+                                            <label class="form-label small fw-semibold text-secondary mb-1">
+                                                <i class="bi bi-building me-1"></i> Filtrer par Organisation
+                                            </label>
+                                            <select v-model="studentFilterOrg" class="form-select form-select-sm">
+                                                <option value="">Toutes les organisations</option>
+                                                <option v-for="o in studentOrgList" :key="o" :value="o">{{ o }}</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Reset Filters -->
+                                        <div class="col-md-2 col-sm-12 text-end">
+                                            <button 
+                                                v-if="studentFilterName || studentFilterCountry || studentFilterOrg" 
+                                                @click="resetStudentFilters" 
+                                                class="btn btn-outline-secondary btn-sm w-100 rounded-2"
+                                            >
+                                                <i class="bi bi-arrow-counterclockwise me-1"></i> Réinitialiser
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <!-- Students Table -->
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
                                                 <th>{{ $t('name') }}</th>
                                                 <th>{{ $t('email') }}</th>
+                                                <th>Pays</th>
+                                                <th>Organisation</th>
                                                 <th>{{ $t('joined_at') }}</th>
                                                 <th>{{ $t('status') }}</th>
                                                 <th>{{ $t('action') }}</th>
                                             </tr>
                                         </thead>
-                                    <tbody>
-                                        <tr v-for="student in students" :key="student.id">
-                                            <td>{{ student?.name || 'N/A' }}</td>
-                                            <td>{{ student?.email }}</td>
-                                            <td>{{ student?.created_at ? new Date(student.created_at).toLocaleDateString() : 'N/A' }}</td>
-                                            <td>
-                                                <span :class="['badge', student?.is_active ? 'bg-success' : 'bg-danger']">
-                                                    {{ student?.is_active ? 'Active' : 'Inactive' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex gap-2">
-                                                    <button 
-                                                        @click="openAssignModal('user', student.id)" 
-                                                        class="btn btn-sm btn-primary"
-                                                        title="Assigner Cours"
-                                                    >
-                                                        <i class="bi bi-book"></i>
+                                        <tbody>
+                                            <tr v-if="paginatedStudents.length === 0">
+                                                <td colspan="7" class="text-center py-4 text-muted">
+                                                    <i class="bi bi-info-circle fs-5 d-block mb-1"></i>
+                                                    Aucun étudiant ne correspond aux critères de recherche.
+                                                </td>
+                                            </tr>
+                                            <tr v-for="student in paginatedStudents" :key="student.id">
+                                                <td>
+                                                    <div class="fw-bold">{{ student?.name || 'N/A' }}</div>
+                                                </td>
+                                                <td>{{ student?.email }}</td>
+                                                <td>
+                                                    <span class="badge bg-light text-dark border font-monospace">
+                                                        <i class="bi bi-geo-alt me-1 text-primary"></i>{{ student?.country || student?.country_name || 'N/A' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light-primary text-primary border">
+                                                        <i class="bi bi-building me-1"></i>{{ student?.organisation || student?.organization || 'N/A' }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ student?.created_at ? new Date(student.created_at).toLocaleDateString() : 'N/A' }}</td>
+                                                <td>
+                                                    <span :class="['badge', student?.is_active ? 'bg-success' : 'bg-danger']">
+                                                        {{ student?.is_active ? 'Active' : 'Inactive' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <div class="d-flex gap-2">
+                                                        <button 
+                                                            @click="openAssignModal('user', student.id)" 
+                                                            class="btn btn-sm btn-primary"
+                                                            title="Assigner Cours"
+                                                        >
+                                                            <i class="bi bi-book"></i>
+                                                        </button>
+                                                        <button 
+                                                            @click="toggleUserStatus(student.id)" 
+                                                            :class="['btn btn-sm', student?.is_active ? 'btn-warning' : 'btn-info']"
+                                                            :title="student?.is_active ? 'Deactivate' : 'Activate'"
+                                                        >
+                                                            <i :class="['bi', student?.is_active ? 'bi-person-x' : 'bi-person-check']"></i>
+                                                        </button>
+                                                        <button 
+                                                            @click="deleteUser(student.id)" 
+                                                            class="btn btn-sm btn-danger"
+                                                            title="Delete"
+                                                        >
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Pagination Controls -->
+                                <div v-if="filteredStudents.length > 0" class="d-flex flex-wrap justify-content-between align-items-center mt-3 pt-3 border-top gap-3">
+                                    <div class="text-muted small">
+                                        Affichage de <strong>{{ studentPageStart }}</strong> à <strong>{{ studentPageEnd }}</strong> sur <strong>{{ filteredStudents.length }}</strong> étudiant(s)
+                                    </div>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="small text-muted">Par page :</span>
+                                            <select v-model.number="studentItemsPerPage" class="form-select form-select-sm" style="width: 75px;">
+                                                <option :value="5">5</option>
+                                                <option :value="10">10</option>
+                                                <option :value="20">20</option>
+                                                <option :value="50">50</option>
+                                            </select>
+                                        </div>
+                                        <nav aria-label="Pagination étudiants" v-if="totalStudentPages > 1">
+                                            <ul class="custom-pagination">
+                                                <li class="page-item" :class="{ disabled: studentCurrentPage === 1 }">
+                                                    <button class="page-link" @click="studentCurrentPage--" :disabled="studentCurrentPage === 1">
+                                                        ‹
                                                     </button>
-                                                    <button 
-                                                        @click="toggleUserStatus(student.id)" 
-                                                        :class="['btn btn-sm', student?.is_active ? 'btn-warning' : 'btn-info']"
-                                                        :title="student?.is_active ? 'Deactivate' : 'Activate'"
-                                                    >
-                                                        <i :class="['bi', student?.is_active ? 'bi-person-x' : 'bi-person-check']"></i>
+                                                </li>
+                                                <li 
+                                                    v-for="p in totalStudentPages" 
+                                                    :key="p" 
+                                                    class="page-item" 
+                                                    :class="{ active: studentCurrentPage === p }"
+                                                >
+                                                    <button class="page-link" @click="studentCurrentPage = p">{{ p }}</button>
+                                                </li>
+                                                <li class="page-item" :class="{ disabled: studentCurrentPage === totalStudentPages }">
+                                                    <button class="page-link" @click="studentCurrentPage++" :disabled="studentCurrentPage === totalStudentPages">
+                                                        ›
                                                     </button>
-                                                    <button 
-                                                        @click="deleteUser(student.id)" 
-                                                        class="btn btn-sm btn-danger"
-                                                        title="Delete"
-                                                    >
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Courses Tab -->
@@ -1453,21 +1728,273 @@ const categories = ref([])
 const categoryForm = ref({ id: null, name: '', slug: '', icon: '', description: '' })
 let categoryModalInstance: any = null
 
-const exportStudentsCsv = () => {
-    if (students.value.length === 0) return
+// Filters & Pagination state for Instructors Tab
+const instructorFilterName = ref('')
+const instructorFilterCountry = ref('')
+const instructorFilterOrg = ref('')
+const instructorFilterStatus = ref('')
+const instructorCurrentPage = ref(1)
+const instructorItemsPerPage = ref(10)
+
+const resetInstructorFilters = () => {
+    instructorFilterName.value = ''
+    instructorFilterCountry.value = ''
+    instructorFilterOrg.value = ''
+    instructorFilterStatus.value = ''
+    instructorCurrentPage.value = 1
+}
+
+const instructorCountryList = computed(() => {
+    const countries = new Set<string>()
+    instructors.value.forEach(inst => {
+        const c = inst.user?.country || inst.user?.country_name || inst.country
+        if (c && typeof c === 'string' && c.trim() !== '') {
+            countries.add(c.trim())
+        }
+    })
+    return Array.from(countries).sort()
+})
+
+const instructorOrgList = computed(() => {
+    const orgs = new Set<string>()
+    instructors.value.forEach(inst => {
+        const o = inst.user?.organisation || inst.user?.organization || inst.organisation
+        if (o && typeof o === 'string' && o.trim() !== '') {
+            orgs.add(o.trim())
+        }
+    })
+    return Array.from(orgs).sort()
+})
+
+const filteredInstructors = computed(() => {
+    return instructors.value.filter(inst => {
+        if (instructorFilterName.value) {
+            const q = instructorFilterName.value.toLowerCase().trim()
+            const nameMatch = (inst.user?.name || inst.name || '').toLowerCase().includes(q)
+            const emailMatch = (inst.user?.email || inst.email || '').toLowerCase().includes(q)
+            const titleMatch = (inst.title || '').toLowerCase().includes(q)
+            if (!nameMatch && !emailMatch && !titleMatch) return false
+        }
+        if (instructorFilterCountry.value) {
+            const country = (inst.user?.country || inst.user?.country_name || inst.country || '').trim()
+            if (country !== instructorFilterCountry.value) return false
+        }
+        if (instructorFilterOrg.value) {
+            const org = (inst.user?.organisation || inst.user?.organization || inst.organisation || '').trim()
+            if (org !== instructorFilterOrg.value) return false
+        }
+        if (instructorFilterStatus.value) {
+            if (inst.status !== instructorFilterStatus.value) return false
+        }
+        return true
+    })
+})
+
+watch([instructorFilterName, instructorFilterCountry, instructorFilterOrg, instructorFilterStatus, instructorItemsPerPage], () => {
+    instructorCurrentPage.value = 1
+})
+
+const totalInstructorPages = computed(() => {
+    return Math.ceil(filteredInstructors.value.length / instructorItemsPerPage.value) || 1
+})
+
+const paginatedInstructors = computed(() => {
+    const start = (instructorCurrentPage.value - 1) * instructorItemsPerPage.value
+    return filteredInstructors.value.slice(start, start + instructorItemsPerPage.value)
+})
+
+const instructorPageStart = computed(() => {
+    if (filteredInstructors.value.length === 0) return 0
+    return (instructorCurrentPage.value - 1) * instructorItemsPerPage.value + 1
+})
+
+const instructorPageEnd = computed(() => {
+    const end = instructorCurrentPage.value * instructorItemsPerPage.value
+    return Math.min(end, filteredInstructors.value.length)
+})
+
+const exportInstructorsCsv = () => {
+    const targetList = filteredInstructors.value.length > 0 ? filteredInstructors.value : instructors.value
+    if (targetList.length === 0) return
     
-    const headers = ['Name', 'Email', 'Joined At', 'Status']
+    const headers = ['Name', 'Email', 'Title', 'Country', 'Organisation', 'Status']
     const csvContent = [
         headers.join(','),
-        ...students.value.map(s => [
+        ...targetList.map(inst => [
+            `"${inst.user?.name || inst.name || 'N/A'}"`,
+            `"${inst.user?.email || inst.email || ''}"`,
+            `"${inst.title || 'Instructor'}"`,
+            `"${inst.user?.country || inst.user?.country_name || inst.country || 'N/A'}"`,
+            `"${inst.user?.organisation || inst.user?.organization || inst.organisation || 'N/A'}"`,
+            `"${inst.status || 'N/A'}"`
+        ].join(','))
+    ].join('\n')
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    link.setAttribute('href', url)
+    link.setAttribute('download', 'instructors_list.csv')
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
+const exportInstructorsPdf = async () => {
+    const targetList = filteredInstructors.value.length > 0 ? filteredInstructors.value : instructors.value
+    if (targetList.length === 0) return
+
+    if (process.client) {
+        try {
+            const { jsPDF } = await import('jspdf');
+            const autoTable = (await import('jspdf-autotable')).default;
+
+            const doc = new jsPDF('landscape', 'mm', 'a4')
+            
+            try {
+                const img = await loadImage(logoIcon);
+                doc.addImage(img, 'PNG', 14, 10, 30, 15);
+            } catch (imgError) {
+                console.warn("Could not load logo for PDF", imgError);
+            }
+
+            doc.setFontSize(16)
+            doc.setTextColor(41, 128, 185)
+            doc.text('ALREI', 48, 16)
+            
+            doc.setFontSize(10)
+            doc.setTextColor(100)
+            doc.text('Centre ALREI de formation des travailleurs', 48, 22)
+            
+            doc.setFontSize(14)
+            doc.setTextColor(0)
+            doc.text('Liste des instructeurs', 14, 35)
+            
+            const tableColumn = ["Name", "Email", "Title", "Country", "Organisation", "Status"]
+            const tableRows = targetList.map(inst => [
+                inst.user?.name || inst.name || 'N/A',
+                inst.user?.email || inst.email || '',
+                inst.title || 'Instructor',
+                inst.user?.country || inst.user?.country_name || inst.country || 'N/A',
+                inst.user?.organisation || inst.user?.organization || inst.organisation || 'N/A',
+                inst.status || 'N/A'
+            ])
+
+            autoTable(doc, {
+                head: [tableColumn],
+                body: tableRows,
+                startY: 42,
+                theme: 'striped',
+                styles: { fontSize: 9 },
+                headStyles: { fillColor: [41, 128, 185] },
+            })
+
+            doc.save('instructors_list.pdf')
+        } catch (error) {
+            console.error('Failed to generate PDF:', error)
+            alert('Erreur lors de la génération du PDF.')
+        }
+    }
+}
+
+// Filters & Pagination state for Students Tab
+const studentFilterName = ref('')
+const studentFilterCountry = ref('')
+const studentFilterOrg = ref('')
+const studentCurrentPage = ref(1)
+const studentItemsPerPage = ref(10)
+
+const resetStudentFilters = () => {
+    studentFilterName.value = ''
+    studentFilterCountry.value = ''
+    studentFilterOrg.value = ''
+    studentCurrentPage.value = 1
+}
+
+const studentCountryList = computed(() => {
+    const countries = new Set<string>()
+    students.value.forEach(s => {
+        const c = s.country || s.country_name
+        if (c && typeof c === 'string' && c.trim() !== '') {
+            countries.add(c.trim())
+        }
+    })
+    return Array.from(countries).sort()
+})
+
+const studentOrgList = computed(() => {
+    const orgs = new Set<string>()
+    students.value.forEach(s => {
+        const o = s.organisation || s.organization
+        if (o && typeof o === 'string' && o.trim() !== '') {
+            orgs.add(o.trim())
+        }
+    })
+    return Array.from(orgs).sort()
+})
+
+const filteredStudents = computed(() => {
+    return students.value.filter(s => {
+        if (studentFilterName.value) {
+            const q = studentFilterName.value.toLowerCase().trim()
+            const nameMatch = (s.name || '').toLowerCase().includes(q)
+            const emailMatch = (s.email || '').toLowerCase().includes(q)
+            if (!nameMatch && !emailMatch) return false
+        }
+        if (studentFilterCountry.value) {
+            const country = (s.country || s.country_name || '').trim()
+            if (country !== studentFilterCountry.value) return false
+        }
+        if (studentFilterOrg.value) {
+            const org = (s.organisation || s.organization || '').trim()
+            if (org !== studentFilterOrg.value) return false
+        }
+        return true
+    })
+})
+
+watch([studentFilterName, studentFilterCountry, studentFilterOrg, studentItemsPerPage], () => {
+    studentCurrentPage.value = 1
+})
+
+const totalStudentPages = computed(() => {
+    return Math.ceil(filteredStudents.value.length / studentItemsPerPage.value) || 1
+})
+
+const paginatedStudents = computed(() => {
+    const start = (studentCurrentPage.value - 1) * studentItemsPerPage.value
+    return filteredStudents.value.slice(start, start + studentItemsPerPage.value)
+})
+
+const studentPageStart = computed(() => {
+    if (filteredStudents.value.length === 0) return 0
+    return (studentCurrentPage.value - 1) * studentItemsPerPage.value + 1
+})
+
+const studentPageEnd = computed(() => {
+    const end = studentCurrentPage.value * studentItemsPerPage.value
+    return Math.min(end, filteredStudents.value.length)
+})
+
+const exportStudentsCsv = () => {
+    const targetList = filteredStudents.value.length > 0 ? filteredStudents.value : students.value
+    if (targetList.length === 0) return
+    
+    const headers = ['Name', 'Email', 'Country', 'Organisation', 'Joined At', 'Status']
+    const csvContent = [
+        headers.join(','),
+        ...targetList.map(s => [
             `"${s.name || 'N/A'}"`,
-            `"${s.email}"`,
-            `"${new Date(s.created_at).toLocaleDateString()}"`,
+            `"${s.email || ''}"`,
+            `"${s.country || s.country_name || 'N/A'}"`,
+            `"${s.organisation || s.organization || 'N/A'}"`,
+            `"${s.created_at ? new Date(s.created_at).toLocaleDateString() : 'N/A'}"`,
             `"${s.is_active ? 'Active' : 'Inactive'}"`
         ].join(','))
     ].join('\n')
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
     link.setAttribute('href', url)
@@ -1490,18 +2017,18 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 };
 
 const exportStudentsPdf = async () => {
-    if (students.value.length === 0) return
+    const targetList = filteredStudents.value.length > 0 ? filteredStudents.value : students.value
+    if (targetList.length === 0) return
 
     if (process.client) {
         try {
             const { jsPDF } = await import('jspdf');
             const autoTable = (await import('jspdf-autotable')).default;
 
-            const doc = new jsPDF()
+            const doc = new jsPDF('landscape', 'mm', 'a4')
             
             try {
                 const img = await loadImage(logoIcon);
-                // Adjust dimensions as needed for the logo
                 doc.addImage(img, 'PNG', 14, 10, 30, 15);
             } catch (imgError) {
                 console.warn("Could not load logo for PDF", imgError);
@@ -1519,11 +2046,13 @@ const exportStudentsPdf = async () => {
             doc.setTextColor(0)
             doc.text('Liste des étudiants inscrits', 14, 35)
             
-            const tableColumn = ["Name", "Email", "Joined At", "Status"]
-            const tableRows = students.value.map(s => [
+            const tableColumn = ["Name", "Email", "Country", "Organisation", "Joined At", "Status"]
+            const tableRows = targetList.map(s => [
                 s.name || 'N/A',
                 s.email,
-                new Date(s.created_at).toLocaleDateString(),
+                s.country || s.country_name || 'N/A',
+                s.organisation || s.organization || 'N/A',
+                s.created_at ? new Date(s.created_at).toLocaleDateString() : 'N/A',
                 s.is_active ? 'Active' : 'Inactive'
             ])
 
@@ -1532,7 +2061,7 @@ const exportStudentsPdf = async () => {
                 body: tableRows,
                 startY: 42,
                 theme: 'striped',
-                styles: { fontSize: 10 },
+                styles: { fontSize: 9 },
                 headStyles: { fillColor: [41, 128, 185] },
             })
 
@@ -2422,3 +2951,61 @@ const submitCourse = async () => {
 }
 // Note: Removed onMounted(fetchAll) as it's now handled in the new onMounted block above.
 </script>
+
+<style scoped>
+.custom-pagination {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 4px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.custom-pagination .page-item {
+    display: inline-flex !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.custom-pagination .page-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    padding: 0 10px !important;
+    border-radius: 6px !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+    line-height: 1 !important;
+}
+
+.custom-pagination .page-link:hover:not(:disabled) {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #94a3b8 !important;
+}
+
+.custom-pagination .page-item.active .page-link {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+    border-color: #0f172a !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 4px rgba(15, 23, 42, 0.2) !important;
+}
+
+.custom-pagination .page-link:disabled,
+.custom-pagination .page-item.disabled .page-link {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+</style>

@@ -54,7 +54,7 @@
                         
                         <div 
                             class="col-xxl-3 col-xl-3 col-lg-4 col-md-6 col-sm-12"
-                            v-for="(item, index) in coursesData.slice(0, 8)"
+                            v-for="(item, index) in coursesList"
                             :key="index"
                         >
                             <div class="education_block_grid border course-card-premium rounded-4 overflow-hidden">
@@ -143,7 +143,28 @@ import FooterDark from '@/components/Footer/FooterDark.vue';
 import FilterModal from '@/components/Courses/full-width-course/FilterModal.vue';
 import ScrollToTop from '@/components/ScrollToTop.vue';
 
-import { coursesData } from '@/data/data.js'
+const api = useApi()
+const coursesList = ref([])
+
+onMounted(async () => {
+    try {
+        const response = await api('/courses')
+        const rawList = Array.isArray(response) ? response : (response?.data || [])
+        const { getThemeImage } = useCourseTheme()
+        coursesList.value = rawList.map((c, idx) => ({
+            id: c.id,
+            slug: c.slug || c.id,
+            image: getThemeImage(c, idx),
+            title: c.title,
+            lectures: c.sections?.reduce((acc, s) => acc + (s.lessons?.length || 0), 0) || 0,
+            level: c.level || 'Tous niveaux',
+            price: c.price,
+            time: c.duration || 'Flexible'
+        }))
+    } catch (error) {
+        coursesList.value = []
+    }
+})
 
 </script>
 

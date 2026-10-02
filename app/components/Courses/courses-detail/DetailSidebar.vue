@@ -175,13 +175,8 @@ const route = useRoute()
 const api = useApi()
 
 const courseImage = computed(() => {
-    const raw = props.course?.thumbnail || props.course?.image
-    if (!raw) return '/img/course-placeholder.jpg'
-    if (typeof raw === 'string' && (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:') || raw.startsWith('blob:'))) {
-        return raw
-    }
-    const config = useRuntimeConfig()
-    return `${config.public.apiBase.replace('/api', '')}/storage/${raw}`
+    const { getThemeImage } = useCourseTheme()
+    return getThemeImage(props.course)
 })
 
 const isFree = computed(() => {

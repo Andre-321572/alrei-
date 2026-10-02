@@ -79,7 +79,6 @@ import CourseHeader from '@/components/Courses/courses-detail/CourseHeader.vue';
 import CoursesOverview from '@/components/Courses/courses-detail/CoursesOverview.vue';
 import Circullum from '@/components/Courses/courses-detail/Circullum.vue';
 import DetailSidebar from '@/components/Courses/courses-detail/DetailSidebar.vue';
-import { coursesData } from '@/data/data.js';
 
 const route = useRoute()
 const api = useApi()
@@ -88,67 +87,40 @@ const { t } = useI18n()
 const course = ref(null)
 const loading = ref(true)
 
+const config = useRuntimeConfig()
+const getImageUrl = (path, fallback = '/img/courses-1.jpg') => {
+  if (!path) return fallback
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) return path
+  if (path.startsWith('/img/') || path.startsWith('/assets/')) return path
+  
+  const apiBase = config.public.apiBase || 'http://localhost:8000/api'
+  const backendUrl = apiBase.replace(/\/api\/?$/, '')
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  
+  if (cleanPath.startsWith('storage/')) {
+    return `${backendUrl}/${cleanPath}`
+  }
+  return `${backendUrl}/storage/${cleanPath}`
+}
+
 onMounted(async () => {
   const paramId = route.params.id
   try {
-    const response = await api(`/courses/${paramId}`)
+    const response = await api(`/courses/${paramId}`).catch(() => api(`/courses/by-id/${paramId}`))
     if (response && (response.data || response.id)) {
-      course.value = response.data || response
-      const localMatch = coursesData.find(c => String(c.id) === String(paramId) || c.slug === paramId)
-      if (localMatch && !course.value.thumbnail && !course.value.image) {
-        course.value.image = localMatch.image
+      const data = response.data || response
+      const { getThemeImage } = useCourseTheme()
+      course.value = {
+        ...data,
+        image: getThemeImage(data),
+        thumbnail: getThemeImage(data)
       }
     } else {
-      throw new Error('No course data returned')
+      course.value = null
     }
   } catch (error) {
-    // Fallback to local coursesData by id or slug
-    const found = coursesData.find(c => String(c.id) === String(paramId) || c.slug === paramId)
-    if (found) {
-      course.value = {
-        ...found,
-        thumbnail: found.image,
-        sections: found.sections || [
-          {
-            id: 1,
-            title: t('default_module_1_title'),
-            instructor_name: "ALREI",
-            lessons: [
-              { id: 1, title: t('default_lesson_1_title'), duration: "20 min", type: "video" },
-              { id: 2, title: t('default_lesson_2_title'), duration: "40 min", type: "document" }
-            ]
-          },
-          {
-            id: 2,
-            title: t('default_module_2_title'),
-            instructor_name: "ALREI",
-            lessons: [
-              { id: 3, title: t('default_lesson_3_title'), duration: "45 min", type: "video" },
-              { id: 4, title: t('default_lesson_4_title'), duration: "60 min", type: "text" }
-            ]
-          }
-        ]
-      }
-    } else {
-      // General default course fallback
-      course.value = {
-        id: paramId || 1,
-        title: t('default_course_title'),
-        price: 0,
-        is_free: true,
-        image: '/img/co-1.jpg',
-        thumbnail: '/img/co-1.jpg',
-        description: t('default_course_desc'),
-        sections: [
-          {
-            id: 1,
-            title: t('default_module_1_title'),
-            instructor_name: "ALREI",
-            lessons: [{ id: 1, title: t('default_lesson_1_title'), duration: "15 min", type: "video" }]
-          }
-        ]
-      }
-    }
+    console.error('Course not found:', error)
+    course.value = null
   } finally {
     loading.value = false;
   }

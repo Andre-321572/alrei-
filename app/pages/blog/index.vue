@@ -35,7 +35,7 @@
           <div v-for="post in filteredPosts" :key="post.id" class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden blog-card bg-white">
               <NuxtLink :to="localePath('/blog/' + post.slug)">
-                <img :src="post.image" class="card-img-top object-fit-cover" style="height: 210px;" :alt="post.cardTitle || post.title" />
+                <img :src="post.image" class="card-img-top object-fit-cover" style="height: 210px;" :alt="post.cardTitle || post.title" @error="(e) => { e.target.src = getBlogFallback(post.id) }" />
               </NuxtLink>
               <div class="card-body p-4 d-flex flex-column">
                 <div class="mb-3">
@@ -85,29 +85,92 @@
 <script setup>
 definePageMeta({ layout: 'default' })
 
-import { blogData } from '@/data/data.js'
-
+const api = useApi()
 const localePath = useLocalePath()
 const search = ref('')
-const filteredPosts = ref([...blogData])
+const posts = ref([])
+const filteredPosts = ref([])
+const loading = ref(true)
 
 function filterPosts() {
   const q = search.value.toLowerCase().trim()
   if (!q) {
-    filteredPosts.value = [...blogData]
+    filteredPosts.value = [...posts.value]
     return
   }
-  filteredPosts.value = blogData.filter(p => {
+  filteredPosts.value = posts.value.filter(p => {
     const titleText = (p.cardTitle || p.title || '').toLowerCase()
-    const descText = (p.desc || '').toLowerCase()
+    const descText = (p.desc || p.content || '').toLowerCase()
     return titleText.includes(q) || descText.includes(q)
   })
 }
 
 function resetSearch() {
   search.value = ''
-  filteredPosts.value = [...blogData]
+  filteredPosts.value = [...posts.value]
 }
+
+const blogFallbackImages = [
+  '/img/blog-1.jpg',
+  '/img/blog-2.jpg',
+  '/img/blog-3.jpg',
+  '/img/blog-4.jpg',
+  '/img/blog-5.jpg',
+  '/img/blog-6.jpg'
+]
+const getBlogFallback = (idOrIndex) => {
+  const idx = Math.abs(Number(idOrIndex) || 0) % blogFallbackImages.length
+  return blogFallbackImages[idx]
+}
+
+const config = useRuntimeConfig()
+const getImageUrl = (path, fallback) => {
+  if (!path) return fallback
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) return path
+  if (path.startsWith('/img/') || path.startsWith('/assets/')) return path
+  
+  const apiBase = config.public.apiBase || 'http://localhost:8000/api'
+  const backendUrl = apiBase.replace(/\/api\/?$/, '')
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path
+  
+  if (cleanPath.startsWith('storage/')) {
+    return `${backendUrl}/${cleanPath}`
+  }
+  return `${backendUrl}/storage/${cleanPath}`
+}
+
+const fetchBlogs = async () => {
+  loading.value = true
+  try {
+    const res = await api('/blogs').catch(() => api('/admin/blogs')).catch(() => [])
+    const rawList = Array.isArray(res) ? res : (res?.data || [])
+    posts.value = rawList.map((b, idx) => {
+      const fallback = getBlogFallback(b.id || idx)
+      return {
+        id: b.id,
+        slug: b.slug || b.id,
+        title: b.title,
+        cardTitle: b.title,
+        desc: b.summary || b.description || (b.content ? b.content.substring(0, 140) + '...' : ''),
+        category: b.category || 'Actualités',
+        author: b.author || b.user?.name || 'ALREI',
+        date: b.published_at || b.created_at ? new Date(b.published_at || b.created_at).toLocaleDateString('fr-FR') : '2026',
+        image: getImageUrl(b.image, fallback)
+      }
+    })
+    filteredPosts.value = [...posts.value]
+  } catch (err) {
+    console.error('Failed to fetch blogs:', err)
+    posts.value = []
+    filteredPosts.value = []
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchBlogs()
+})
 </script>
 
 <style scoped>

@@ -145,7 +145,7 @@
                     <div class="col-lg-4 col-md-6" v-for="item in filtered" :key="item.id">
                         <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden course-card">
                             <div class="position-relative">
-                                <img :src="item.image" class="card-img-top object-fit-cover" style="height: 200px;" :alt="item.title">
+                                <img :src="item.image" class="card-img-top object-fit-cover" style="height: 200px;" :alt="item.title" @error="(e) => { e.target.src = getFallback(item.id) }">
                                 <div class="position-absolute top-0 start-0 m-3">
                                     <span class="badge bg-main text-white px-3 py-2 rounded-pill shadow-sm">{{ item.badge }}</span>
                                 </div>
@@ -209,9 +209,9 @@
 </template>
 
 <script setup>
-import { coursesData } from '@/data/data.js'
 definePageMeta({ layout: 'default' })
 
+const api = useApi()
 const localePath = useLocalePath()
 const route = useRoute()
 const { t } = useI18n()
@@ -227,8 +227,9 @@ const selectedLanguages = ref([])
 const selectedModes = ref([])
 const selectedPlaces = ref([])
 
-const courses = ref(coursesData)
-const filtered = ref(coursesData)
+const courses = ref([])
+const filtered = ref([])
+const loading = ref(true)
 
 const typeOptions = computed(() => [
     { value: 'Standard Course', label: t('type_standard') },
@@ -295,20 +296,20 @@ const filterCourses = () => {
     
     if (search.value.trim()) {
         const q = search.value.toLowerCase()
-        result = result.filter(c => c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q))
+        result = result.filter(c => (c.title || '').toLowerCase().includes(q) || (c.desc || '').toLowerCase().includes(q))
     }
     if (selectedDomain.value) {
-        result = result.filter(c => c.title.toLowerCase().includes(selectedDomain.value.toLowerCase()) || c.desc.toLowerCase().includes(selectedDomain.value.toLowerCase()))
+        result = result.filter(c => (c.title || '').toLowerCase().includes(selectedDomain.value.toLowerCase()) || (c.desc || '').toLowerCase().includes(selectedDomain.value.toLowerCase()))
     }
     if (selectedAccess.value) {
-        result = result.filter(c => c.accessType.toLowerCase().includes(selectedAccess.value.toLowerCase()))
+        result = result.filter(c => (c.accessType || '').toLowerCase().includes(selectedAccess.value.toLowerCase()))
     }
 
     if (selectedTypes.value.length > 0) {
         result = result.filter(c => {
             return selectedTypes.value.some(t => {
                 if (t === 'Free') return !c.price || c.price == 0 || c.accessType?.toLowerCase().includes('libre')
-                if (t === 'Master') return c.title.toLowerCase().includes('master') || c.badge?.toLowerCase().includes('pro')
+                if (t === 'Master') return (c.title || '').toLowerCase().includes('master') || (c.badge || '').toLowerCase().includes('pro')
                 return true
             })
         })
@@ -316,7 +317,7 @@ const filterCourses = () => {
 
     if (selectedTopics.value.length > 0) {
         result = result.filter(c => {
-            return selectedTopics.value.some(top => c.title.toLowerCase().includes(top.toLowerCase()) || c.desc.toLowerCase().includes(top.toLowerCase()))
+            return selectedTopics.value.some(top => (c.title || '').toLowerCase().includes(top.toLowerCase()) || (c.desc || '').toLowerCase().includes(top.toLowerCase()))
         })
     }
 
@@ -362,10 +363,70 @@ const resetFilters = () => {
     activeTab.value = null
 }
 
-onMounted(() => {
-    if (route.query.q) {
-        filterCourses()
+const fallbackImages = [
+    '/img/co-1.jpg',
+    '/img/co-2.jpg',
+    '/img/co-3.jpg',
+    '/img/co-4.jpg',
+    '/img/co-5.jpg',
+    '/img/co-6.jpg',
+    '/img/co-7.jpg',
+    '/img/co-8.jpg'
+]
+const getFallback = (idOrIndex) => {
+    const idx = Math.abs(Number(idOrIndex) || 0) % fallbackImages.length
+    return fallbackImages[idx]
+}
+
+const config = useRuntimeConfig()
+const getImageUrl = (path, fallback) => {
+    if (!path) return fallback
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) return path
+    if (path.startsWith('/img/') || path.startsWith('/assets/')) return path
+    
+    const apiBase = config.public.apiBase || 'http://localhost:8000/api'
+    const backendUrl = apiBase.replace(/\/api\/?$/, '')
+    const cleanPath = path.startsWith('/') ? path.slice(1) : path
+    
+    if (cleanPath.startsWith('storage/')) {
+        return `${backendUrl}/${cleanPath}`
     }
+    return `${backendUrl}/storage/${cleanPath}`
+}
+
+const fetchCourses = async () => {
+    loading.value = true
+    try {
+        const response = await api('/courses')
+        const rawList = Array.isArray(response) ? response : (response?.data || [])
+        const { getThemeImage } = useCourseTheme()
+        courses.value = rawList.map((c, idx) => {
+            return {
+                id: c.id,
+                slug: c.slug || c.id,
+                image: getThemeImage(c, idx),
+                title: c.title,
+                desc: c.subtitle || c.description || '',
+                badge: c.level || 'Formation',
+                format: c.format || 'Formation en ligne',
+                schedule: c.schedule || 'Permanent',
+                accessType: c.access_type || (c.is_free ? 'Libre' : 'Sur candidature'),
+                price: c.price,
+                language: c.language
+            }
+        })
+        filterCourses()
+    } catch (error) {
+        console.error('Failed to fetch courses:', error)
+        courses.value = []
+        filtered.value = []
+    } finally {
+        loading.value = false
+    }
+}
+
+onMounted(() => {
+    fetchCourses()
 })
 </script>
 

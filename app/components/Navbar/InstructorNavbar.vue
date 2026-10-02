@@ -34,7 +34,6 @@
                                             <li><NuxtLink :to="localePath('/instructor-dashboard')"><i class="bi bi-ui-radios-grid"></i>{{ $t('dashboard') }}</NuxtLink></li>
                                             <li><NuxtLink :to="localePath('/instructor-courses')"><i class="bi bi-basket2"></i>{{ $t('courses') }}</NuxtLink></li>
                                             <li><NuxtLink :to="localePath('/instructor-students')"><i class="bi bi-people"></i>{{ $t('students') }}</NuxtLink></li>
-                                            <li><NuxtLink :to="localePath('/instructor-reviews')"><i class="bi bi-star-half"></i>{{ $t('reviews') }}</NuxtLink></li>
                                             <li><NuxtLink :to="localePath('/profile-edit')"><i class="bi bi-person-circle"></i>{{ $t('my_profile') }}</NuxtLink></li>
                                             <li><a href="#" @click.prevent="logout"><i class="bi bi-box-arrow-right"></i>{{ $t('logout') }}</a></li>
                                         </ul>

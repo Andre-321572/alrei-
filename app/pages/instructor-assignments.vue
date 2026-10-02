@@ -71,6 +71,7 @@ import Sidebar from '@/components/Accounts/instructor-dashboard/Sidebar.vue'
 import StudentAdminSidebar from '@/components/Accounts/student-dashboard/StudentAdminSidebar.vue'
 import AssignmentManager from '@/components/Instructor/AssignmentManager.vue'
 
+const localePath = useLocalePath()
 const { isAdmin, isInstructor } = useAuth()
 const api = useApi()
 const courses = ref([])
