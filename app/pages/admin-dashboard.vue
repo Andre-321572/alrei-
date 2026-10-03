@@ -41,9 +41,8 @@
                     <div class="card border rounded-3" :style="{ minHeight: activeTab === 'country_summary' ? 'auto' : '550px' }">
                         <div class="card-body">
                             <!-- Actions Rapides -->
-                            <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap align-items-center">
-                                <button v-if="activeTab==='categories'" class="btn btn-primary btn-sm" @click="openCategoryModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Catégorie</button>
-                                <template v-else-if="activeTab==='instructors'">
+                            <div class="d-flex justify-content-end mb-3 gap-2 flex-wrap align-items-center" v-if="activeTab==='instructors' || activeTab==='students'">
+                                <template v-if="activeTab==='instructors'">
                                     <button @click="exportInstructorsCsv" class="btn btn-success btn-sm rounded-pill">
                                         <i class="bi bi-filetype-csv me-1"></i> {{ $t('export_csv') }}
                                     </button>
@@ -65,10 +64,6 @@
                                         <i class="bi bi-plus-lg me-1"></i> Ajouter Étudiant
                                     </button>
                                 </template>
-                                <NuxtLink v-else-if="activeTab==='courses'" class="btn btn-primary btn-sm" :to="localePath('/instructor-create-course')"><i class="bi bi-plus-lg me-1"></i> Ajouter Cours</NuxtLink>
-                                <button v-else-if="activeTab==='groups'" class="btn btn-primary btn-sm" @click="openGroupModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Groupe</button>
-                                <button v-else-if="activeTab==='blogs'" class="btn btn-primary btn-sm" @click="openBlogModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Blog</button>
-                                <button v-else-if="activeTab==='scholarships'" class="btn btn-primary btn-sm" @click="openScholarshipModal()"><i class="bi bi-plus-lg me-1"></i> Ajouter Bourse</button>
                             </div>
                             <!-- Instructors Tab -->
                             <div v-if="activeTab === 'instructors'">
@@ -876,39 +871,133 @@
 
                             <!-- Categories Tab -->
                             <div v-if="activeTab === 'categories'">
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h5 class="m-0">Catégories</h5>
-                                    <button class="btn btn-primary btn-sm" @click="openCategoryModal()">
-                                        <i class="bi bi-plus-lg me-1"></i> Ajouter Categorie
+                                <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+                                    <div>
+                                        <h4 class="fw-bold mb-1"><i class="bi bi-tags text-primary me-2"></i>Toutes les Catégories</h4>
+                                        <p class="text-muted small m-0">Gérez les catégories de formations pour organiser le catalogue de cours.</p>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm rounded-pill px-3 shadow-xs fw-semibold" @click="openCategoryModal()">
+                                        <i class="bi bi-plus-lg me-1"></i> Ajouter une Catégorie
                                     </button>
                                 </div>
+
+                                <!-- Filter / Search bar for categories -->
+                                <div class="row g-3 mb-3 align-items-center">
+                                    <div class="col-md-5">
+                                        <div class="input-group input-group-sm">
+                                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                            <input 
+                                                type="text" 
+                                                v-model="categorySearch" 
+                                                class="form-control border-start-0" 
+                                                placeholder="Rechercher une catégorie par nom ou slug..."
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7 d-flex align-items-center justify-content-end gap-3 text-muted small">
+                                        <div>
+                                            Affichage de <strong>{{ categoryPageStart }}</strong> à <strong>{{ categoryPageEnd }}</strong> sur <strong>{{ filteredCategories.length }}</strong> catégorie(s)
+                                        </div>
+                                        <div class="d-flex align-items-center gap-1">
+                                            <span class="small text-muted">Par page :</span>
+                                            <select v-model.number="categoryItemsPerPage" class="form-select form-select-sm" style="width: 70px;">
+                                                <option :value="5">5</option>
+                                                <option :value="10">10</option>
+                                                <option :value="20">20</option>
+                                                <option :value="50">50</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Nom</th>
+                                                <th>Catégorie</th>
                                                 <th>Slug</th>
-                                                <th>Icone</th>
-                                                <th>Action</th>
+                                                <th>Description</th>
+                                                <th>Cours</th>
+                                                <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="cat in categories" :key="cat.id">
-                                                <td>{{ cat.name }}</td>
-                                                <td>{{ cat.slug }}</td>
-                                                <td><i :class="cat.icon"></i> {{ cat.icon }}</td>
+                                            <tr v-for="cat in paginatedCategories" :key="cat.id">
                                                 <td>
-                                                    <div class="d-flex gap-2">
-                                                        <button @click="openCategoryModal(cat)" class="btn btn-sm btn-primary"><i class="bi bi-pencil"></i></button>
-                                                        <button @click="deleteCategory(cat.id)" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i></button>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="square--35 circle bg-primary-subtle text-primary fw-bold fs-6 d-flex align-items-center justify-content-center">
+                                                            <i :class="cat.icon || 'bi bi-folder'"></i>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">{{ cat.name }}</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light text-secondary border font-monospace">{{ cat.slug }}</span>
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted">{{ cat.description || '—' }}</small>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light-primary text-primary border">
+                                                        <i class="bi bi-book me-1"></i>{{ cat.courses_count || cat.courses?.length || 0 }} cours
+                                                    </span>
+                                                </td>
+                                                <td class="text-end">
+                                                    <div class="d-flex gap-2 justify-content-end">
+                                                        <button 
+                                                            @click="openCategoryModal(cat)" 
+                                                            class="btn btn-sm btn-outline-primary rounded-2"
+                                                            title="Modifier la catégorie"
+                                                        >
+                                                            <i class="bi bi-pencil me-1"></i> Modifier
+                                                        </button>
+                                                        <button 
+                                                            @click="deleteCategory(cat.id, cat.name)" 
+                                                            class="btn btn-sm btn-outline-danger rounded-2"
+                                                            title="Supprimer la catégorie"
+                                                        >
+                                                            <i class="bi bi-trash me-1"></i> Supprimer
+                                                        </button>
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr v-if="categories.length === 0">
-                                                <td colspan="4" class="text-center text-muted py-3">Aucune catégorie trouvée.</td>
+                                            <tr v-if="filteredCategories.length === 0">
+                                                <td colspan="5" class="text-center text-muted py-5">
+                                                    <i class="bi bi-tags fs-1 d-block mb-2 text-secondary"></i>
+                                                    Aucune catégorie disponible.
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <!-- Category Pagination Controls -->
+                                <div class="d-flex align-items-center justify-content-between pt-3 border-top mt-3" v-if="filteredCategories.length > 0">
+                                    <div class="small text-muted">
+                                        Page <strong>{{ categoryCurrentPage }}</strong> sur <strong>{{ totalCategoryPages }}</strong>
+                                    </div>
+                                    <nav aria-label="Pagination catégories" v-if="totalCategoryPages > 1">
+                                        <ul class="custom-pagination">
+                                            <li class="page-item" :class="{ disabled: categoryCurrentPage === 1 }">
+                                                <button class="page-link" @click="categoryCurrentPage--" :disabled="categoryCurrentPage === 1">
+                                                    ‹
+                                                </button>
+                                            </li>
+                                            <li 
+                                                v-for="p in totalCategoryPages" 
+                                                :key="p" 
+                                                class="page-item" 
+                                                :class="{ active: categoryCurrentPage === p }"
+                                            >
+                                                <button class="page-link" @click="categoryCurrentPage = p">{{ p }}</button>
+                                            </li>
+                                            <li class="page-item" :class="{ disabled: categoryCurrentPage === totalCategoryPages }">
+                                                <button class="page-link" @click="categoryCurrentPage++" :disabled="categoryCurrentPage === totalCategoryPages">
+                                                    ›
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
 
@@ -1299,34 +1388,94 @@
     <!-- Modal Ajouter Utilisateur -->
     <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ $t('add_user') }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-light border-0 px-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="square--45 rounded-circle bg-warning-subtle text-warning-emphasis d-flex align-items-center justify-content-center fs-4">
+                            <i class="bi bi-person-plus-fill text-warning"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold m-0 text-dark">{{ $t('add_user') }}</h5>
+                            <span class="text-muted extra-small">Créez un compte et définissez ses accès à la plateforme</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form @submit.prevent="submitUser">
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('full_name') }}</label>
-                            <input type="text" class="form-control" v-model="userForm.name" required>
+                            <label class="form-label fw-semibold text-dark">{{ $t('full_name') }} <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control rounded-3 py-2" v-model="userForm.name" placeholder="Ex: Mohamed Traoré" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('email') }}</label>
-                            <input type="email" class="form-control" v-model="userForm.email" required>
+                            <label class="form-label fw-semibold text-dark">{{ $t('email') }} <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control rounded-3 py-2" v-model="userForm.email" placeholder="utilisateur@alrei.org" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('password') }}</label>
-                            <input type="password" class="form-control" v-model="userForm.password" required>
+                            <label class="form-label fw-semibold text-dark">{{ $t('password') }} <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input 
+                                    :type="showUserPassword ? 'text' : 'password'" 
+                                    class="form-control rounded-start-3 py-2" 
+                                    v-model="userForm.password" 
+                                    placeholder="Saisissez ou générez un mot de passe..."
+                                    required
+                                >
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-secondary px-3" 
+                                    @click="showUserPassword = !showUserPassword" 
+                                    :title="showUserPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+                                >
+                                    <i :class="['bi', showUserPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill']"></i>
+                                </button>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-outline-primary px-3 fw-semibold" 
+                                    @click="generatePassword" 
+                                    title="Générer un mot de passe sécurisé"
+                                >
+                                    <i class="bi bi-shuffle me-1"></i> Générer
+                                </button>
+                            </div>
+                            <div class="mt-2 p-2 bg-light-primary border border-primary-subtle rounded-3 small text-dark d-flex align-items-center justify-content-between" v-if="userForm.password">
+                                <div>
+                                    <i class="bi bi-key-fill text-primary me-1"></i>
+                                    <span>Mot de passe défini :</span>
+                                    <strong class="font-monospace text-primary ms-1 fs-6">{{ userForm.password }}</strong>
+                                </div>
+                                <button type="button" class="btn btn-xs btn-outline-primary py-0 px-2 rounded-pill" @click="copyPassword" title="Copier le mot de passe">
+                                    <i class="bi bi-clipboard me-1"></i>Copier
+                                </button>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">{{ $t('role') }}</label>
-                            <select class="form-select" v-model="userForm.role" required>
+                            <label class="form-label fw-semibold text-dark">{{ $t('role') }} <span class="text-danger">*</span></label>
+                            <select class="form-select rounded-3 py-2" v-model="userForm.role" required>
                                 <option value="student">{{ $t('student') }}</option>
                                 <option value="instructor">{{ $t('instructor') }}</option>
                                 <option value="admin">{{ $t('admin') }}</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100" :disabled="submitting">{{ $t('create') }}</button>
+                        <div class="mb-3 p-3 bg-light rounded-3 border">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="sendEmailCheck" v-model="userForm.send_email_notification">
+                                <label class="form-check-label fw-semibold text-dark cursor-pointer ms-1" for="sendEmailCheck">
+                                    <i class="bi bi-envelope-at-fill text-primary me-1"></i> Envoyer un e-mail avec les accès à l'utilisateur
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1 ps-4" style="font-size: 0.8rem;">
+                                Un e-mail de bienvenue contenant son identifiant et son mot de passe lui sera automatiquement transmis dès la création.
+                            </small>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-warning text-white fw-bold rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 shadow-sm" :disabled="submitting">
+                                <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                <i v-else class="bi bi-person-check-fill"></i>
+                                {{ $t('create') }}
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1483,7 +1632,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{ scholarshipForm.value.id ? 'Modifier la Bourse' : 'Créer une Bourse' }}</h5>
+                    <h5 class="modal-title">{{ scholarshipForm.id ? 'Modifier la Bourse' : 'Créer une Bourse' }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1510,7 +1659,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100" :disabled="submitting">
-                            {{ scholarshipForm.value.id ? 'Modifier' : 'Créer' }}
+                            {{ scholarshipForm.id ? 'Modifier' : 'Créer' }}
                         </button>
                     </form>
                 </div>
@@ -1534,37 +1683,61 @@
     </div>
 
     <!-- Category Modal -->
-    <div class="modal fade" id="categoryModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ categoryForm.id ? 'Modifier' : 'Ajouter' }} une Catégorie</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-light border-0 px-4 py-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="square--45 rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fs-4">
+                            <i class="bi bi-tags-fill"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title fw-bold m-0 text-dark">{{ categoryForm.id ? 'Modifier la Catégorie' : 'Ajouter une Catégorie' }}</h5>
+                            <span class="text-muted extra-small">Organisez les cours et les formations par domaine d'apprentissage</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Nom de la catégorie</label>
-                        <input type="text" class="form-control" v-model="categoryForm.name" @input="categoryForm.slug = categoryForm.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Slug</label>
-                        <input type="text" class="form-control" v-model="categoryForm.slug">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Icone (Classe Bootstrap / FontAwesome, ex: bi bi-code)</label>
-                        <input type="text" class="form-control" v-model="categoryForm.icon">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" v-model="categoryForm.description" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-primary" @click="submitCategory" :disabled="submitting">
-                        <span v-if="submitting" class="spinner-border spinner-border-sm me-2"></span>
-                        Enregistrer
-                    </button>
+                <div class="modal-body p-4">
+                    <form @submit.prevent="submitCategory">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark">Nom de la catégorie <span class="text-danger">*</span></label>
+                            <input 
+                                type="text" 
+                                class="form-control rounded-3 py-2" 
+                                v-model="categoryForm.name" 
+                                @input="onCategoryNameInput" 
+                                placeholder="Ex: Développement Web, Management..." 
+                                required
+                            >
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark">Slug URL</label>
+                            <input type="text" class="form-control rounded-3 py-2 font-monospace" v-model="categoryForm.slug" placeholder="ex: developpement-web">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark">Icône (Classe Bootstrap Icon)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i :class="categoryForm.icon || 'bi bi-folder'"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0 py-2" v-model="categoryForm.icon" placeholder="Ex: bi bi-code-slash, bi bi-laptop">
+                            </div>
+                            <small class="text-muted">Utilisez des classes d'icônes Bootstrap (ex: <code>bi bi-laptop</code>, <code>bi bi-graph-up</code>, <code>bi bi-gear</code>)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark">Description</label>
+                            <textarea class="form-control rounded-3 py-2" v-model="categoryForm.description" rows="3" placeholder="Brève description de la catégorie..."></textarea>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-primary fw-bold rounded-pill px-4 py-2 d-inline-flex align-items-center gap-2 shadow-sm" :disabled="submitting">
+                                <span v-if="submitting" class="spinner-border spinner-border-sm me-1"></span>
+                                <i v-else :class="['bi', categoryForm.id ? 'bi-check-lg' : 'bi-plus-lg']"></i>
+                                {{ categoryForm.id ? 'Mettre à jour' : 'Enregistrer' }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1702,6 +1875,7 @@ const blogs = ref<any[]>([])
 const certificates = ref<any[]>([])
 const scholarships = ref<any[]>([])
 const scholarshipApplications = ref<any[]>([])
+const scholarshipStudents = ref<any[]>([])
 const loading = ref(true)
 const submitting = ref(false)
 const validatingDoc = ref<number | null>(null)
@@ -1724,7 +1898,7 @@ watch(() => route.query.tab, (newTabQuery) => {
 
 const selectedInstructor = ref<any>(null)
 
-const categories = ref([])
+const categories = ref<any[]>([])
 const categoryForm = ref({ id: null, name: '', slug: '', icon: '', description: '' })
 let categoryModalInstance: any = null
 
@@ -2074,7 +2248,25 @@ const exportStudentsPdf = async () => {
 }
 
 // Forms
-const userForm = ref({ name: '', email: '', password: '', role: 'student' })
+const userForm = ref({ name: '', email: '', password: '', role: 'student', send_email_notification: true })
+const showUserPassword = ref(true)
+
+const generatePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$'
+    let pwd = ''
+    for (let i = 0; i < 10; i++) {
+        pwd += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    userForm.value.password = pwd
+    showUserPassword.value = true
+}
+
+const copyPassword = () => {
+    if (userForm.value.password && process.client) {
+        navigator.clipboard.writeText(userForm.value.password)
+        alert('Mot de passe copié dans le presse-papier !')
+    }
+}
 const groupForm = ref({ name: '', description: '', user_ids: [] })
 const assignForm = ref({ course_id: '', target_type: 'user', target_id: '' })
 const blogForm = ref({ id: null, title: '', category: '', description: '', content: '', author_name: '', read_time: '', status: 'published', image: null as any })
@@ -2251,10 +2443,10 @@ const exportCountrySummaryPdf = async () => {
             head: [tableColumn],
             body: tableRows,
             startY: 32,
-            theme: 'striped',
-            styles: { fontSize: 8, cellPadding: 2.5, font: 'helvetica', overflow: 'linebreak' },
-            headStyles: { fillColor: [13, 110, 253], textColor: [255, 255, 255], fontStyle: 'bold' },
-            alternateRowStyles: { fillColor: [248, 249, 250] },
+            theme: 'striped' as const,
+            styles: { fontSize: 8, cellPadding: 2.5, font: 'helvetica', overflow: 'linebreak' as const },
+            headStyles: { fillColor: [13, 110, 253] as [number, number, number], textColor: [255, 255, 255] as [number, number, number], fontStyle: 'bold' as const },
+            alternateRowStyles: { fillColor: [248, 249, 250] as [number, number, number] },
             columnStyles: {
                 0: { cellWidth: 10 },  // N°
                 1: { cellWidth: 35 },  // Délégué
@@ -2468,7 +2660,7 @@ const previewCert = async (id: number, certNumber: string) => {
             method: 'GET',
             responseType: 'blob'
         })
-        const url = window.URL.createObjectURL(new Blob([response], { type: 'application/pdf' }))
+        const url = window.URL.createObjectURL(new Blob([response as BlobPart], { type: 'application/pdf' }))
         window.open(url, '_blank')
     } catch (error) {
         console.error('Preview error:', error)
@@ -2549,25 +2741,45 @@ const deleteCourse = async (id: number) => {
 
 // User Actions
 const openUserModal = (role = 'student') => {
-    userForm.value = { name: '', email: '', password: '', role }
+    userForm.value = { name: '', email: '', password: '', role, send_email_notification: true }
+    showUserPassword.value = true
+    generatePassword()
     if (process.client) {
         const { $bootstrap } = useNuxtApp()
-        if (!userModalInstance) {
-            userModalInstance = new ($bootstrap as any).Modal(document.getElementById('userModal'))
+        const modalElement = document.getElementById('userModal')
+        if (modalElement) {
+            userModalInstance = ($bootstrap as any).Modal.getInstance(modalElement) || new ($bootstrap as any).Modal(modalElement)
+            userModalInstance.show()
         }
-        userModalInstance.show()
     }
 }
 
 const submitUser = async () => {
+    if (!userForm.value.name || !userForm.value.email || !userForm.value.password) {
+        alert('Veuillez remplir tous les champs obligatoires.')
+        return
+    }
     submitting.value = true
     try {
         await api('/admin/users', { method: 'POST', body: userForm.value })
-        userModalInstance?.hide()
+        
+        if (process.client) {
+            const { $bootstrap } = useNuxtApp()
+            const modalElement = document.getElementById('userModal')
+            if (modalElement) {
+                const modal = ($bootstrap as any).Modal.getInstance(modalElement) || userModalInstance
+                modal?.hide()
+            }
+        }
+
+        const emailInfo = userForm.value.send_email_notification 
+            ? `\nUn e-mail de bienvenue contenant ses accès a été envoyé à ${userForm.value.email}.`
+            : ''
+        alert(`✅ Compte créé avec succès pour "${userForm.value.name}" !${emailInfo}`)
         await fetchAll()
-    } catch (err) {
+    } catch (err: any) {
         console.error('Create user failed:', err)
-        alert('Erreur lors de la création')
+        alert(err?.data?.message || err?.message || 'Erreur lors de la création de l\'utilisateur.')
     } finally {
         submitting.value = false
     }
@@ -2662,9 +2874,10 @@ const submitBlog = async () => {
     submitting.value = true
     try {
         const formData = new FormData()
-        Object.keys(blogForm.value).forEach(key => {
-            if (blogForm.value[key] !== null) {
-                formData.append(key, blogForm.value[key])
+        const formObj = blogForm.value as Record<string, any>
+        Object.keys(formObj).forEach(key => {
+            if (formObj[key] !== null && formObj[key] !== undefined) {
+                formData.append(key, formObj[key])
             }
         })
 
@@ -2777,45 +2990,133 @@ const viewMotivation = (app: any) => {
     }
 }
 
-// Category Actions
+// Category Actions & Pagination
+const categorySearch = ref('')
+const categoryCurrentPage = ref(1)
+const categoryItemsPerPage = ref(5)
+
+watch([categorySearch, categoryItemsPerPage], () => {
+    categoryCurrentPage.value = 1
+})
+
+const filteredCategories = computed(() => {
+    if (!categorySearch.value) return categories.value
+    const q = categorySearch.value.toLowerCase().trim()
+    return categories.value.filter(cat => 
+        (cat.name || '').toLowerCase().includes(q) ||
+        (cat.slug || '').toLowerCase().includes(q) ||
+        (cat.description || '').toLowerCase().includes(q)
+    )
+})
+
+const totalCategoryPages = computed(() => {
+    return Math.ceil(filteredCategories.value.length / categoryItemsPerPage.value) || 1
+})
+
+const paginatedCategories = computed(() => {
+    const start = (categoryCurrentPage.value - 1) * categoryItemsPerPage.value
+    return filteredCategories.value.slice(start, start + categoryItemsPerPage.value)
+})
+
+const categoryPageStart = computed(() => {
+    if (filteredCategories.value.length === 0) return 0
+    return (categoryCurrentPage.value - 1) * categoryItemsPerPage.value + 1
+})
+
+const categoryPageEnd = computed(() => {
+    const end = categoryCurrentPage.value * categoryItemsPerPage.value
+    return end > filteredCategories.value.length ? filteredCategories.value.length : end
+})
+
+const onCategoryNameInput = () => {
+    if (!categoryForm.value.id || !categoryForm.value.slug) {
+        categoryForm.value.slug = categoryForm.value.name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '')
+    }
+}
+
 const openCategoryModal = (category: any = null) => {
     if (category) {
-        categoryForm.value = { ...category }
+        categoryForm.value = {
+            id: category.id,
+            name: category.name || '',
+            slug: category.slug || '',
+            icon: category.icon || 'bi bi-folder',
+            description: category.description || ''
+        }
     } else {
-        categoryForm.value = { id: null, name: '', slug: '', icon: '', description: '' }
+        categoryForm.value = { id: null, name: '', slug: '', icon: 'bi bi-folder', description: '' }
     }
     if (process.client) {
         const { $bootstrap } = useNuxtApp()
-        if (!categoryModalInstance) {
-            categoryModalInstance = new ($bootstrap as any).Modal(document.getElementById('categoryModal'))
+        const modalElement = document.getElementById('categoryModal')
+        if (modalElement) {
+            const modal = ($bootstrap as any).Modal.getInstance(modalElement) || new ($bootstrap as any).Modal(modalElement)
+            modal.show()
         }
-        categoryModalInstance.show()
     }
 }
 
 const submitCategory = async () => {
+    if (!categoryForm.value.name.trim()) {
+        alert('Veuillez saisir le nom de la catégorie.')
+        return
+    }
     submitting.value = true
     try {
-        const method = categoryForm.value.id ? 'PUT' : 'POST'
-        const url = categoryForm.value.id ? `/admin/categories/${categoryForm.value.id}` : '/admin/categories'
-        await api(url, { method, body: categoryForm.value })
-        categoryModalInstance?.hide()
+        const isEdit = !!categoryForm.value.id
+        const method = isEdit ? 'PUT' : 'POST'
+        const primaryUrl = isEdit ? `/admin/categories/${categoryForm.value.id}` : '/admin/categories'
+        const fallbackUrl = isEdit ? `/categories/${categoryForm.value.id}` : '/categories'
+
+        try {
+            await api(primaryUrl, { method, body: categoryForm.value })
+        } catch (err: any) {
+            if (err?.status === 404 || err?.statusCode === 404) {
+                await api(fallbackUrl, { method, body: categoryForm.value })
+            } else {
+                throw err
+            }
+        }
+
+        if (process.client) {
+            const { $bootstrap } = useNuxtApp()
+            const modalElement = document.getElementById('categoryModal')
+            if (modalElement) {
+                const modal = ($bootstrap as any).Modal.getInstance(modalElement)
+                modal?.hide()
+            }
+        }
         await fetchAll()
-    } catch (err) {
+    } catch (err: any) {
         console.error('Save category failed:', err)
-        alert('Erreur lors de l\'enregistrement de la catégorie')
+        alert(err?.data?.message || err?.message || 'Erreur lors de l\'enregistrement de la catégorie')
     } finally {
         submitting.value = false
     }
 }
 
-const deleteCategory = async (id: number) => {
-    if (!confirm('Supprimer cette catégorie ?')) return
+const deleteCategory = async (id: number, name?: string) => {
+    const categoryName = name ? `"${name}"` : 'cette catégorie'
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${categoryName} ?`)) return
     try {
-        await api(`/admin/categories/${id}`, { method: 'DELETE' })
+        try {
+            await api(`/admin/categories/${id}`, { method: 'DELETE' })
+        } catch (err: any) {
+            if (err?.status === 404 || err?.statusCode === 404) {
+                await api(`/categories/${id}`, { method: 'DELETE' })
+            } else {
+                throw err
+            }
+        }
         await fetchAll()
-    } catch (err) {
+    } catch (err: any) {
         console.error('Delete category failed:', err)
+        alert(err?.data?.message || err?.message || 'Erreur lors de la suppression de la catégorie')
     }
 }
 

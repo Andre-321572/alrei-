@@ -2,8 +2,14 @@
     <div class="ed_view_box border-0 shadow-lg rounded-4 overflow-hidden mb-4 bg-white">
 
         <div class="courses-video position-relative">
-            <div class="thumb">
-                <img class="pro_img img-fluid w-100" :src="courseImage" :alt="course?.title || ''">
+            <div class="thumb overflow-hidden rounded-top-4" style="background-color: #0b0f19; aspect-ratio: 16/9; max-height: 240px; position: relative;">
+                <img 
+                    class="pro_img w-100 h-100" 
+                    :src="courseImage" 
+                    @error="onImgError"
+                    :alt="course?.title || ''"
+                    style="object-fit: cover; object-position: center;"
+                >
                 <div v-if="course.video_preview" class="overlay_icon">
                     <div data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="bb-video-box">
                         <a href="#" class="play-popup-video">
@@ -174,10 +180,19 @@ const router = useRouter()
 const route = useRoute()
 const api = useApi()
 
+const hasError = ref(false)
+
 const courseImage = computed(() => {
     const { getThemeImage } = useCourseTheme()
+    if (hasError.value) {
+        return getThemeImage(props.course, 0, true)
+    }
     return getThemeImage(props.course)
 })
+
+const onImgError = () => {
+    hasError.value = true
+}
 
 const isFree = computed(() => {
     if (!props.course) return true

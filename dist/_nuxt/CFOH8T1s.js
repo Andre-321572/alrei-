@@ -1,1 +1,0 @@
-import{_ as r}from"./5NVnKKzM.js";import{S as a}from"./Cbk1ajyr.js";import{o,c as s,b as t,af as m,F as n}from"./CaiwNdoN.js";import"./CfN2Pvcf.js";import"./B4Qvxrcg.js";import"./CyJdxUud.js";const S={__name:"student",setup(p){return(e,c)=>(o(),s(n,null,[t(r),t(a),m(e.$slots,"default")],64))}};export{S as default};

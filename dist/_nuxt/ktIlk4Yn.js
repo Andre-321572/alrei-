@@ -1,0 +1,1 @@
+import{_ as o}from"./CR3y7FXr.js";import{_ as a}from"./Dl3N-mVd.js";import{o as e,c as s,b as r,af as m,F as n}from"./Ba5VOm5r.js";import"./IU67b27w.js";import"./DWuuHQJ1.js";import"./Djqa4tGH.js";const $={__name:"instructor",setup(_){return(t,c)=>(e(),s(n,null,[r(o),r(a),m(t.$slots,"default")],64))}};export{$ as default};

@@ -831,9 +831,11 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
     try {
         const formData = new FormData()
         formData.append('title', course.title)
-        formData.append('category_id', String(course.category_id || ''))
-        formData.append('level', course.level)
-        formData.append('language', course.language)
+        if (course.category_id && String(course.category_id).trim() !== '') {
+            formData.append('category_id', String(course.category_id))
+        }
+        formData.append('level', course.level || 'beginner')
+        formData.append('language', course.language || 'fr')
         formData.append('description', course.description || '')
         formData.append('prerequisites', course.prerequisites || '')
         formData.append('is_free', course.is_free ? '1' : '0')
@@ -841,7 +843,7 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
         formData.append('requires_approval', course.requires_approval ? '1' : '0')
         formData.append('price', String(course.is_free ? 0 : (course.price || 0)))
         formData.append('status', targetStatus)
-        if (course.instructor_id) {
+        if (course.instructor_id && String(course.instructor_id).trim() !== '') {
             formData.append('instructor_id', String(course.instructor_id))
         }
         if (course.thumbnail) {
@@ -851,7 +853,7 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
         // Multilingual content
         formData.append('content_type', contentType.value)
         if (contentType.value === 'youtube') {
-            formData.append('youtube_url', youtubeUrl.value)
+            formData.append('youtube_url', youtubeUrl.value || '')
         } else {
             languageVersions.value.forEach((v, i) => {
                 formData.append(`versions[${i}][lang]`, v.lang)
@@ -927,7 +929,7 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
             }
         }
 
-        // Notification e-mail aux instituteurs assignés (si par l'administrateur)
+        // Notification e-mail aux instituteurs assignés (si gérée par route optionnelle)
         const assignedInstructorIds = new Set<string | number>()
         if (course.instructor_id) assignedInstructorIds.add(course.instructor_id)
         modules.value.forEach(m => {
@@ -944,22 +946,31 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
                             course_id: savedCourseId,
                             course_title: course.title
                         }
-                    }).catch(err => console.info('Notification email info:', err))
-                } catch (notifyErr) {
-                    console.warn('Notification email error:', notifyErr)
+                    }).catch(() => null)
+                } catch {
+                    // Route optionnelle : gérée automatiquement par le backend Laravel
                 }
             }
         }
 
         const msg = targetStatus === 'draft'
-            ? '✅ Cours enregistré comme brouillon avec succès ! E-mail d\'assignation transmis à l\'instituteur.'
-            : '🎉 Félicitations ! Votre cours a été publié avec succès et l\'instituteur a été notifié.'
+            ? '✅ Cours enregistré comme brouillon avec succès !'
+            : '🎉 Félicitations ! Votre cours a été publié avec succès.'
         alert(msg)
         const targetRoute = isAdmin.value ? '/admin-dashboard?tab=courses' : '/instructor-courses';
         navigateTo(localePath(targetRoute));
     } catch (error: any) {
         console.error('Failed to save course:', error)
-        alert(error?.data?.message || 'Erreur lors de l\'enregistrement du cours. Veuillez vérifier tous les champs.')
+        let errorMsg = 'Erreur lors de l\'enregistrement du cours.'
+        if (error?.data?.errors) {
+            const details = Object.entries(error.data.errors)
+                .map(([field, msgs]: [string, any]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+                .join('\n')
+            errorMsg = `Erreur de validation (422) :\n${details}`
+        } else if (error?.data?.message) {
+            errorMsg = `Erreur (422) : ${error.data.message}`
+        }
+        alert(errorMsg)
     } finally {
         submitting.value = false
     }

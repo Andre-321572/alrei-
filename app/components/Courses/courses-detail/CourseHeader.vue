@@ -1,14 +1,30 @@
 <template>
-    <!-- Dark overlay wrapper ensures text visibility regardless of image brightness -->
-    <div class="ed_detail_head_wrapper position-relative" style="overflow: hidden;">
+    <!-- Dark overlay wrapper ensures text visibility regardless of image brightness and format -->
+    <div class="ed_detail_head_wrapper position-relative overflow-hidden" style="min-height: 420px; background-color: #0b0f19;">
 
-        <!-- Background Image Layer -->
-        <div class="position-absolute top-0 start-0 w-100 h-100" :style="backgroundStyle"></div>
+        <!-- Ambient Blurred Background Layer (Fills canvas smoothly for portrait or odd ratio images) -->
+        <img
+            :src="headerImage"
+            @error="handleImgError"
+            alt=""
+            aria-hidden="true"
+            class="position-absolute top-0 start-0 w-100 h-100"
+            style="object-fit: cover; object-position: center; filter: blur(30px) brightness(0.35); transform: scale(1.2); opacity: 0.7; pointer-events: none;"
+        />
 
-        <!-- Gradient Overlay: dark bottom-to-top for readability -->
+        <!-- Main Banner Sharp Image Layer (Cleanly cropped cover without stretching) -->
+        <img
+            :src="headerImage"
+            @error="handleImgError"
+            :alt="course?.title || ''"
+            class="position-absolute top-0 start-0 w-100 h-100"
+            style="object-fit: cover; object-position: center 35%; transition: opacity 0.3s ease; z-index: 0;"
+        />
+
+        <!-- Multi-layer Gradient Overlay: dark bottom-to-top for guaranteed text readability -->
         <div
             class="position-absolute top-0 start-0 w-100 h-100"
-            style="background: linear-gradient(135deg, rgba(10,10,30,0.85) 0%, rgba(10,10,40,0.70) 60%, rgba(20,20,60,0.50) 100%); z-index: 1;"
+            style="background: linear-gradient(135deg, rgba(10,10,30,0.88) 0%, rgba(10,10,40,0.75) 60%, rgba(20,20,60,0.60) 100%); z-index: 1;"
         ></div>
 
         <div class="container position-relative py-5" style="z-index: 2; padding-top: 100px !important; padding-bottom: 100px !important;">
@@ -81,24 +97,19 @@
 </template>
 
 <script setup>
+const props = defineProps({ course: Object })
+const { getThemeImage } = useCourseTheme()
 
-const { course } = defineProps({ course: Object })
+const hasError = ref(false)
 
-const courseBg = computed(() => {
-    const raw = course?.thumbnail || course?.image
-    if (!raw) return '/img/student-banner.png'
-    if (typeof raw === 'string' && (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || raw.startsWith('data:') || raw.startsWith('blob:'))) {
-        return raw
+const headerImage = computed(() => {
+    if (hasError.value) {
+        return getThemeImage(props.course, 0, true)
     }
-    const config = useRuntimeConfig()
-    return `${config.public.apiBase.replace('/api', '')}/storage/${raw}`
+    return getThemeImage(props.course)
 })
 
-const backgroundStyle = computed(() => ({
-    backgroundImage: `url(${courseBg.value})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '420px'
-}))
+const handleImgError = () => {
+    hasError.value = true
+}
 </script>

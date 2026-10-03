@@ -1,1 +1,0 @@
-import{ad as i,H as n,E as s,ae as o}from"./CaiwNdoN.js";const c=i(async()=>{let e,a;const{isAuthenticated:r,fetchUser:u,user:t}=n();if(!r.value)return s("/");if(t.value||([e,a]=o(()=>u()),await e,a()),t.value?.role!=="admin")return s("/")});export{c as default};
