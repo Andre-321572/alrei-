@@ -47,6 +47,9 @@
                         <div v-if="sent" class="alert alert-success mt-3 mb-0 small p-2 text-center rounded-3">
                             {{ t('form_success_msg') }}
                         </div>
+                        <div v-if="errorMessage" class="alert alert-danger mt-3 mb-0 small p-2 text-center rounded-3">
+                            {{ errorMessage }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -57,6 +60,7 @@
 <script setup>
 const { t } = useI18n()
 const localePath = useLocalePath()
+const api = useApi()
 
 const points = [
     { key: "resource_point_1", fallback: "Enseigner à partir des réalités africaines" },
@@ -68,14 +72,25 @@ const points = [
 const form = ref({ name: '', email: '', expertise: '', message: '' })
 const submitting = ref(false)
 const sent = ref(false)
+const errorMessage = ref('')
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
     submitting.value = true
-    setTimeout(() => {
-        submitting.value = false
+    sent.value = false
+    errorMessage.value = ''
+    try {
+        await api('/resource-persons', {
+            method: 'POST',
+            body: form.value
+        })
         sent.value = true
         form.value = { name: '', email: '', expertise: '', message: '' }
-    }, 1000)
+    } catch (err) {
+        console.error('Error submitting resource person application:', err)
+        errorMessage.value = err?.data?.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
+    } finally {
+        submitting.value = false
+    }
 }
 </script>
 

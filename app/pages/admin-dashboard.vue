@@ -1876,6 +1876,7 @@ const certificates = ref<any[]>([])
 const scholarships = ref<any[]>([])
 const scholarshipApplications = ref<any[]>([])
 const scholarshipStudents = ref<any[]>([])
+const resourcePersons = ref<any[]>([])
 const loading = ref(true)
 const submitting = ref(false)
 const validatingDoc = ref<number | null>(null)
@@ -2602,6 +2603,7 @@ const fetchAll = async () => {
             fetchItem('/admin/scholarships', scholarships),
             fetchItem('/admin/scholarship-applications', scholarshipApplications),
             fetchItem('/admin/scholarship-students', scholarshipStudents),
+            fetchItem('/resource-persons', resourcePersons),
             fetchItem('/categories', categories)
         ])
     } catch (err) {
