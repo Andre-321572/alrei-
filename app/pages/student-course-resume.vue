@@ -333,9 +333,22 @@ const isLessonCompleted = (lessonId) => {
 
 const fetchCourse = async () => {
     try {
-        const id = route.query.id
+        const id = route.query.id || route.query.course_id
         if (id) {
             courseId.value = id
+
+            // Verify enrollment status before granting lesson access
+            try {
+                const statusRes = await api(`/courses/${id}/enrollment-status`)
+                if (statusRes && statusRes.enrolled && !statusRes.can_access) {
+                    alert('Accès refusé : Votre candidature (Lettre de nomination / Validation de dossier) est en cours d\'examen par l\'administration.')
+                    navigateTo('/student-dashboard')
+                    return
+                }
+            } catch (e) {
+                // Ignore error if endpoint unavailable
+            }
+
             const response = await api(`/courses/by-id/${id}`)
             course.value = response.data || response
         }

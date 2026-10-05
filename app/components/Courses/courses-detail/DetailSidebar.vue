@@ -39,15 +39,17 @@
             <div class="ed_view_link d-flex align-items-center justify-content-center flex-column gap-3 mt-4 p-0">
                 <button 
                     @click="handleFollowCourse" 
-                    class="btn btn-main w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" 
+                    :class="['btn w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2', 
+                            isEnrolled && enrollmentStatus === 'pending' ? 'btn-warning text-dark' : 
+                            (isEnrolled && enrollmentStatus === 'rejected' ? 'btn-danger text-white' : 'btn-main')]" 
                     style="font-size: 1.1rem;"
                     :disabled="enrolling"
                 >
                     <span v-if="enrolling" class="spinner-border spinner-border-sm"></span>
                     <template v-else>
-                        <i :class="isEnrolled ? 'bi bi-play-circle-fill' : (isFree ? 'bi bi-person-check-fill' : 'bi bi-mortarboard-fill')"></i>
+                        <i :class="isEnrolled ? (enrollmentStatus === 'pending' ? 'bi bi-clock-history' : (enrollmentStatus === 'rejected' ? 'bi bi-x-circle' : 'bi bi-play-circle-fill')) : (isFree ? 'bi bi-person-check-fill' : 'bi bi-mortarboard-fill')"></i>
                         <span>
-                            {{ isEnrolled ? ($t('enrolled_continue') || 'Accéder au cours') : (isFree ? ($t('join_course') || 'Rejoindre le cours') : ($t('follow_course') || 'Suivre le cours')) }}
+                            {{ isEnrolled ? (enrollmentStatus === 'pending' ? 'En attente de validation' : (enrollmentStatus === 'rejected' ? 'Candidature non retenue' : ($t('enrolled_continue') || 'Accéder au cours'))) : (isFree ? ($t('join_course') || 'Rejoindre le cours') : ($t('follow_course') || 'Suivre le cours')) }}
                         </span>
                     </template>
                 </button>
@@ -201,6 +203,7 @@ const isFree = computed(() => {
 })
 
 const isEnrolled = ref(false)
+const enrollmentStatus = ref('none')
 const enrolling = ref(false)
 const scholarships = ref([])
 const motivationLetter = ref('')
@@ -223,6 +226,7 @@ const checkEnrollmentStatus = async () => {
             const res = await api(`/courses/${props.course.id}/enrollment-status`)
             if (res && (res.enrolled || res.is_enrolled)) {
                 isEnrolled.value = true
+                enrollmentStatus.value = res.status || 'active'
             }
         } catch (e) {
             // silent catch
@@ -260,22 +264,42 @@ const handleFollowCourse = async () => {
 
     // User is logged in
     if (isEnrolled.value) {
-        router.push(`/student-course-resume?course_id=${props.course.id}`)
+        if (enrollmentStatus.value === 'pending') {
+            alert('Votre candidature (Lettre de nomination / Validation de dossier) a bien été reçue. Elle est actuellement en cours d\'examen par l\'administration.')
+            return
+        }
+        if (enrollmentStatus.value === 'rejected') {
+            alert('Désolé, votre candidature pour ce cours n\'a pas été retenue par l\'administration.')
+            return
+        }
+        router.push(`/student-course-resume?id=${props.course.id}&course_id=${props.course.id}`)
         return
     }
 
-    if (isFree.value) {
+    if (isFree.value || props.course?.is_nomination_only || props.course?.requires_approval) {
         enrolling.value = true
         try {
-            await api(`/courses/${props.course.id}/enroll`, { method: 'POST' })
+            const res = await api(`/courses/${props.course.id}/enroll`, { method: 'POST' })
             isEnrolled.value = true
-            alert('Félicitations ! Vous êtes inscrit(e) à ce cours.')
-            router.push('/student-dashboard')
+            const status = res?.enrollment?.status || (props.course?.is_nomination_only || props.course?.requires_approval ? 'pending' : 'active')
+            enrollmentStatus.value = status
+
+            if (status === 'pending') {
+                alert('Votre demande a été enregistrée ! Elle est actuellement en attente de validation par l\'administration.')
+            } else {
+                alert('Félicitations ! Vous êtes inscrit(e) à ce cours.')
+                router.push('/student-dashboard')
+            }
         } catch (error) {
             console.error('Enrollment error:', error)
             if (error.status === 409 || error.data?.message?.includes('enrolled')) {
                 isEnrolled.value = true
-                router.push('/student-dashboard')
+                await checkEnrollmentStatus()
+                if (enrollmentStatus.value === 'pending') {
+                    alert('Votre dossier est en cours de validation par l\'administration.')
+                } else {
+                    router.push('/student-dashboard')
+                }
             } else {
                 alert(error.data?.message || 'Erreur lors de l\'inscription au cours.')
             }
