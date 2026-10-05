@@ -6,7 +6,7 @@
         :class="['top-scroll', scroll ? 'd-block' : 'd-none']"
         title="Back to top"
     >
-        <i class="ti-arrow-up"></i>
+        <i class="bi bi-arrow-up-short fs-3"></i>
     </a>
 </template>
 
