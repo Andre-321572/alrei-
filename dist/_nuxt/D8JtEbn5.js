@@ -1,1 +1,0 @@
-import{ad as i,H as a,E as n,ae as o}from"./Ba5VOm5r.js";const d=i(async()=>{let e,t;const{isAuthenticated:s,fetchUser:u}=a();if(!s.value)return n("/");const{user:r}=a();r.value||([e,t]=o(()=>u()),await e,t())});export{d as default};

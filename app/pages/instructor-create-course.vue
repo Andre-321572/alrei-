@@ -247,6 +247,80 @@
                                         <textarea v-model="course.prerequisites" class="form-control" rows="2" placeholder="Ex: Adhésion syndicale ou désignation par l'organisation membre"></textarea>
                                     </div>
 
+                                    <!-- Bloc Objectifs, Public Cible & Méthodologie (Style ALREI / ITCILO) -->
+                                    <div class="card border rounded-3 p-4 mb-4 bg-light shadow-xs">
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <div class="square--40 circle bg-light-primary text-primary">
+                                                <i class="bi bi-journal-check fs-5"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="fw-bold mb-0 text-dark">Détails Pédagogiques & Fiche du Cours</h6>
+                                                <small class="text-muted">Renseignez les objectifs, le public visé et l'approche pédagogique.</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- 1. Objectifs de la formation -->
+                                        <div class="mb-4 bg-white p-3 rounded-3 border">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <label class="form-label fw-bold mb-0 text-danger d-flex align-items-center gap-2">
+                                                    <i class="bi bi-bullseye"></i> Objectifs De La Formation
+                                                </label>
+                                                <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" @click="addObjective">
+                                                    <i class="bi bi-plus-lg me-1"></i> Ajouter un objectif
+                                                </button>
+                                            </div>
+                                            <p class="text-muted small mb-3">Lister les compétences clés ou résultats attendus que l'apprenant va acquérir.</p>
+
+                                            <div v-for="(obj, oIdx) in course.objectives" :key="oIdx" class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-danger-subtle text-danger rounded-circle p-2">
+                                                    <i class="bi bi-check-circle-fill"></i>
+                                                </span>
+                                                <input type="text" v-model="course.objectives[oIdx]" class="form-control form-control-sm" placeholder="Ex: Comprendre les enjeux clés et le cadre juridique du travail...">
+                                                <button type="button" class="btn btn-outline-danger btn-sm border-0 p-1" @click="removeObjective(oIdx)" title="Supprimer cet objectif">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div v-if="course.objectives.length === 0" class="text-muted small fst-italic py-1">
+                                                Aucun objectif défini. Cliquez sur "+ Ajouter un objectif" pour en créer un.
+                                            </div>
+                                        </div>
+
+                                        <!-- 2. À qui s'adresse cette formation ? -->
+                                        <div class="mb-4 bg-white p-3 rounded-3 border">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <label class="form-label fw-bold mb-0 text-primary d-flex align-items-center gap-2">
+                                                    <i class="bi bi-people-fill"></i> À Qui S'adresse Cette Formation ?
+                                                </label>
+                                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill px-3" @click="addTargetAudience">
+                                                    <i class="bi bi-plus-lg me-1"></i> Ajouter un profil cible
+                                                </button>
+                                            </div>
+                                            <p class="text-muted small mb-3">Précisez les profils d'apprenants ou les catégories de professionnels visés.</p>
+
+                                            <div v-for="(target, tIdx) in course.who_should_enroll" :key="tIdx" class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-primary-subtle text-primary rounded-circle p-2">
+                                                    <i class="bi bi-person-check-fill"></i>
+                                                </span>
+                                                <input type="text" v-model="course.who_should_enroll[tIdx]" class="form-control form-control-sm" placeholder="Ex: Syndicalistes et responsables d'organisations de travailleurs">
+                                                <button type="button" class="btn btn-outline-danger btn-sm border-0 p-1" @click="removeTargetAudience(tIdx)" title="Supprimer ce profil">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                            <div v-if="course.who_should_enroll.length === 0" class="text-muted small fst-italic py-1">
+                                                Aucun profil cible défini. Cliquez sur "+ Ajouter un profil cible" pour commencer.
+                                            </div>
+                                        </div>
+
+                                        <!-- 3. Méthodologie & Approche Pédagogique -->
+                                        <div class="bg-white p-3 rounded-3 border">
+                                            <label class="form-label fw-bold text-dark d-flex align-items-center gap-2 mb-1">
+                                                <i class="bi bi-journal-bookmark-fill text-warning"></i> Méthodologie & Approche Pédagogique
+                                            </label>
+                                            <p class="text-muted small mb-2">Décrivez la méthode d'apprentissage (apports théoriques, cas pratiques, travaux individuels, quiz...).</p>
+                                            <textarea v-model="course.methodology" class="form-control" rows="3" placeholder="Ex: Les cours de l'Institut ALREI combinent apports théoriques, études de cas africaines, ressources téléchargeables, quiz d'évaluation et échanges interactifs."></textarea>
+                                        </div>
+                                    </div>
+
                                     <!-- Modalités d'accès, Inscription & Tarification -->
                                     <div class="card border rounded-3 p-3.5 mb-4 bg-light shadow-xs">
                                         <h6 class="fw-bold mb-2 text-dark">
@@ -685,17 +759,23 @@ const removeModule = (idx: number) => {
 }
 
 const addLessonToModule = (mIdx: number) => {
-    modules.value[mIdx].lessons.push({
-        id: null,
-        title: '',
-        type: 'video',
-        duration: 15,
-        video_url: ''
-    })
+    const targetModule = modules.value[mIdx]
+    if (targetModule) {
+        targetModule.lessons.push({
+            id: null,
+            title: '',
+            type: 'video',
+            duration: 15,
+            video_url: ''
+        })
+    }
 }
 
 const removeLessonFromModule = (mIdx: number, lIdx: number) => {
-    modules.value[mIdx].lessons.splice(lIdx, 1)
+    const targetModule = modules.value[mIdx]
+    if (targetModule) {
+        targetModule.lessons.splice(lIdx, 1)
+    }
 }
 
 // ===== Contenu multilingue =====
@@ -721,8 +801,10 @@ const removeVersion = (idx: number) => {
 
 const handleVersionFile = (e: Event, idx: number) => {
     const input = e.target as HTMLInputElement
-    if (input.files?.[0]) {
-        languageVersions.value[idx].file = input.files[0]
+    const file = input.files?.[0]
+    const targetVersion = languageVersions.value[idx]
+    if (file && targetVersion) {
+        targetVersion.file = file
     }
 }
 // ================================
@@ -740,8 +822,24 @@ const course = reactive({
     thumbnail: null as File | null,
     prerequisites: '',
     status: 'draft',
-    instructor_id: '' as string | number
+    instructor_id: '' as string | number,
+    objectives: [] as string[],
+    who_should_enroll: [] as string[],
+    methodology: ''
 })
+const addObjective = () => {
+    course.objectives.push('')
+}
+const removeObjective = (idx: number) => {
+    course.objectives.splice(idx, 1)
+}
+
+const addTargetAudience = () => {
+    course.who_should_enroll.push('')
+}
+const removeTargetAudience = (idx: number) => {
+    course.who_should_enroll.splice(idx, 1)
+}
 
 onMounted(async () => {
     try {
@@ -774,6 +872,35 @@ onMounted(async () => {
                 course.price = data.price || 0
                 course.status = data.status || 'draft'
                 course.instructor_id = data.instructor_id || data.instructor?.id || ''
+                
+                if (data.objectives) {
+                    if (Array.isArray(data.objectives)) {
+                        course.objectives = data.objectives
+                    } else if (typeof data.objectives === 'string') {
+                        try {
+                            course.objectives = JSON.parse(data.objectives)
+                        } catch {
+                            course.objectives = data.objectives.split('\n').filter((s: string) => s.trim())
+                        }
+                    }
+                }
+
+                const targetAud = data.who_should_enroll || data.target_audience
+                if (targetAud) {
+                    if (Array.isArray(targetAud)) {
+                        course.who_should_enroll = targetAud
+                    } else if (typeof targetAud === 'string') {
+                        try {
+                            course.who_should_enroll = JSON.parse(targetAud)
+                        } catch {
+                            course.who_should_enroll = targetAud.split('\n').filter((s: string) => s.trim())
+                        }
+                    }
+                }
+
+                if (data.methodology) {
+                    course.methodology = data.methodology
+                }
                 
                 if (data.thumbnail) {
                     preview.value = data.thumbnail.startsWith('http') || data.thumbnail.startsWith('/')
@@ -838,6 +965,15 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
         formData.append('language', course.language || 'fr')
         formData.append('description', course.description || '')
         formData.append('prerequisites', course.prerequisites || '')
+        
+        // Formattage des Objectifs, Public Cible et Méthodologie
+        const cleanObjectives = course.objectives.filter(o => o && o.trim())
+        const cleanWhoShouldEnroll = course.who_should_enroll.filter(w => w && w.trim())
+        formData.append('objectives', JSON.stringify(cleanObjectives))
+        formData.append('who_should_enroll', JSON.stringify(cleanWhoShouldEnroll))
+        formData.append('target_audience', JSON.stringify(cleanWhoShouldEnroll))
+        formData.append('methodology', course.methodology || '')
+
         formData.append('is_free', course.is_free ? '1' : '0')
         formData.append('is_nomination_only', course.is_nomination_only ? '1' : '0')
         formData.append('requires_approval', course.requires_approval ? '1' : '0')
@@ -864,16 +1000,49 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
         let savedCourseId = route.query.id
         if (isEditMode.value && savedCourseId) {
             formData.append('_method', 'PUT')
-            const res: any = await api(`/instructor/courses/${savedCourseId}`, {
-                method: 'POST',
-                body: formData
-            })
+            let res: any = null
+            try {
+                res = await api(`/instructor/courses/${savedCourseId}?_method=PUT`, {
+                    method: 'POST',
+                    body: formData
+                })
+            } catch (editErr: any) {
+                const status = editErr?.status || editErr?.statusCode || editErr?.response?.status
+                if (status === 405 || status === 404) {
+                    try {
+                        res = await api(`/admin/courses/${savedCourseId}?_method=PUT`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                    } catch {
+                        res = await api(`/courses/${savedCourseId}?_method=PUT`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                    }
+                } else {
+                    throw editErr
+                }
+            }
             savedCourseId = res?.data?.id || res?.id || savedCourseId
         } else {
-            const res: any = await api('/instructor/courses', {
-                method: 'POST',
-                body: formData
-            })
+            let res: any = null
+            try {
+                res = await api('/instructor/courses', {
+                    method: 'POST',
+                    body: formData
+                })
+            } catch (createErr: any) {
+                const status = createErr?.status || createErr?.statusCode || createErr?.response?.status
+                if (status === 404) {
+                    res = await api('/admin/courses', {
+                        method: 'POST',
+                        body: formData
+                    }).catch(() => api('/courses', { method: 'POST', body: formData }))
+                } else {
+                    throw createErr
+                }
+            }
             savedCourseId = res?.data?.id || res?.id
         }
 
@@ -946,9 +1115,9 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
                             course_id: savedCourseId,
                             course_title: course.title
                         }
-                    }).catch(() => null)
+                    })
                 } catch {
-                    // Route optionnelle : gérée automatiquement par le backend Laravel
+                    // Route optionnelle backend (ignorée silencieusement si absente)
                 }
             }
         }
