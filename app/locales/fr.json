@@ -860,5 +860,11 @@
   "confirmation_code": "Code de confirmation",
   "validate_and_confirm": "Valider & Confirmer mon compte",
   "resend_code": "Renvoyer un nouveau code",
-  "developed_by": "Développé par"
+  "developed_by": "Développé par",
+  "feature_quality_courses_title": "Formations de Qualité",
+  "feature_quality_courses_desc": "Des programmes structurés et adaptés aux exigences du marché du travail.",
+  "feature_recognized_certs_title": "Certificats Reconnus",
+  "feature_recognized_certs_desc": "Obtenez une certification officielle à la fin de votre parcours de formation.",
+  "feature_expert_support_title": "Accompagnement d'Experts",
+  "feature_expert_support_desc": "Bénéficiez des conseils et du suivi personnalisé de nos formateurs."
 }

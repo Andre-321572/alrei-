@@ -860,5 +860,11 @@
   "confirmation_code": "Confirmation code",
   "validate_and_confirm": "Validate & Confirm my account",
   "resend_code": "Resend new code",
-  "developed_by": "Developed by"
+  "developed_by": "Developed by",
+  "feature_quality_courses_title": "Quality Training",
+  "feature_quality_courses_desc": "Structured programs tailored to the demands of the labor market.",
+  "feature_recognized_certs_title": "Recognized Certificates",
+  "feature_recognized_certs_desc": "Earn an official certificate at the end of your training course.",
+  "feature_expert_support_title": "Expert Guidance",
+  "feature_expert_support_desc": "Benefit from advice and personalized support from our trainers."
 }
