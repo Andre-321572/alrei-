@@ -947,9 +947,11 @@ const nextTab = () => {
   if (activeTab.value < 3) activeTab.value++
 }
 
+const { success: swalSuccess, error: swalError, warning: swalWarning } = useSwal()
+
 const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
     if (!course.title.trim()) {
-        alert('Veuillez renseigner le titre du cours.')
+        await swalWarning('Champ obligatoire', 'Veuillez renseigner le titre du cours.')
         activeTab.value = 1
         return
     }
@@ -1122,24 +1124,26 @@ const handleSubmit = async (targetStatus: 'draft' | 'published' = 'draft') => {
             }
         }
 
-        const msg = targetStatus === 'draft'
-            ? '✅ Cours enregistré comme brouillon avec succès !'
-            : '🎉 Félicitations ! Votre cours a été publié avec succès.'
-        alert(msg)
+        const msgTitle = targetStatus === 'draft' ? 'Brouillon enregistré !' : 'Félicitations !'
+        const msgText = targetStatus === 'draft'
+            ? 'Votre cours a été enregistré comme brouillon avec succès.'
+            : 'Votre cours a été publié avec succès.'
+        await swalSuccess(msgTitle, msgText)
         const targetRoute = isAdmin.value ? '/admin-dashboard?tab=courses' : '/instructor-courses';
         navigateTo(localePath(targetRoute));
     } catch (error: any) {
         console.error('Failed to save course:', error)
+        let errorTitle = 'Erreur de sauvegarde'
         let errorMsg = 'Erreur lors de l\'enregistrement du cours.'
         if (error?.data?.errors) {
             const details = Object.entries(error.data.errors)
-                .map(([field, msgs]: [string, any]) => `• ${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
-                .join('\n')
-            errorMsg = `Erreur de validation (422) :\n${details}`
+                .map(([field, msgs]: [string, any]) => `• <b>${field}</b>: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+                .join('<br>')
+            errorMsg = `<div class="text-start fs-7">${details}</div>`
         } else if (error?.data?.message) {
-            errorMsg = `Erreur (422) : ${error.data.message}`
+            errorMsg = error.data.message
         }
-        alert(errorMsg)
+        await swalError(errorTitle, errorMsg)
     } finally {
         submitting.value = false
     }

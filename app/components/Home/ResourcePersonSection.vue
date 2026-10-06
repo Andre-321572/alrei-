@@ -57,10 +57,11 @@
     </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
 const api = useApi()
+const { success, error: swalError } = useSwal()
 
 const points = [
     { key: "resource_point_1", fallback: "Enseigner à partir des réalités africaines" },
@@ -85,9 +86,12 @@ const handleSubmit = async () => {
         })
         sent.value = true
         form.value = { name: '', email: '', expertise: '', message: '' }
-    } catch (err) {
+        await success(t('form_success_title') || 'Demande envoyée !', t('form_success_msg') || 'Votre candidature de personne ressource a été soumise avec succès.')
+    } catch (err: any) {
         console.error('Error submitting resource person application:', err)
-        errorMessage.value = err?.data?.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
+        const msg = err?.data?.message || 'Une erreur est survenue lors de l\'envoi de votre demande.'
+        errorMessage.value = msg
+        await swalError('Erreur de soumission', msg)
     } finally {
         submitting.value = false
     }
