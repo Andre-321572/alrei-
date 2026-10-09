@@ -229,7 +229,7 @@ let messageModalInstance: any = null
 const fetchStudents = async () => {
     loading.value = true
     try {
-        const response = await api('/instructor/students')
+        const response = await api<any>('/instructor/students')
         students.value = response.data || []
     } catch (err) {
         console.error('Fetch students error:', err)
