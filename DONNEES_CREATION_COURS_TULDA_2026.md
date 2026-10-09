@@ -167,10 +167,10 @@ Vous devez créer **5 Modules** dans le formulaire. Voici les informations exact
 5. **Leçon 5.5 (Devoir / Projet)** : `Projet Individuel : Kit Campagne & Plan d'action Jeunes`
    * *Type* : `Devoir / Projet`
    * *Consigne* : Concevoir un message de recrutement (vidéo TikTok ou visuel) et un plan d'action d'inclusion sur 2-3 pages.
+--
 
----
-
-## 🎯 ÉTAPE 3 : FINALISATION & PUBLICATION DU COURS
+## 🎯 ÉTAPE 3 : FINALISATION & PUBLICATIO
+N DU COURS
 
 * **Statut de Publication** : `Publié` (`published`)
 * **Délai de Remise des Projets** : `30 jours calendaires` après la fin de la formation en ligne.
