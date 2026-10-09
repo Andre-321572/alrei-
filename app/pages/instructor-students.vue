@@ -335,14 +335,13 @@ const sendMessage = async () => {
 const exportGlobalCsv = () => {
     if (filteredStudents.value.length === 0) return
     
-    const headers = ['Name', 'Email', 'Course', 'Progress', 'Joined At']
+    const headers = ['Nom & Prénom', 'Email', 'Titre du cours', 'Date d\'inscription']
     const csvContent = [
         headers.join(','),
         ...filteredStudents.value.map(s => [
             `"${s.name || ''}"`,
             `"${s.email || ''}"`,
             `"${s.course_title || ''}"`,
-            `"${s.progress || 0}%"`,
             `"${s.joined_at ? new Date(s.joined_at).toLocaleDateString() : ''}"`
         ].join(','))
     ].join('\n')
@@ -385,14 +384,13 @@ const exportPdf = async () => {
         const filterText = searchQuery.value ? ` | Recherche: "${searchQuery.value}"` : ''
         doc.text(`Rapport généré le: ${dateStr} | Total: ${filteredStudents.value.length} étudiant(s)${filterText}`, 14, 22)
 
-        const tableColumn = ['N°', 'Étudiant', 'Email', 'Titre du cours', 'Progression', 'Inscrit le']
+        const tableColumn = ['N°', 'Étudiant', 'Email', 'Titre du cours', 'Inscrit le']
 
         const tableRows = filteredStudents.value.map((s: any, index: number) => [
             index + 1,
             s.name || 'N/A',
             s.email || 'N/A',
             s.course_title || 'N/A',
-            `${s.progress || 0}%`,
             s.joined_at ? new Date(s.joined_at).toLocaleDateString('fr-FR') : 'N/A'
         ])
 
@@ -405,12 +403,11 @@ const exportPdf = async () => {
             headStyles: { fillColor: [25, 135, 84], textColor: [255, 255, 255], fontStyle: 'bold' },
             alternateRowStyles: { fillColor: [248, 249, 250] },
             columnStyles: {
-                0: { cellWidth: 10 },
-                1: { cellWidth: 40 },
-                2: { cellWidth: 50 },
+                0: { cellWidth: 12 },
+                1: { cellWidth: 45 },
+                2: { cellWidth: 55 },
                 3: { cellWidth: 45 },
-                4: { cellWidth: 20 },
-                5: { cellWidth: 20 }
+                4: { cellWidth: 25 }
             }
         })
 
