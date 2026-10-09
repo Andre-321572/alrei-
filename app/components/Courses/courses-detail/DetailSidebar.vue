@@ -27,13 +27,13 @@
                         <i class="bi bi-gift-fill me-2"></i>{{ $t('free') }}
                     </h2>
                     <template v-else>
-                        <h2 class="lh-base fw-bold text-dark m-0">{{ course.discount_price || course.price }} $</h2>
+                        <h2 class="lh-base fw-bold text-dark m-0">{{ course.discount_price || course.price }} €</h2>
                         <span v-if="course.discount_price" class="badge bg-light-danger text-danger rounded-pill px-3 py-2 ms-auto">
                             {{ Math.round((1 - course.discount_price / course.price) * 100) }}% off
                         </span>
                     </template>
                 </div>
-                <del v-if="!isFree && course.discount_price" class="text-muted fs-5">{{ course.price }} $</del>
+                <del v-if="!isFree && course.discount_price" class="text-muted fs-5">{{ course.price }} €</del>
             </div>
 
             <div class="ed_view_link d-flex align-items-center justify-content-center flex-column gap-3 mt-4 p-0">
@@ -70,7 +70,7 @@
                         <h6 class="fw-bold mb-1 text-dark">{{ sch.name }}</h6>
                         <p class="small text-muted mb-3">{{ sch.description }}</p>
                         <div class="d-flex justify-content-between align-items-center">
-                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold">- {{ sch.value }} FCFA</span>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold">- {{ sch.value }} €</span>
                             <button @click="openMotivationModal(sch)" class="btn btn-sm btn-primary rounded-pill px-3 fw-semibold">{{ $t('apply') }}</button>
                         </div>
                     </div>

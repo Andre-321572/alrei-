@@ -30,7 +30,7 @@ Ce document contient l'intégralité des informations exactes et structurées ch
   > Formation réservée aux jeunes syndicalistes et dirigeants d'organisations membres de la CSI-Afrique. Candidature sur désignation/nomination par l'organisation syndicale. Sélection pour la phase résidentielle à Lomé soumise à évaluation.
 
 ### 4. Modalités d'accès, Inscription & Tarification
-* **[x] Cours Gratuit** : `Coché` (Prix : `0 FCFA`)
+* **[x] Cours Gratuit** : `Coché` (Prix : `0 €`)
 * **[x] Sur Nomination** : `Coché` (Lettre de désignation syndicale requise)
 * **[x] Validation de Dossier** : `Coché` (Validation par l'équipe ALREI obligatoire)
 

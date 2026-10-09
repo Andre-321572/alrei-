@@ -63,7 +63,9 @@ const props = defineProps({
         default: () => ({
             description: "",
             who_should_enroll: [],
-            objectives: []
+            target_audience: [],
+            objectives: [],
+            methodology: ""
         })
     }
 })
@@ -92,7 +94,7 @@ const courseLanguage = computed(() => {
 
 const accessLabel = computed(() => {
     if (isFree.value) return t('free')
-    if (props.course?.price) return `${props.course.price} $`
+    if (props.course?.price) return `${props.course.price} €`
     return t('by_application')
 })
 
@@ -109,13 +111,38 @@ const defaultTarget = computed(() => [
     t('default_target_4')
 ])
 
+const parseList = (data) => {
+    if (!data) return []
+    if (Array.isArray(data)) {
+        return data.filter(item => typeof item === 'string' ? item.trim() !== '' : Boolean(item))
+    }
+    if (typeof data === 'string') {
+        const trimmed = data.trim()
+        if (!trimmed) return []
+        if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+            try {
+                const parsed = JSON.parse(trimmed)
+                if (Array.isArray(parsed)) {
+                    return parsed.filter(item => typeof item === 'string' ? item.trim() !== '' : Boolean(item))
+                }
+            } catch (e) {
+                // Ignore JSON parse error
+            }
+        }
+        return trimmed.split('\n').map(s => s.trim()).filter(Boolean)
+    }
+    return []
+}
+
 const objectives = computed(() => {
-    if (props.course?.objectives && props.course.objectives.length > 0) return props.course.objectives
+    const list = parseList(props.course?.objectives)
+    if (list.length > 0) return list
     return defaultObjectives.value
 })
 
 const targetAudience = computed(() => {
-    if (props.course?.who_should_enroll && props.course.who_should_enroll.length > 0) return props.course.who_should_enroll
+    const list = parseList(props.course?.who_should_enroll || props.course?.target_audience)
+    if (list.length > 0) return list
     return defaultTarget.value
 })
 </script>

@@ -35,7 +35,7 @@
                                         </td>
                                         <td class="text-end fw-bold">
                                             <span v-if="(item.discount_price || item.price) == 0" class="text-green">{{ $t('free') }}</span>
-                                            <span v-else>{{ item.discount_price || item.price }} FCFA</span>
+                                            <span v-else>{{ item.discount_price || item.price }} €</span>
                                         </td>
                                         <td class="text-end">
                                             <button @click="removeFromCart(item.id)" class="btn btn-sm text-danger"><i class="bi bi-trash"></i></button>
@@ -53,7 +53,7 @@
                         <div class="cart-wrap">
                             <div class="flex_cart mb-4">
                                 <div class="flex_cart_1 fs-5 fw-bold">{{ $t('total_cost') }}</div>
-                                <div class="flex_cart_2 text-green fs-4 fw-bold">{{ total }} FCFA</div>
+                                <div class="flex_cart_2 text-green fs-4 fw-bold">{{ total }} €</div>
                             </div>
                             <button @click="handleCheckout" :disabled="loading" class="btn btn-main w-100 py-3 fs-6">
                                 <span v-if="loading" class="spinner-border spinner-border-sm me-2"></span>

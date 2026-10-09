@@ -385,8 +385,8 @@
                                         <div v-if="!course.is_free" class="mt-3">
                                             <label class="form-label fw-semibold">Prix de la formation <span class="text-danger">*</span></label>
                                             <div class="input-group" style="max-width: 300px;">
-                                                <input v-model.number="course.price" type="number" min="0" class="form-control" placeholder="Ex: 50000">
-                                                <span class="input-group-text fw-bold">FCFA</span>
+                                                <input v-model.number="course.price" type="number" min="0" class="form-control" placeholder="Ex: 50">
+                                                <span class="input-group-text fw-bold">€</span>
                                             </div>
                                         </div>
                                     </div>
@@ -591,7 +591,7 @@
                                                         <i class="bi bi-gift me-1"></i>Accès gratuit
                                                     </span>
                                                     <span v-else class="badge bg-white text-dark border fw-bold">
-                                                        <i class="bi bi-tag me-1"></i>Tarifé : {{ course.price }} FCFA
+                                                        <i class="bi bi-tag me-1"></i>Tarifé : {{ course.price }} €
                                                     </span>
                                                     <span v-if="course.is_nomination_only" class="badge bg-white text-primary border fw-bold">
                                                         <i class="bi bi-file-earmark-person me-1"></i>Sur Nomination

@@ -43,7 +43,7 @@
                                 <tr v-for="(item, index) in cartData" :key="index">
                                     <td><div class="tb_course_thumb"><img :src="item.image" class="img-fluid" alt="" /></div></td>
                                     <th>{{item.title}}<span class="tb_date text-muted">{{item.date}}</span></th>
-                                    <td><span class="wish_price theme-cl">{{item.price}} FCFA</span></td>
+                                    <td><span class="wish_price theme-cl">{{item.price}} €</span></td>
                                     <td><input type="number" class="form-control qty" step="1" value="1" title="Qty" size="4" placeholder="" inputmode="numeric"></td>
                                     <td><a href="#" class="btn btn-remove">Remove</a></td>
                                 </tr>
@@ -76,7 +76,7 @@
                         <h4>Billing Summary</h4>
                         <div class="cart-wrap">
                             <ul class="cart_list">
-                                <li>Base price<strong>14000 FCFA</strong></li>
+                                <li>Base price<strong>14 €</strong></li>
                                 <li>Discount<strong>$10.00</strong></li>
                                 <li>CGST<strong>$10.00</strong></li>
                                 <li>SGST<strong>$10.00</strong></li>
